@@ -8,6 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		A9350FC720C834D5006EC093 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9350FC620C834D5006EC093 /* main.cpp */; };
+		A9350FFF20C835A7006EC093 /* Company.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9350FF620C835A7006EC093 /* Company.cpp */; };
+		A935100020C835A7006EC093 /* Account.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9350FF720C835A7006EC093 /* Account.cpp */; };
+		A935100120C835A7006EC093 /* User.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9350FF820C835A7006EC093 /* User.cpp */; };
+		A935100220C835A7006EC093 /* Group.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9350FF920C835A7006EC093 /* Group.cpp */; };
+		A935100320C835A7006EC093 /* Date.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9350FFA20C835A7006EC093 /* Date.cpp */; };
+		A935100420C835A7006EC093 /* Clock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9350FFB20C835A7006EC093 /* Clock.cpp */; };
+		A935100520C835A7006EC093 /* Manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9350FFC20C835A7006EC093 /* Manager.cpp */; };
+		A935100620C835A7006EC093 /* MainFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9350FFD20C835A7006EC093 /* MainFunctions.cpp */; };
+		A935100720C835A7006EC093 /* Post.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9350FFE20C835A7006EC093 /* Post.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +34,25 @@
 /* Begin PBXFileReference section */
 		A9350FC320C834D5006EC093 /* Exam Project */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Exam Project"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9350FC620C834D5006EC093 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		A9350FE920C835A7006EC093 /* Post.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Post.h; sourceTree = "<group>"; };
+		A9350FEA20C835A7006EC093 /* TemplateFunctions.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TemplateFunctions.hpp; sourceTree = "<group>"; };
+		A9350FEC20C835A7006EC093 /* Account.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Account.h; sourceTree = "<group>"; };
+		A9350FED20C835A7006EC093 /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
+		A9350FEE20C835A7006EC093 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		A9350FEF20C835A7006EC093 /* Company.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Company.h; sourceTree = "<group>"; };
+		A9350FF020C835A7006EC093 /* Manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Manager.h; sourceTree = "<group>"; };
+		A9350FF120C835A7006EC093 /* Date.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Date.h; sourceTree = "<group>"; };
+		A9350FF220C835A7006EC093 /* Graph.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Graph.hpp; sourceTree = "<group>"; };
+		A9350FF320C835A7006EC093 /* Clock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Clock.h; sourceTree = "<group>"; };
+		A9350FF620C835A7006EC093 /* Company.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Company.cpp; sourceTree = "<group>"; };
+		A9350FF720C835A7006EC093 /* Account.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Account.cpp; sourceTree = "<group>"; };
+		A9350FF820C835A7006EC093 /* User.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = User.cpp; sourceTree = "<group>"; };
+		A9350FF920C835A7006EC093 /* Group.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Group.cpp; sourceTree = "<group>"; };
+		A9350FFA20C835A7006EC093 /* Date.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Date.cpp; sourceTree = "<group>"; };
+		A9350FFB20C835A7006EC093 /* Clock.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Clock.cpp; sourceTree = "<group>"; };
+		A9350FFC20C835A7006EC093 /* Manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Manager.cpp; sourceTree = "<group>"; };
+		A9350FFD20C835A7006EC093 /* MainFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MainFunctions.cpp; sourceTree = "<group>"; };
+		A9350FFE20C835A7006EC093 /* Post.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Post.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,9 +85,68 @@
 		A9350FC520C834D5006EC093 /* Exam Project */ = {
 			isa = PBXGroup;
 			children = (
+				A9350FE720C835A7006EC093 /* Libraries */,
 				A9350FC620C834D5006EC093 /* main.cpp */,
 			);
 			path = "Exam Project";
+			sourceTree = "<group>";
+		};
+		A9350FE720C835A7006EC093 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				A9350FE820C835A7006EC093 /* Headers */,
+				A9350FF420C835A7006EC093 /* Sources */,
+			);
+			path = Libraries;
+			sourceTree = "<group>";
+		};
+		A9350FE820C835A7006EC093 /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				A9350FEB20C835A7006EC093 /* Account Hierarchy */,
+				A9350FF320C835A7006EC093 /* Clock.h */,
+				A9350FF120C835A7006EC093 /* Date.h */,
+				A9350FF220C835A7006EC093 /* Graph.hpp */,
+				A9350FF020C835A7006EC093 /* Manager.h */,
+				A9350FE920C835A7006EC093 /* Post.h */,
+				A9350FEA20C835A7006EC093 /* TemplateFunctions.hpp */,
+			);
+			path = Headers;
+			sourceTree = "<group>";
+		};
+		A9350FEB20C835A7006EC093 /* Account Hierarchy */ = {
+			isa = PBXGroup;
+			children = (
+				A9350FEC20C835A7006EC093 /* Account.h */,
+				A9350FED20C835A7006EC093 /* Group.h */,
+				A9350FEE20C835A7006EC093 /* User.h */,
+				A9350FEF20C835A7006EC093 /* Company.h */,
+			);
+			path = "Account Hierarchy";
+			sourceTree = "<group>";
+		};
+		A9350FF420C835A7006EC093 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				A9350FF520C835A7006EC093 /* Account Hierarchy */,
+				A9350FFA20C835A7006EC093 /* Date.cpp */,
+				A9350FFB20C835A7006EC093 /* Clock.cpp */,
+				A9350FFC20C835A7006EC093 /* Manager.cpp */,
+				A9350FFD20C835A7006EC093 /* MainFunctions.cpp */,
+				A9350FFE20C835A7006EC093 /* Post.cpp */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		A9350FF520C835A7006EC093 /* Account Hierarchy */ = {
+			isa = PBXGroup;
+			children = (
+				A9350FF620C835A7006EC093 /* Company.cpp */,
+				A9350FF720C835A7006EC093 /* Account.cpp */,
+				A9350FF820C835A7006EC093 /* User.cpp */,
+				A9350FF920C835A7006EC093 /* Group.cpp */,
+			);
+			path = "Account Hierarchy";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -118,7 +205,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A935100120C835A7006EC093 /* User.cpp in Sources */,
 				A9350FC720C834D5006EC093 /* main.cpp in Sources */,
+				A935100020C835A7006EC093 /* Account.cpp in Sources */,
+				A935100320C835A7006EC093 /* Date.cpp in Sources */,
+				A935100220C835A7006EC093 /* Group.cpp in Sources */,
+				A935100420C835A7006EC093 /* Clock.cpp in Sources */,
+				A9350FFF20C835A7006EC093 /* Company.cpp in Sources */,
+				A935100620C835A7006EC093 /* MainFunctions.cpp in Sources */,
+				A935100520C835A7006EC093 /* Manager.cpp in Sources */,
+				A935100720C835A7006EC093 /* Post.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
