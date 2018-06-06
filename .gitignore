@@ -93,5 +93,6 @@ xcuserdata/
 !*.xcworkspace/contents.xcworkspacedata
 /*.gcno
 
+Index/
 
 # End of https://www.gitignore.io/api/osx,c++,xcode
