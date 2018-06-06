@@ -3,7 +3,7 @@
 
 ### MINE ###
 
-*.pbxproj
+
 
 Index/
 Extra/
@@ -11,8 +11,9 @@ Exam Project/main.cpp
 gitignore alias
 .idea/
 project.pbxproj
+Exam Project.xcodeproj/
 
-
+*.pbxproj
 
 ### C++ ###
 # Prerequisites
