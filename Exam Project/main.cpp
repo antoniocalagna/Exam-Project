@@ -6,6 +6,7 @@
 //  Copyright © 2018 Antonio Calagna. All rights reserved.
 //
 
+//test
 #include <iostream>
 #include "Manager.h"
 
