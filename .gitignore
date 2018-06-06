@@ -3,7 +3,7 @@
 
 ### MINE ###
 
-*.pbxproj
+
 
 Index/
 Extra/
@@ -12,7 +12,7 @@ gitignore alias
 .idea/
 project.pbxproj
 
-
+*.pbxproj
 
 ### C++ ###
 # Prerequisites
