@@ -11,6 +11,7 @@ Exam Project/main.cpp
 gitignore alias
 .idea/
 project.pbxproj
+Exam Project.xcodeproj/
 
 *.pbxproj
 
