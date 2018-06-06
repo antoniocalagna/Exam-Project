@@ -7,7 +7,10 @@
 //
 
 #include <iostream>
+
 #include "Manager.h"
+#include "Account.h"
+
 
 bool test_fun (Account first, User second);
 size_t FindPosbyID (const vector<Account> &v, const string &id_original);
