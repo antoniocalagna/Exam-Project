@@ -1,0 +1,197 @@
+//
+//  Clock.cpp
+//  Social Network
+//
+//  Created by Antonio Calagna on 23/05/18.
+//  Copyright © 2018 Antonio Calagna. All rights reserved.
+//
+
+#include "Clock.h"
+
+Clock::Clock()
+{
+  _hours=0;
+  _minutes=0;
+  _seconds=0;
+}
+
+Clock::Clock(const int &hours, const int &minutes, const int &seconds)
+{
+  _hours=hours;
+  _minutes=minutes;
+  _seconds=seconds;
+  CorrectValues();
+}
+
+Clock::Clock(const int &hours, const int &minutes)
+{
+  _hours=hours;
+  _minutes=minutes;
+  _seconds=0;
+  CorrectValues();
+}
+
+Clock::Clock(const Clock &to_copy)
+{
+  _hours=to_copy._hours;
+  _minutes=to_copy._minutes;
+  _seconds=to_copy._seconds;
+}
+
+void Clock::setHours(const int &hours)
+{
+  _hours=hours;
+}
+
+void Clock::setMinutes(const int &minutes)
+{
+  _minutes=minutes;
+}
+
+void Clock::setSeconds(const int &seconds)
+{
+  _seconds=seconds;
+}
+
+int Clock::getHours() const
+{
+  return _hours;
+}
+
+int Clock::getMinutes() const
+{
+  return _minutes;
+}
+
+int Clock::getSeconds() const
+{
+  return _seconds;
+}
+
+string Clock::getFullTime() const
+{
+  stringstream ss;
+  ss << _hours << ":" << _minutes << ":" << _seconds;
+  return ss.str();
+}
+
+string Clock::getShortTime() const
+{
+  stringstream ss;
+  ss << _hours << ":" << _minutes;
+  return ss.str();
+}
+
+bool Clock::_isValid() const
+{
+  if (_hours>23)
+    return false;
+  if (_minutes>59)
+    return false;
+  if (_seconds>59)
+    return false;
+  
+  return true;
+}
+
+void Clock::CorrectValues()
+{
+  while (!_isValid())
+  {
+    if (_seconds>59)
+    {
+      _seconds=_seconds-60;
+      _minutes++;
+    }
+    if (_minutes>59)
+    {
+      _minutes=_minutes-60;
+      _hours++;
+    }
+    if (_hours>23)
+      _hours=_hours-24;
+  }
+}
+
+void Clock::SetCurrentTime()
+{
+  time_t raw;
+  struct tm * timeinfo;
+  char buffer [8];
+  time (&raw); //Tempo in secondi
+  timeinfo = localtime(&raw); //Strutturizza
+  strftime(buffer, 8, "%X", timeinfo); //Formatta
+  sscanf(buffer, "%d/%d/%d", &_hours, &_minutes, &_seconds); //Analisi e set
+}
+
+void Clock::Acquire(std::string s)
+{
+  sscanf(s.c_str(), "%d:%d:%d", &_hours, &_minutes, &_seconds);
+}
+
+ostream &operator<< (ostream &stream, const Clock& c)
+{
+  stream << c._hours<<":"<<c._minutes<<":"<<c._seconds << endl;
+  return stream;
+}
+
+Clock Clock::operator+(const Clock &to_be_added)
+{
+  Clock output;
+  output._hours = this -> _hours+to_be_added._hours;
+  output._minutes = this -> _minutes+to_be_added._minutes;
+  output._seconds = this -> _seconds+to_be_added._seconds;
+  
+  output.CorrectValues();
+  
+  return output;
+}
+
+void Clock::operator=(const Clock &to_be_assigned)
+{
+  this -> _hours = to_be_assigned._hours;
+  this -> _minutes = to_be_assigned._minutes;
+  this -> _seconds = to_be_assigned._seconds;
+}
+
+const Clock& Clock::operator++()
+{
+  _seconds++;
+  this->CorrectValues();
+  return *this;
+}
+
+const Clock Clock::operator++(int)
+{
+  Clock c(*this);
+  ++(*this);
+  return c;
+}
+
+bool Clock::operator==(const Clock &to_be_compared)
+{
+  return ((_hours == to_be_compared._hours) && (_minutes == to_be_compared._minutes) && (_seconds == to_be_compared._seconds));
+}
+
+bool Clock::operator!=(const Clock &to_be_compared)
+{
+  return !(*this == to_be_compared);
+}
+
+bool Clock::operator<(const Clock &is_greater)
+{
+  if (this->_hours < is_greater._hours)
+    return true;
+  if ((this->_hours == is_greater._hours)&&(this->_minutes < is_greater._minutes))
+    return true;
+  if ((this->_hours == is_greater._hours)&&(this->_minutes == is_greater._minutes)&&(this->_seconds < is_greater._seconds))
+    return true;
+  
+  return false;
+}
+
+bool Clock::operator>(const Clock &is_smaller)
+{
+  return !(*this < is_smaller || *this == is_smaller);
+}
+
