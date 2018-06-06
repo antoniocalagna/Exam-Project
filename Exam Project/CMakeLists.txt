@@ -8,18 +8,23 @@ include_directories(Libraries/Headers               #Qui vengono aggiunti i perc
         Libraries/Headers/Account\ Hierarchy        #Nota come si fa con lo spazio
         )
 
+set(SRC Libraries/Sources)                          #Aliases (SRC -> Source, HDR -> Header)
+set(HDR Libraries/Headers)
+
 #QUI i .cpp
 set(                                                #Qui si fa una sorta di assegnazione: chiamando "${SOURCE_FILES}"
         SOURCE_FILES                                #è come se scrivessi tutta questa roba
-        Libraries/Sources/Clock.cpp
-        Libraries/Sources/Date.cpp
-        Libraries/Sources/MainFunctions.cpp
-        Libraries/Sources/Manager.cpp
-        Libraries/Sources/Post.cpp
-        Libraries/Sources/Account\ Hierarchy/Account.cpp
-        Libraries/Sources/Account\ Hierarchy/Company.cpp
-        Libraries/Sources/Account\ Hierarchy/Group.cpp
-        Libraries/Sources/Account\ Hierarchy/User.cpp
-        Libraries/Sources/FileHandler.cpp)
+        ${HDR}/Clock.h          ${SRC}/Clock.cpp
+        ${HDR}/Date.h           ${SRC}/Date.cpp
+        ${HDR}/FileHandler.h    ${SRC}/FileHandler.cpp
+        ${HDR}/Manager.h        ${SRC}/Manager.cpp
+        ${HDR}/Post.h           ${SRC}/Post.cpp
+
+        ${HDR}/Account\ Hierarchy/Account.h     ${SRC}/Account\ Hierarchy/Account.cpp
+        ${HDR}/Account\ Hierarchy/Company.h     ${SRC}/Account\ Hierarchy/Company.cpp
+        ${HDR}/Account\ Hierarchy/Group.h       ${SRC}/Account\ Hierarchy/Group.cpp
+        ${HDR}/Account\ Hierarchy/User.h        ${SRC}/Account\ Hierarchy/User.cpp
+        )
+
 
 add_executable(Social_Network main.cpp ${SOURCE_FILES})     #I .cpp vengono linkati "in automatico" qui
