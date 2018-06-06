@@ -20,6 +20,6 @@ set(                                                #Qui si fa una sorta di asse
         Libraries/Sources/Account\ Hierarchy/Company.cpp
         Libraries/Sources/Account\ Hierarchy/Group.cpp
         Libraries/Sources/Account\ Hierarchy/User.cpp
-        )
+        Libraries/Sources/FileHandler.cpp)
 
 add_executable(Social_Network main.cpp ${SOURCE_FILES})     #I .cpp vengono linkati "in automatico" qui
