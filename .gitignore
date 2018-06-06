@@ -93,6 +93,8 @@ xcuserdata/
 !*.xcworkspace/contents.xcworkspacedata
 /*.gcno
 
+### MINE ###
+*.pbxproj
 Index/
 Exam Project/main.cpp
 
