@@ -18,9 +18,9 @@
 
 namespace relation
 {
-  const static string friendship = "friend";
-  const static string fatherhood = "father";
-  const static string partner = "partner";
+  const string friendship = "friend";
+  const string fatherhood = "father";
+  const string partner = "partner";
 }
 
 class Manager
