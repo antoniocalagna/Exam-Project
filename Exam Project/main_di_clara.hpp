@@ -26,17 +26,24 @@ int main_di_clara() {
             cout << "Users:" << endl;
             cout
                     << "\nset name <user_id>\nset surname <user_id>\nset gender <user_id>\nset birth <user_id>\nset address <user_id>\nset id <user_id>\nset subscription <user_id>\n"
+                    << endl
+                    << "get name <user_id>\nget surname <user_id>\nget gender <user_id>\nget birth <user_id>\nget address <user_id>\nget id <user_id>\nget subscription <user_id>\n"
                     << endl;
-            //per ora mi occupo solo dei set
+
             cout << "Groups:" << endl;
             cout
                     << "\nset name <group_id>\nset n_members <group_id>\nset location <group_id>\nset type_activity <group_id>\nset inception <group_id>\nset id <group_id>\nset subscription <group_id>\n"
+                    << endl
+                    << "get name <group_id>\nget n_members <group_id>\nget location <group_id>\nget type_activity <group_id>\nget inception <group_id>\nget id <group_id>\nget subscription <group_id>\n"
                     << endl;
-            //altra roba
+
             cout << "Companies:" << endl;
             cout
-                    << "\nset name <company_id>\nset finantial_location <company_id>\nset operative_location <company_id>\nset products <company_id>\nset inception <company_id>\nset id <group_id>\nset subscription <company_id>\n"
+                    << "\nset name <company_id>\nset finantial_location <company_id>\nset operative_location <company_id>\nset products <company_id>\nset inception <company_id>\nset id <company_id>\nset subscription <company_id>\n"
+                    << endl
+                    << "get name <company_id>\nget finantial_location <company_id>\nget operative_location <company_id>\nget products <company_id>\nget inception <company_id>\nget id <company_id>\nget subscription <company_id>\n"
                     << endl;
+            cout << "delete <id>"<<endl; //forse potrebbe sembrare che questa funzione permetta di eliminare solo l'id quando invece elimina tutto l'account
             cout << ">";
 
             getline(cin, input);
@@ -47,16 +54,17 @@ int main_di_clara() {
         if (cmd == "set") {
             string what, who; //non so se questi nomi sono messi per scherzo, a me sembrano carini
             command >> what >> who;
-            if (who== "") {
+            if (who == "") {
                 cout << "Error! Check the numbers of parameters you have to insert." << endl;
             }/*NON POSSO METTERE command.good(), OGNI VOLTA CHE VEDE LA FINE DELLA RIGA ROMPE IL CAZZO*/
             else /*if(who appartiene al vettore di ID preso dal file)*/{
                 if (what == "name") {
                     //prendo dal vettore di id quello con id==who, chiedo all'utente il nuovo nome e con
-                    //setname(nuovonome) lo cambio.
+                    //setname(nuovonome) lo cambio
+                    //GENERICO PER TUTTI GLI ACCOUNT
                 }
                 if (what == "surname") {
-
+                    //se l'account non è user deve dare errore
                 }
                 if (what == "gender") {
 
@@ -68,10 +76,10 @@ int main_di_clara() {
 
                 }
                 if (what == "id") {
-
+                    //GENERICO PER TUTTI GLI ACCOUNT
                 }
                 if (what == "subscription") {
-
+                    //GENERICO PER TUTTI GLI ACCOUNT
                 }
                 if (what == "n_members") {
 
@@ -98,11 +106,77 @@ int main_di_clara() {
             /*else
              * {dai un messaggio di errore}*/
         }
-        if (cmd=="exit"){
-            exit=1;
+        if (cmd == "get") {
+            string what, who;
+            command >> what >> who;
+            if (who == "") {
+                cout << "Error! Check the numbers of parameters you have to insert." << endl;
+            } else /*if(who appartiene al vettore di ID preso dal file)*/{
+                if (what == "name") {
+                    //prendo dal vettore di id quello con id==who
+                    // faccio Account.getname(who) lo cambio.
+                    //GENERICO PER TUTTI GLI ACCOUNT
+                }
+                if (what == "surname") {
+                    //se l'account non è user deve dare errore
+                }
+                if (what == "gender") {
+
+                }
+                if (what == "birth") {
+
+                }
+                if (what == "address") {
+
+                }
+                if (what == "id") {
+                    //GENERICO PER TUTTI GLI ACCOUNT
+                }
+                if (what == "subscription") {
+                    //GENERICO PER TUTTI GLI ACCOUNT
+                }
+                if (what == "n_members") {
+
+                }
+                if (what == "location") {
+
+                }
+                if (what == "type_activity") {
+
+                }
+                if (what == "inception") {
+
+                }
+                if (what == "finantial_location") {
+
+                }
+                if (what == "operative_location") {
+
+                }
+                if (what == "products") {
+
+                }
+            }
+            /*else
+             * {dai un messaggio di errore}*/
+        }
+        if (cmd == "delete") {
+            string who;
+            command >> who;
+            if (who == "") {
+                cout << "Error! Check the numbers of parameters you have to insert." << endl;
+            } else /*if(who appartiene al vettore di ID preso dal file)*/{
+                //si usa il distruttore per eliminare o imposto tutti i paramentri vuoti?
+                //o forse lo fa l'onnisciente Manager
+
+            }
         }
 
-    }
-    while(exit==0);
+
+        if (cmd == "exit") {
+            exit = 1;
+        }
+
+    } while (exit == 0);
     return 0;
 }
