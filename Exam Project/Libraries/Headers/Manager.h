@@ -126,7 +126,7 @@ template <typename AccountType>
 void Manager::addAccount(const AccountType &account_to_add)
 {
   size_t pos=_graph.find(account_to_add.getID());
-  if (pos!=_graph.nodes())
+  if (pos!=_graph.nodesNumber())
   {
     return; //L'ID esiste già!
   }
@@ -186,7 +186,7 @@ void Manager::replaceAccount (const string &ID_to_replace, const AccountType &ne
   size_t pos=0;
   
   pos=_graph.find(new_account.getID());
-  if (pos!=_graph.nodes())
+  if (pos!=_graph.nodesNumber())
   {
     return; //L'ID esiste già!
   }
