@@ -46,7 +46,7 @@ public:
   
   
   //Static functions
-  static bool IDValid(const std::string &id);       //Controlla la validità di un ID
+  static bool IDValid(const std::string &ID);       //Controlla la validità di un ID
   static bool typeValid(char type);                 //Controlla la validità di un tipo
   static bool nameValid(const std::string &name);   //Controlla la validità di un nome (o cognome)
 

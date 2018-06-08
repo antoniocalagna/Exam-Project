@@ -70,12 +70,12 @@ void Account::operator=(const Account &to_be_assigned) {
   this->_subscription = to_be_assigned._subscription;
 }
 
-bool Account::IDValid(const std::string &id) {
-  size_t size = id.size();
-  if (size < 3 || size > 20) return false;                          //Limiti sulle dimensioni (per "convenzione")
-  //Scorri l'ID e controlla che sia puramente alfanumerico e che contenga al massimo underscore
+bool Account::IDValid(const std::string &ID) {
+  size_t size = ID.size();
+  if (size < 3 || size > 20) return false;                      //Limiti sulle dimensioni (per "convenzione")
+    //Scorri l'ID e controlla che sia puramente alfanumerico e che contenga al massimo underscore
   for (int i = 0; i < size; i++) {
-    if (!isalnum(id[i]) && id[i] != '_')
+    if (!isalnum(ID[i]) && ID[i] != '_')
       return false;
   }
   return true;

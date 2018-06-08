@@ -10,7 +10,6 @@
 
 Group::Group()
 {
-  _n_members=0;
   _legal_location="blank";
   _type_of_activity="blank";
   _type=group_type;
@@ -23,7 +22,6 @@ Group::Group(const string &name, const string &ID, const string &legal_loc, cons
   _ID=ID;
   _legal_location=legal_loc;
   _type_of_activity=type_activity;
-  _n_members=num;
   _subscription=subscription;
   _inception=inception;
   _type=group_type;
@@ -32,11 +30,6 @@ Group::Group(const string &name, const string &ID, const string &legal_loc, cons
 Group::Group(const Group &to_copy)
 {
   *this=to_copy;
-}
-
-void Group::setNumber(const int &number_to_set)
-{
-  _n_members=number_to_set;
 }
 
 void Group::setLegalLocation(const std::string &location_to_set)
@@ -52,11 +45,6 @@ void Group::setTypeOfActivity(const std::string &type_to_set)
 void Group::setInception(const Date &date_to_set)
 {
   _inception=date_to_set;
-}
-
-int Group::getNumOfMembers() const
-{
-  return _n_members;
 }
 
 string Group::getLegalLocation() const
@@ -81,7 +69,6 @@ void Group::operator=(const Group &to_be_assigned)
   //this -> _type = to_be_assigned._type; superflua
   this -> _subscription = to_be_assigned._subscription;
   
-  this -> _n_members = to_be_assigned._n_members;
   this -> _legal_location = to_be_assigned._legal_location;
   this -> _type_of_activity = to_be_assigned._type_of_activity;
   this -> _inception = to_be_assigned._inception;

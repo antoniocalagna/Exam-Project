@@ -46,24 +46,39 @@ vector<Group> Manager::getGroups() const
   return _groups;
 }
 
+void Manager::deleteAccount (const string &ID)
+{
+  size_t pos=0;
+  
+  pos=FindPosbyID(_users, ID);
+  if (pos!=_users.size())
+  {
+    _users.erase(_users.begin()+pos);
+  }
+  
+  pos=FindPosbyID(_companies, ID);
+  if (pos!=_companies.size())
+  {
+    _companies.erase(_companies.begin()+pos);
+  }
+  
+  pos=FindPosbyID(_groups, ID);
+  if (pos!=_groups.size())
+  {
+    _groups.erase(_groups.begin()+pos);
+  }
+  
+  if (pos==_groups.size())
+  {
+    return;
+  }
+  
+  _graph.popNode(ID);
+}
+
 void Manager::deleteRelationship(const std::string &root, const std::string &target)
 {
   _graph.setEdge(root, target, _graph.no_edge);
-}
-
-void Manager::modifyUserAtPos(const unsigned int &i, const User &modified_user)
-{
-  _users[i]=modified_user;
-}
-
-void Manager::modifyCompanyAtPos (const unsigned int &i, const Company &modified_company)
-{
-  _companies[i]=modified_company;
-}
-
-void Manager::modifyGroupAtPos (const unsigned int &i, const Group &modified_group)
-{
-  _groups[i]=modified_group;
 }
 
 vector<Account> Manager::getAllAccounts() const
@@ -125,44 +140,4 @@ void Manager::_setNodes()
   {
     _graph.addNode(it_g->getID());
   }
-}
-
-void Manager::_deleteNode(const std::string &ID_to_delete)
-{
-  _graph.popNode(ID_to_delete);
-}
-
-size_t Manager::_findNodePos(const std::string &ID_to_find)
-{
-  return _graph.find(ID_to_find);
-}
-
-void Manager::deleteAccount (const string &ID)
-{
-  size_t pos=0;
-  
-  pos=FindPosbyID(_users, ID);
-  if (pos!=_users.size())
-  {
-    _users.erase(_users.begin()+pos);
-  }
-  
-  pos=FindPosbyID(_companies, ID);
-  if (pos!=_companies.size())
-  {
-    _companies.erase(_companies.begin()+pos);
-  }
-  
-  pos=FindPosbyID(_groups, ID);
-  if (pos!=_groups.size())
-  {
-    _groups.erase(_groups.begin()+pos);
-  }
-  
-  if (pos==_groups.size())
-  {
-    return;
-  }
-  
-  _graph.popNode(ID);
 }
