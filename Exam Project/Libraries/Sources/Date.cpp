@@ -20,7 +20,12 @@ Date::Date (const int &d, const int &m, const int &y)
   _day=d;
   _month=m;
   _year=y;
-  CorrectValues();
+  correctValues();
+}
+
+Date::Date (const string &date_to_set)
+{
+  acquireDateByString(date_to_set);
 }
 
 Date::Date (const Date &to_copy)
@@ -70,7 +75,13 @@ string Date::getDate()
   //Converto lo stream in una stringa e la ritorno.
 }
 
-void Date::CorrectValues()
+bool Date::CheckDate (const string &date_to_check)
+{
+  Date tmp (date_to_check);
+  return tmp._isValid();
+}
+
+void Date::correctValues()
 {
   while (!_isValid())
   {
@@ -98,7 +109,7 @@ void Date::CorrectValues()
   
 }
 
-void Date::SetCurrentDate()
+void Date::setCurrentDate()
 {
   //Definisco le variabili di tipo "tempo" e la struttura richiesta da ctime.h
   time_t rawtime;
@@ -125,7 +136,7 @@ int Date::yearsFrom(const Date &d) const
   return d._year-_year;
 }
 
-void Date::Acquire(string s)
+void Date::acquireDateByString(string s)
 {
   //La funzione acquisisce una data da una stringa formattata nel seguente modo: dd/mm/yyyy
   int d_tmp,m_tmp,y_tmp;
@@ -164,7 +175,7 @@ Date Date::operator+(const Date &to_be_added)
   output._month = this -> _month + to_be_added._month;
   output._year = this -> _year + to_be_added._year;
   
-  output.CorrectValues();
+  output.correctValues();
   
   return output;
 }
@@ -173,7 +184,7 @@ Date Date::operator+(const Date &to_be_added)
 const Date& Date::operator++()
 {
   _day++;
-  this -> CorrectValues();
+  this -> correctValues();
   return *this; //Ritorno un nuovo oggetto copia del precedente
 }
 

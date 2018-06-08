@@ -17,16 +17,14 @@
 
 using namespace std;
 
-//Copio la classe fornita dall'esercizio e aggiungo gli overloading degli operatori che ritengo necessari.
-
 class Date
 {
 public:
-  
   // Dafault Constructor, set the date to the actual date
   Date();
-  // Constructor, pass the date in the form of dd,mm,yyyy
+  // Constructor, pass the date in the form of dd,mm,yyyy or a string formatted this way.
   Date(const int &d, const int &m, const int &y);
+  Date(const string &date_to_set);
   // Copy Constructor
   Date(const Date &to_copy);
   //Destructor
@@ -42,15 +40,17 @@ public:
   void setDay(const int &d);
   void setMonth(const int &m);
   void setYear(const int &y);
+  void setCurrentDate();
+  
+  //Static functions
+  static bool CheckDate (const string &date_to_check);
   
   // Returns the year from the date d, if d it not passed, it returns the year from now.
   // Useful to compute the age of a person, where this is the person’s birth date
   int yearsFrom(const Date &d) const;
   // Sets the private attribute _date (the date as a string in the form dd/mm/yyyy)
-  void Acquire(string s);
-  //Sets all attributes to actual time.
-  void SetCurrentDate();
-  void CorrectValues ();
+  void acquireDateByString(string s);
+  void correctValues();
   
   //Overloading operators:
   
@@ -65,10 +65,7 @@ public:
   bool operator>(const Date &is_smaller);
   bool operator<(const Date &is_greater);
   
-  
-  
 private:
-  
   bool _isValid() const;
   
   int _year;

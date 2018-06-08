@@ -23,13 +23,11 @@ public:
   ~Group()=default;
   
   //Setters
-  void setNumber (const int &number_to_set);
   void setLegalLocation (const string &location_to_set);
   void setTypeOfActivity (const string &type_to_set);
   void setInception (const Date &date_to_set);
   
   //Getters
-  int getNumOfMembers() const;
   string getLegalLocation() const;
   string getTypeOfActivity() const;
   Date getInception() const;
@@ -40,7 +38,6 @@ public:
   
 private:
   
-  int _n_members;
   string _legal_location;
   string _type_of_activity;
   Date _inception;

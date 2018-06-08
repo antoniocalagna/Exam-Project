@@ -32,7 +32,7 @@ public:
   ~Graph() = default;
   
   /**Getters */
-  std::size_t nodes() const;                                                  //Numero di nodi
+  std::size_t nodesNumber() const;                                                  //Numero di nodi
   std::size_t degree() const;                                                 //Numero di archi
   std::size_t degree(const node_T &node) const;                               //Grado complessivo di un nodo
   std::size_t inDegree(const node_T &node) const;                             //Grado input
@@ -46,6 +46,7 @@ public:
   /**General*/
   void clear();
   std::size_t find(const node_T &node) const;   //Ritorna la posizione di un nodo
+  size_t size() const;  //Ritorna la dimensione del vettore dei nodi
   void addNode(const node_T &new_node);         //Aggiungi un nodo
   void popNode(const node_T &to_erase);         //Rimuovi un nodo
   //Imposta il valore di un arco UNIDIREZIONALE
@@ -82,7 +83,7 @@ Graph<node_T, edge_T>::Graph(const Graph<node_T, edge_T> &to_copy) {
  */
 
 template<typename node_T, typename edge_T>
-std::size_t Graph<node_T, edge_T>::nodes() const {
+std::size_t Graph<node_T, edge_T>::nodesNumber() const {
   return _nodes.size();
 }
 
