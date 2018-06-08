@@ -29,6 +29,9 @@ int main_di_clara() {
                     << endl
                     << "get name <user_id>\nget surname <user_id>\nget gender <user_id>\nget birth <user_id>\nget address <user_id>\nget id <user_id>\nget subscription <user_id>\n"
                     << endl;
+            cout << "new account user\n";
+            cout << "delete <id>\n"
+                 << endl;
 
             cout << "Groups:" << endl;
             cout
@@ -36,6 +39,9 @@ int main_di_clara() {
                     << endl
                     << "get name <group_id>\nget n_members <group_id>\nget location <group_id>\nget type_activity <group_id>\nget inception <group_id>\nget id <group_id>\nget subscription <group_id>\n"
                     << endl;
+            cout << "new account group\n";
+            cout << "delete <id>\n"
+                 << endl;
 
             cout << "Companies:" << endl;
             cout
@@ -43,7 +49,9 @@ int main_di_clara() {
                     << endl
                     << "get name <company_id>\nget finantial_location <company_id>\nget operative_location <company_id>\nget products <company_id>\nget inception <company_id>\nget id <company_id>\nget subscription <company_id>\n"
                     << endl;
-            cout << "delete <id>"<<endl; //forse potrebbe sembrare che questa funzione permetta di eliminare solo l'id quando invece elimina tutto l'account
+            cout << "new account company\n";
+            cout << "delete <id>\n"
+                 << endl;
             cout << ">";
 
             getline(cin, input);
@@ -170,9 +178,44 @@ int main_di_clara() {
                 //o forse lo fa l'onnisciente Manager
 
             }
+            /*else
+             * {dai un messaggio di errore}*/
+        }
+        if (cmd == "new") {
+            string what1, what2;
+            command >> what1 >> what2;
+            if (what1 == "") {
+                cout << "Error! Check the numbers of parameters you have to insert." << endl;
+            } else {
+
+                if (what1 == "account") {
+
+                    if (what2 == "") {
+                        cout << "Error! Check the numbers of parameters you have to insert." << endl;
+                    } else {
+                        if (what2 == "user") {
+
+                        }
+                        if (what2 == "group") {
+
+                        }
+                        if (what2 == "company") {
+
+                        }
+                    }
+                }
+                if (what1 == "relation") {
+
+                }
+                if (what1 == "post") {
+
+                }
+
+            }
+
         }
 
-
+        //INIZIARE A GUARDARE LE RELAZIONI
         if (cmd == "exit") {
             exit = 1;
         }
