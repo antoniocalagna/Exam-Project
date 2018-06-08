@@ -43,24 +43,20 @@ public:
   vector<Group> getGroups() const;
   
   //Functions
-  void addUser (const User &user_to_add);
-  void addCompany (const Company &company_to_add);
-  void addGroup (const Group &group_to_add);
-  void addNode (const string &ID_to_add);
+  template <typename AccountType>
+  void addAccount (const AccountType &account_to_add);
   
-  void delUserAtPos (const unsigned int &i);
-  void delCompanyAtPos (const unsigned int &i);
-  void delGroupAtPos (const unsigned int &i);
-  void deleteEdge (const string &ID_to_modify, const string &relationship_to_remove);
+  void deleteAccount (const string &ID);
+  void deleteRelationship (const string &root, const string &target);
   
   void modifyUserAtPos (const unsigned int &i, const User &modified_user);
   void modifyCompanyAtPos (const unsigned int &i, const Company &modified_company);
   void modifyGroupAtPos (const unsigned int &i, const Group &modified_group);
   
-  User getUserByPos (const unsigned int &i) const;
-  Company getCompanyByPos (const unsigned int &i) const;
-  Group getGroupByPos (const unsigned int &i) const;
   vector<Account> getAllAccounts() const;
+  
+  template <typename AccountType>
+  AccountType getAccount (const string &ID);
   
   void addDirectedRelationship (const string &ID_start, const string &ID_target, const string &relationship);
   
@@ -81,4 +77,130 @@ private:
   
 };
 
+template <typename AccountType>
+size_t FindPosbyID (const vector<AccountType> &v, const string &ID)
+{
+  //Ricerchiamo l'id richiesto all'interno del vettore (opportunamente ordinato)
+  
+  
+  size_t a = 0, b = v.size() - 1;  //Estremi di ricerca
+  size_t m;
+  
+  while (a < b)
+  {
+    m = (a + b) / 2;  //Dividiamo l'intervallo a metà
+    
+    if (v[a].getID() == ID) {
+      return a;
+    }
+    else if (v[b].getID() == ID) {
+      return b;
+    }
+    
+    if(v[m].getID() == ID)
+    {
+      //Abbiamo trovato l'elemento
+      return m;
+    }
+    
+    //L'elemento non è stato trovato
+    else if(v[m].getID() < ID)
+    {
+      //Abbiamo scelto un elemento che si trova prima di quello ricercato. Il nuovo intervallo è la seconda metà
+      a = m;
+    }
+    else
+    {
+      //L'elemento ricercato si trova prima del punto medio (v[m] > id). L'intervallo è la prima metà
+      b = m;
+    }
+    a++;
+    b--;
+  }
+  /*
+   * Arrivati a questo punto, l'intervallo è stato suddiviso così tante volte che a = b oppure a = b-1.
+   * L'elemento non era presente.
+   */
+  return v.size();
+}
+
+template <typename AccountType>
+void Manager::addAccount(const AccountType &account_to_add)
+{
+  if (account_to_add.getType()==Account::user_type)
+  {
+    insert_sorted(_users, account_to_add);
+  }
+  else if (account_to_add.getType()==Account::company_type)
+  {
+    insert_sorted(_companies, account_to_add);
+  }
+  else if (account_to_add.getType()==Account::group_type)
+  {
+    insert_sorted(_groups, account_to_add);
+  }
+  else
+    return;
+  
+  _graph.addNode(account_to_add.getID());
+}
+
+void Manager::deleteAccount (const string &ID)
+{
+  size_t pos=0;
+  
+  pos=FindPosbyID(_users, ID);
+  if (pos!=_users.size())
+  {
+    _users.erase(_users.begin()+pos);
+  }
+  
+  pos=FindPosbyID(_companies, ID);
+  if (pos!=_companies.size())
+  {
+    _companies.erase(_companies.begin()+pos);
+  }
+  
+  pos=FindPosbyID(_groups, ID);
+  if (pos!=_groups.size())
+  {
+    _groups.erase(_groups.begin()+pos);
+  }
+  
+  if (pos==_groups.size())
+  {
+    return;
+  }
+  
+  _graph.popNode(ID);
+}
+
+template <typename AccountType>
+AccountType Manager::getAccount(const std::string &ID)
+{
+  size_t pos=0;
+  
+  pos=FindPosbyID(_users, ID);
+  if (pos!=_users.size())
+  {
+    return _users[pos];
+  }
+  
+  pos=FindPosbyID(_companies, ID);
+  if (pos!=_companies.size())
+  {
+    return _companies[pos];
+  }
+  
+  pos=FindPosbyID(_groups, ID);
+  if (pos!=_groups.size())
+  {
+    return _groups[pos];
+  }
+  
+  if (pos==_groups.size())
+  {
+    return AccountType();
+  }
+}
 #endif /* Manager_h */

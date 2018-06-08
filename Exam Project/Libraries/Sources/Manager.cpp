@@ -46,44 +46,9 @@ vector<Group> Manager::getGroups() const
   return _groups;
 }
 
-void Manager::addUser(const User &user_to_add)
+void Manager::deleteRelationship(const std::string &root, const std::string &target)
 {
-  insert_sorted(_users, user_to_add);
-}
-
-void Manager::addCompany(const Company &company_to_add)
-{
-  insert_sorted(_companies, company_to_add);
-}
-
-void Manager::addGroup(const Group &group_to_add)
-{
-  insert_sorted(_groups, group_to_add);
-}
-
-void Manager::addNode(const std::string &ID_to_add)
-{
-  _graph.addNode(ID_to_add);
-}
-
-void Manager::delUserAtPos(const unsigned int &i)
-{
-  _users.erase(_users.begin()+i);
-}
-
-void Manager::delCompanyAtPos(const unsigned int &i)
-{
-  _companies.erase(_companies.begin()+i);
-}
-
-void Manager::delGroupAtPos(const unsigned int &i)
-{
-  _groups.erase(_groups.begin()+i);
-}
-
-void Manager::deleteEdge(const std::string &ID_to_modify, const std::string &relationship_to_remove)
-{
-  //NEED FUNCTION
+  _graph.setEdge(root, target, _graph.no_edge);
 }
 
 void Manager::modifyUserAtPos(const unsigned int &i, const User &modified_user)
@@ -99,21 +64,6 @@ void Manager::modifyCompanyAtPos (const unsigned int &i, const Company &modified
 void Manager::modifyGroupAtPos (const unsigned int &i, const Group &modified_group)
 {
   _groups[i]=modified_group;
-}
-
-User Manager::getUserByPos(const unsigned int &i) const
-{
-  return _users[i];
-}
-
-Company Manager::getCompanyByPos(const unsigned int &i) const
-{
-  return _companies[i];
-}
-
-Group Manager::getGroupByPos(const unsigned int &i) const
-{
-  return _groups[i];
 }
 
 vector<Account> Manager::getAllAccounts() const
@@ -186,4 +136,5 @@ size_t Manager::_findNodePos(const std::string &ID_to_find)
 {
   return _graph.find(ID_to_find);
 }
+
 
