@@ -25,7 +25,7 @@ set(                                                #Qui si fa una sorta di asse
         ${HDR}/Account\ Hierarchy/Company.h     ${SRC}/Account\ Hierarchy/Company.cpp
         ${HDR}/Account\ Hierarchy/Group.h       ${SRC}/Account\ Hierarchy/Group.cpp
         ${HDR}/Account\ Hierarchy/User.h        ${SRC}/Account\ Hierarchy/User.cpp
-        )
+        main_di_clara.cpp)
 
 
 add_executable(Social_Network main.cpp ${SOURCE_FILES})     #I .cpp vengono linkati "in automatico" qui
