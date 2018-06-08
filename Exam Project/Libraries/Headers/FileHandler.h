@@ -11,11 +11,11 @@
 
 namespace fh { //File handler;
 //Traduce il codice errore nella stringa corrispondente
-std::string error(int code);
+std::string error(unsigned int code);
 
 std::string readField(const std::string &field_name, const std::string &raw_str);
 
-int checkAccountsFile(std::ifstream &f);
+unsigned int checkAccountsFile(std::ifstream &f);
 
 } //Namespace fh
 

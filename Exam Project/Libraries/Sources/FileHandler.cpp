@@ -5,7 +5,7 @@
 #include "FileHandler.h"
 #include <iostream>
 
-std::string fh::error(int code) {
+std::string fh::error(unsigned int code) {
   std::string err;
   switch (code) {
     //Format or integrity problems
@@ -44,7 +44,7 @@ std::string fh::readField(const std::string &field_name, const std::string &raw_
   return raw_str.substr(field_name.size() + 2, raw_str.size() - (field_name.size() + 3));
 }
 
-int fh::checkAccountsFile(std::ifstream &f) {
+unsigned int fh::checkAccountsFile(std::ifstream &f) {
   //Controlla se il file è aperto
   if (!f.is_open()) {
     return 0xFFFFFFFF;
