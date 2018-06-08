@@ -79,6 +79,8 @@ Group Manager::getGroup(const std::string &ID) const
     return Group();
 }
 
+//addAccount polimorfica controlla che l'ID non sia già esistente e poi lo aggiunge ordinatamente nel vettore opportuno
+
 bool Manager::addAccount(const User &account_to_add)
 {
   if (!_exist_as_node(account_to_add.getID()))
@@ -143,6 +145,8 @@ void Manager::deleteRelationship(const std::string &root, const std::string &tar
 {
   _graph.setEdge(root, target, _graph.no_edge);
 }
+
+//replaceAccount polimorfica controlla che il nuovo ID non sia già esistente, cerca la posizione dell'ID da sostituire e procede.
 
 bool Manager::replaceAccount(const std::string &ID_to_replace, const User &new_account)
 {
@@ -210,7 +214,7 @@ vector<Account> Manager::getAllAccounts() const
     insert_sorted(all, *it_g);
   }
   
-  return all;
+  return all; //vettore binary-sorted
 }
 
 void Manager::addDirectedRelationship(const string &ID_start, const string &ID_target, const string &relationship)
@@ -227,6 +231,8 @@ vector<string> Manager::getListConnection(const std::string &starting_ID, const 
 {
   return _graph.branches(starting_ID, relationship);
 }
+
+//PRIVATE METHODS
 
 void Manager::_setNodes()
 {
@@ -254,7 +260,7 @@ bool Manager::_exist_as_node(const string &ID_to_check)
   size_t pos=_graph.find(ID_to_check);
   if (pos!=_graph.nodesNumber())
   {
-    return false; //L'ID esiste già!
+    return false; //ID already exists!
   }
   else
     return true;
