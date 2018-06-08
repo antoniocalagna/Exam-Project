@@ -13,19 +13,18 @@
 #include "Date.h"
 #include "Clock.h"
 
-class Account
-{
+class Account {
 public:
   
   //Constructors and Destructor
   Account();
-  ~Account()=default;
+  ~Account() = default;
   
   //Setters
-  void setName (const string &name_to_set);
-  void setID (const string &id_to_set);
-  void setType (const char &type_to_set);
-  void setSubscription (const Date &date_to_set);
+  void setName(const string &name_to_set);
+  void setID(const string &id_to_set);
+  void setType(const char &type_to_set);
+  void setSubscription(const Date &date_to_set);
   
   //Getters
   string getName() const;
@@ -45,6 +44,11 @@ public:
   static const char company_type = 'C';
   static const char group_type = 'G';
   
+  //Static functions
+  static bool IDValid(const std::string &id);       //Controlla la validità di un ID
+  static bool typeValid(char type);                 //Controlla la validità di un tipo
+  static bool nameValid(const std::string &name);   //Controlla la validità di un nome (o cognome)
+
 protected:
   
   string _name;
@@ -53,6 +57,5 @@ protected:
   Date _subscription;
   
 };
-
 
 #endif /* Account_h */

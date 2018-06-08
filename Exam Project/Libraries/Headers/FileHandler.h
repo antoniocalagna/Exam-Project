@@ -7,11 +7,13 @@
 
 #include <string>
 #include <fstream>
+#include "Account.h"
 
-namespace fh { //File handler
+namespace fh { //File handler;
+//Traduce il codice errore nella stringa corrispondente
+std::string error(int code);
 
-//Ritorna il contenuto di una stringa
-std::string getScopeContent(const std::string &scope);
+std::string readField(const std::string &field_name, const std::string &raw_str);
 
 int checkAccountsFile(std::ifstream &f);
 
