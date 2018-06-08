@@ -13,6 +13,7 @@
 #include "Company.h"
 #include "Group.h"
 #include "Graph.hpp"
+#include "Post.h"
 #include "TemplateFunctions.hpp"
 
 #define MAX 6
@@ -20,8 +21,20 @@
 namespace relation
 {
   const string friendship = "friend";
+  const string knowings = "acquaintances";
+  
   const string fatherhood = "father";
+  const string motherhood = "mother";
+  const string unclehood = "uncle/aunt";
+  const string grandpas = "granddad/granny";
   const string partner = "partner";
+  const string engaged = "fiance";
+  
+  //const string employer = "boss";
+  const string employee = "hired";
+  const string co_worker = "subsidiaries";
+  
+  const string membership = "member";
 }
 
 namespace gender
@@ -52,7 +65,7 @@ public:
   Company getCompany (const string &ID) const;
   Group getGroup (const string &ID) const;
   
-  //Functions
+  //Management Functions
   bool addAccount(const User &account_to_add);
   bool addAccount(const Company &account_to_add);
   bool addAccount(const Group &account_to_add);
@@ -64,7 +77,6 @@ public:
   bool replaceAccount (const string &ID_to_replace, const Company &new_account);
   bool replaceAccount (const string &ID_to_replace, const Group &new_account);
   
-  
   vector<Account> getAllAccounts() const;
   
   void addDirectedRelationship (const string &ID_start, const string &ID_target, const string &relationship);
@@ -73,6 +85,29 @@ public:
   
   vector<string> getListConnection (const string &starting_ID, const string &relationship);
   
+  //Statistics Functions
+  
+  size_t NumAccounts() const;
+  size_t NumUsers() const;
+  size_t NumCompanies() const;
+  size_t NumGroups() const;
+  
+  size_t NumFriends (const string &whose_ID) const;
+  size_t NumRelatives (const string &whose_ID) const;
+  size_t NumEmployees (const string &company_employer) const;
+  size_t NumSubsidiaries (const string &company_main) const;
+  size_t NumMembers (const string &group) const;
+  size_t NumBornAfter (const Date &start_date) const;
+  
+  string MostEmployingCompany() const;
+  string MostEmployingPartnership() const;
+  string UserWithMostFriends() const;
+  string UserWithMostAcquaintances() const;
+  
+  float UsersMiddleAge() const;
+  
+  Post MostLikedPost() const;
+  Post MostDislikedPost() const;
   
 private:
   vector<User> _users;

@@ -266,3 +266,160 @@ bool Manager::_exist_as_node(const string &ID_to_check)
     return true;
 }
 
+//STATISTICS
+
+size_t Manager::NumAccounts() const
+{
+  return _graph.nodesNumber();
+}
+
+size_t Manager::NumUsers() const
+{
+  return _users.size();
+}
+
+size_t Manager::NumCompanies() const
+{
+  return _companies.size();
+}
+
+size_t Manager::NumGroups() const
+{
+  return _groups.size();
+}
+
+size_t Manager::NumFriends(const std::string &whose_ID) const
+{
+  if (FindPosbyID(_users, whose_ID)==_users.size())
+    return -1; //Controllo che sia un utente.
+  
+  return _graph.branches(whose_ID, relation::friendship).size();
+}
+
+size_t Manager::NumRelatives(const std::string &whose_ID) const
+{
+  if (FindPosbyID(_users, whose_ID)==_users.size())
+    return -1; //Controllo che sia un utente.
+  
+  size_t count=0;
+  count = _graph.branches(whose_ID, relation::fatherhood).size();
+  count=count+_graph.branches(whose_ID, relation::motherhood).size();
+  count=count+_graph.branches(whose_ID, relation::unclehood).size();
+  count=count+_graph.branches(whose_ID, relation::grandpas).size();
+  return count;
+}
+
+size_t Manager::NumEmployees(const std::string &company_employer) const
+{
+  if (FindPosbyID(_companies, company_employer)==_companies.size())
+    return -1; //Controllo che sia un'azienda.
+  
+  return _graph.branches(company_employer, relation::employee).size();
+}
+
+size_t Manager::NumSubsidiaries(const std::string &company_main) const
+{
+  if (FindPosbyID(_companies, company_main)==_companies.size())
+    return -1; //Controllo che sia un'azienda.
+  
+  return _graph.branches(company_main, relation::co_worker).size();
+}
+
+size_t Manager::NumMembers(const std::string &group) const
+{
+  if (FindPosbyID(_groups, group)==_groups.size())
+    return -1; //Controllo che sia un'azienda.
+  
+  return _graph.branches(group, relation::membership).size();
+}
+
+size_t Manager::NumBornAfter(const Date &start_date) const
+{
+  if(!Date::CheckDate(start_date))
+    return -1;
+  
+  int count=0;
+  for (auto it=_users.begin(); it!=_users.end(); it++)
+  {
+    if (it->getBirth()>start_date)
+      count++;
+  }
+  return count;
+}
+
+string Manager::MostEmployingCompany() const
+{
+  Company best;
+  size_t num_members=0;
+  for (auto it=_companies.begin(); it!=_companies.end(); it++)
+  {
+    if((_graph.branches(it->getID(), relation::employee).size())>num_members)
+    {
+      best=*it;
+    }
+  }
+  return best.getID();
+}
+
+string Manager::MostEmployingPartnership() const
+{
+  Company best;
+  vector<string> subs;
+  size_t num_members=0, num_prev=0;
+  for (auto it=_companies.begin(); it!=_companies.end(); it++)
+  {
+    num_members=_graph.branches(it->getID(), relation::employee).size();
+    
+    subs=_graph.branches(it->getID(), relation::co_worker);
+    for (auto it2=subs.begin(); it2!=subs.end(); it++)
+    {
+      num_members=num_members+_graph.branches(*it2, relation::employee).size();
+    }
+    
+    if (num_members>num_prev)
+    {
+      best=*it;
+    }
+  }
+  return best.getID();
+}
+
+string Manager::UserWithMostFriends() const
+{
+  User best;
+  size_t num_friends=0;
+  for (auto it=_users.begin(); it!=_users.end(); it++)
+  {
+    if ((_graph.branches(it->getID(), relation::friendship).size())>num_friends)
+    {
+      best=*it;
+    }
+  }
+  return best.getID();
+}
+
+string Manager::UserWithMostAcquaintances() const
+{
+  User best;
+  size_t num_acquaintances=0;
+  for (auto it=_users.begin(); it!=_users.end(); it++)
+  {
+    if ((_graph.branches(it->getID(), relation::knowings).size())>num_acquaintances)
+    {
+      best=*it;
+    }
+  }
+  return best.getID();
+}
+
+float Manager::UsersMiddleAge() const
+{
+  float sum=0;
+  Date now = Date::Now();
+  for (auto it=_users.begin(); it!=_users.end(); it++)
+  {
+    Date tmp = it->getBirth();
+    sum=sum+tmp.yearsFrom(now);
+  }
+  return (float)sum/(_users.size());
+}

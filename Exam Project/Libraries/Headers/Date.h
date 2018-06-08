@@ -43,7 +43,9 @@ public:
   void setCurrentDate();
   
   //Static functions
+  static bool CheckDate (const Date &date_to_check);
   static bool CheckDate (const string &date_to_check);
+  static Date Now();
   
   // Returns the year from the date d, if d it not passed, it returns the year from now.
   // Useful to compute the age of a person, where this is the person’s birth date

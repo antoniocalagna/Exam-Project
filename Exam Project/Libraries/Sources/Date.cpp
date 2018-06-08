@@ -75,10 +75,22 @@ string Date::getDate()
   //Converto lo stream in una stringa e la ritorno.
 }
 
+bool Date::CheckDate(const Date &date_to_check)
+{
+  return date_to_check._isValid();
+}
+
 bool Date::CheckDate (const string &date_to_check)
 {
   Date tmp (date_to_check);
   return tmp._isValid();
+}
+
+Date Date::Now()
+{
+  Date tmp;
+  tmp.setCurrentDate();
+  return tmp;
 }
 
 void Date::correctValues()
@@ -106,7 +118,6 @@ void Date::correctValues()
       _month++;
     }
   }
-  
 }
 
 void Date::setCurrentDate()
@@ -119,12 +130,12 @@ void Date::setCurrentDate()
   //La procedura per il calcolo di data (ed eventualmente ora) al momento dell'esecuzione prevede i seguenti passaggi:
   time (&rawtime); //Restituisce il tempo in secondi a partire da una data di default
   timeinfo = localtime ( &rawtime ); //Strutturizza quel tempo
-  strftime(buffer, 10, "%x", timeinfo); //Estraggo da tale struttura le informazioni desiderate convertendole in un vettore di caratteri. Lo specificatore "%x" determina il tipo di informazione, in rete sono reperibili tutti gli specificatori.
+  strftime(buffer, 10, "%F", timeinfo); //Estraggo da tale struttura le informazioni desiderate convertendole in un vettore di caratteri. Lo specificatore "%x" determina il tipo di informazione, in rete sono reperibili tutti gli specificatori.
   string s(&buffer[0]); //Tale costruttore stringa converte il vettore di caratteri in una stringa C++
   
   // istringstream (s) >> _month >> _day >> _year; //Ho tentato con uno stream ad estrarre i singoli elementi della stringa ma non ha funzionato: BAD INPUT
   
-  sscanf(buffer, "%d/%d/%d", &_month, &_day, &_year); //Analisi formattata dell'array all'antica.
+  sscanf(buffer, "%d-%d-%d", &_year, &_month, &_day); //Analisi formattata dell'array all'antica.
   
 }
 
@@ -197,7 +208,7 @@ const Date Date::operator++(int)
 
 bool Date::operator==(const Date &to_be_compared)
 {
-  return ((_day == to_be_compared._day) && (_month == to_be_compared._day) && (_year == to_be_compared._year));
+  return ((_day == to_be_compared._day) && (_month == to_be_compared._month) && (_year == to_be_compared._year));
 }
 
 bool Date::operator!=(const Date &to_be_compared)
@@ -246,3 +257,4 @@ bool Date::_isValid() const
   
   return true;
 }
+

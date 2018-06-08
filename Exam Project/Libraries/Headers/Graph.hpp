@@ -55,7 +55,7 @@ public:
   void bsetEdge(const node_T &starting_node, const node_T &target_node, const edge_T &new_value);
   
   //Ritorna una lista di nodi connessi al nodo di partenza da un arco del valore richiesto
-  std::vector<node_T> branches(const node_T &starting_node, const edge_T &edge);
+  std::vector<node_T> branches(const node_T &starting_node, const edge_T &edge) const;
   
   /**Operators */
   node_T &operator[](unsigned int pos);
@@ -225,7 +225,7 @@ void Graph<node_T, edge_T>::bsetEdge(const node_T &starting_node, const node_T &
 }
 
 template<typename node_T, typename edge_T>
-std::vector<node_T> Graph<node_T, edge_T>::branches(const node_T &starting_node, const edge_T &edge) {
+std::vector<node_T> Graph<node_T, edge_T>::branches(const node_T &starting_node, const edge_T &edge) const {
   //Ritorna una lista di nodi connessi allo starting_node tramite un arco del valore richiesto
   std::vector<node_T> branches;
   
