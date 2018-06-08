@@ -46,7 +46,6 @@ public:
   /**General*/
   void clear();
   std::size_t find(const node_T &node) const;   //Ritorna la posizione di un nodo
-  size_t size() const;  //Ritorna la dimensione del vettore dei nodi
   void addNode(const node_T &new_node);         //Aggiungi un nodo
   void popNode(const node_T &to_erase);         //Rimuovi un nodo
   //Imposta il valore di un arco UNIDIREZIONALE
@@ -182,12 +181,6 @@ std::size_t Graph<node_T, edge_T>::find(const node_T &node) const {
    */
   //Ricerca il nodo e ritorna la distanza del suo iteratore dal _nodes.begin()
   return (std::size_t) std::distance(_nodes.begin(), std::find(_nodes.begin(), _nodes.end(), node));
-}
-
-template<typename node_T, typename edge_T>
-std::size_t Graph<node_T, edge_T>::size() const
-{
-  return (std::size_t) _nodes.size();
 }
 
 template<typename node_T, typename edge_T>
