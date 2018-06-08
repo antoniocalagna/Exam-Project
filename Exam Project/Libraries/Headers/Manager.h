@@ -60,8 +60,10 @@ public:
   void deleteAccount (const string &ID);
   void deleteRelationship (const string &root, const string &target);
   
-  template <typename AccountType>
-  void replaceAccount (const string &ID_to_replace, const AccountType &new_account);
+  bool replaceAccount (const string &ID_to_replace, const User &new_account);
+  bool replaceAccount (const string &ID_to_replace, const Company &new_account);
+  bool replaceAccount (const string &ID_to_replace, const Group &new_account);
+  
   
   vector<Account> getAllAccounts() const;
   
@@ -79,6 +81,7 @@ private:
   Graph<string, string> _graph;
   
   void _setNodes();
+  bool _exist_as_node();
 };
 
 template <typename AccountType>
@@ -123,34 +126,4 @@ size_t FindPosbyID (const vector<AccountType> &v, const string &ID)
   return v.size();
 }
 
-template <typename AccountType>
-void Manager::replaceAccount (const string &ID_to_replace, const AccountType &new_account)
-{
-  size_t pos=0;
-  
-  pos=_graph.find(new_account.getID());
-  if (pos!=_graph.nodesNumber())
-  {
-    return; //L'ID esiste già!
-  }
-  
-  pos=FindPosbyID(_users, ID_to_replace);
-  if (pos!=_users.size())
-  {
-    _users[pos]=new_account;
-    return;
-  }
-  
-  pos=FindPosbyID(_companies, ID_to_replace);
-  if (pos!=_companies.size())
-  {
-    _companies[pos]=new_account;
-  }
-  
-  pos=FindPosbyID(_groups, ID_to_replace);
-  if (pos!=_groups.size())
-  {
-    _groups[pos]=new_account;
-  }
-}
 #endif /* Manager_h */

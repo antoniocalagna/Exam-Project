@@ -153,6 +153,59 @@ void Manager::deleteRelationship(const std::string &root, const std::string &tar
   _graph.setEdge(root, target, _graph.no_edge);
 }
 
+bool Manager::replaceAccount(const std::string &ID_to_replace, const User &new_account)
+{
+  size_t pos=_graph.find(new_account.getID());
+  if (pos!=_graph.nodesNumber())
+  {
+    return false; //L'ID esiste già!
+  }
+  
+  pos=FindPosbyID(_users, ID_to_replace);
+  if (pos!=_users.size())
+  {
+    _users[pos]=new_account;
+    return true;
+  }
+  else
+    return false;
+}
+
+bool Manager::replaceAccount(const std::string &ID_to_replace, const Company &new_account)
+{
+  size_t pos=_graph.find(new_account.getID());
+  if (pos!=_graph.nodesNumber())
+  {
+    return false; //L'ID esiste già!
+  }
+  
+  pos=FindPosbyID(_companies, ID_to_replace);
+  if (pos!=_companies.size())
+  {
+    _companies[pos]=new_account;
+    return true;
+  }
+  else
+    return false;
+}
+
+bool Manager::replaceAccount(const std::string &ID_to_replace, const Group &new_account)
+{
+  size_t pos=_graph.find(new_account.getID());
+  if (pos!=_graph.nodesNumber())
+  {
+    return false; //L'ID esiste già!
+  }
+  
+  pos=FindPosbyID(_groups, ID_to_replace);
+  if (pos!=_groups.size())
+  {
+    _groups[pos]=new_account;
+    return true;
+  }
+  else
+    return false;
+}
 vector<Account> Manager::getAllAccounts() const
 {
   vector<Account> all;
