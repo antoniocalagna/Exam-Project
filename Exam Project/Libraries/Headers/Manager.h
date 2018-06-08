@@ -51,6 +51,7 @@ public:
   //Functions
   template <typename AccountType>
   void addAccount (const AccountType &account_to_add);
+  template <> void addAccount<User>(const User &account_to_add);
   
   void deleteAccount (const string &ID);
   void deleteRelationship (const string &root, const string &target);

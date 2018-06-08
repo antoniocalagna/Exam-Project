@@ -32,7 +32,7 @@ public:
   ~Graph() = default;
   
   /**Getters */
-  std::size_t nodes() const;                                                  //Numero di nodi
+  std::size_t nodesNumber() const;                                                  //Numero di nodi
   std::size_t degree() const;                                                 //Numero di archi
   std::size_t degree(const node_T &node) const;                               //Grado complessivo di un nodo
   std::size_t inDegree(const node_T &node) const;                             //Grado input
@@ -82,7 +82,7 @@ Graph<node_T, edge_T>::Graph(const Graph<node_T, edge_T> &to_copy) {
  */
 
 template<typename node_T, typename edge_T>
-std::size_t Graph<node_T, edge_T>::nodes() const {
+std::size_t Graph<node_T, edge_T>::nodesNumber() const {
   return _nodes.size();
 }
 
