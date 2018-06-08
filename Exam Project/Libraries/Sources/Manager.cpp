@@ -31,19 +31,91 @@ void Manager::setGroups(const vector<Group> &groups_to_set)
   _groups=groups_to_set;
 }
 
-vector<User> Manager::getUsers() const
+vector<User> Manager::getAllUsers() const
 {
   return _users;
 }
 
-vector<Company> Manager::getCompanies() const
+vector<Company> Manager::getAllCompanies() const
 {
   return _companies;
 }
 
-vector<Group> Manager::getGroups() const
+vector<Group> Manager::getAllGroups() const
 {
   return _groups;
+}
+
+User Manager::getUser(const std::string &ID) const
+{
+  size_t pos=FindPosbyID(_users, ID);
+  if (pos!=_users.size())
+  {
+    return _users[pos];
+  }
+  else
+    return User();
+}
+
+Company Manager::getCompany(const std::string &ID) const
+{
+  size_t pos=FindPosbyID(_companies, ID);
+  if (pos!=_companies.size())
+  {
+    return _companies[pos];
+  }
+  else
+    return Company();
+}
+
+Group Manager::getGroup(const std::string &ID) const
+{
+  size_t pos=FindPosbyID(_groups, ID);
+  if (pos!=_groups.size())
+  {
+    return _groups[pos];
+  }
+  else
+    return Group();
+}
+
+bool Manager::addAccount(const User &account_to_add)
+{
+  size_t pos=_graph.find(account_to_add.getID());
+  if (pos!=_graph.nodesNumber())
+  {
+    return false; //L'ID esiste già!
+  }
+  
+  insert_sorted<User, User>(_users, account_to_add);
+  _graph.addNode(account_to_add.getID());
+  return true;
+}
+
+bool Manager::addAccount(const Company &account_to_add)
+{
+  size_t pos=_graph.find(account_to_add.getID());
+  if (pos!=_graph.nodesNumber())
+  {
+    return false; //L'ID esiste già!
+  }
+  
+  insert_sorted<Company, Company>(_companies, account_to_add);
+  _graph.addNode(account_to_add.getID());
+  return true;
+}
+
+bool Manager::addAccount(const Group &account_to_add)
+{
+  size_t pos=_graph.find(account_to_add.getID());
+  if (pos!=_graph.nodesNumber())
+  {
+    return false; //L'ID esiste già!
+  }
+  
+  insert_sorted<Group, Group>(_groups, account_to_add);
+  _graph.addNode(account_to_add.getID());
+  return true;
 }
 
 void Manager::deleteAccount (const string &ID)
@@ -142,41 +214,4 @@ void Manager::_setNodes()
   }
 }
 
-bool Manager::addAccount(const User &account_to_add)
-{
-  size_t pos=_graph.find(account_to_add.getID());
-  if (pos!=_graph.nodesNumber())
-  {
-    return false; //L'ID esiste già!
-  }
-  
-  insert_sorted<User, User>(_users, account_to_add);
-  _graph.addNode(account_to_add.getID());
-  return true;
-}
 
-bool Manager::addAccount(const Company &account_to_add)
-{
-  size_t pos=_graph.find(account_to_add.getID());
-  if (pos!=_graph.nodesNumber())
-  {
-    return false; //L'ID esiste già!
-  }
-  
-  insert_sorted<Company, Company>(_companies, account_to_add);
-  _graph.addNode(account_to_add.getID());
-  return true;
-}
-
-bool Manager::addAccount(const Group &account_to_add)
-{
-  size_t pos=_graph.find(account_to_add.getID());
-  if (pos!=_graph.nodesNumber())
-  {
-    return false; //L'ID esiste già!
-  }
-  
-  insert_sorted<Group, Group>(_groups, account_to_add);
-  _graph.addNode(account_to_add.getID());
-  return true;
-}

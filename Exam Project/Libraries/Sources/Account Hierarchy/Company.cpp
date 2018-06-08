@@ -78,7 +78,7 @@ void Company::operator=(const Company &to_be_assigned)
 {
   this -> _name = to_be_assigned._name;
   this -> _ID = to_be_assigned._ID;
-  //this -> _type = to_be_assigned._type; superflua
+  this -> _type = to_be_assigned._type;
   this -> _subscription = to_be_assigned._subscription;
   
   this -> _financial_location = to_be_assigned._financial_location;

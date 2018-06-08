@@ -44,9 +44,13 @@ public:
   void setGroups (const vector<Group> &groups_to_set);
   
   //Getters
-  vector<User> getUsers() const;
-  vector<Company> getCompanies() const;
-  vector<Group> getGroups() const;
+  vector<User> getAllUsers() const;
+  vector<Company> getAllCompanies() const;
+  vector<Group> getAllGroups() const;
+  
+  User getUser (const string &ID) const;
+  Company getCompany (const string &ID) const;
+  Group getGroup (const string &ID) const;
   
   //Functions
   bool addAccount(const User &account_to_add);
@@ -58,9 +62,6 @@ public:
   
   template <typename AccountType>
   void replaceAccount (const string &ID_to_replace, const AccountType &new_account);
-  
-  template <typename AccountType>
-  AccountType getAccount (const string &ID);
   
   vector<Account> getAllAccounts() const;
   
@@ -120,35 +121,6 @@ size_t FindPosbyID (const vector<AccountType> &v, const string &ID)
    * L'elemento non era presente.
    */
   return v.size();
-}
-
-template <typename AccountType>
-AccountType Manager::getAccount(const std::string &ID)
-{
-  size_t pos=0;
-  
-  pos=FindPosbyID(_users, ID);
-  if (pos!=_users.size())
-  {
-    return _users[pos];
-  }
-  
-  pos=FindPosbyID(_companies, ID);
-  if (pos!=_companies.size())
-  {
-    return _companies[pos];
-  }
-  
-  pos=FindPosbyID(_groups, ID);
-  if (pos!=_groups.size())
-  {
-    return _groups[pos];
-  }
-  
-  if (pos==_groups.size())
-  {
-    return AccountType();
-  }
 }
 
 template <typename AccountType>
