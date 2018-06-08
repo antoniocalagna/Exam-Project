@@ -81,11 +81,8 @@ Group Manager::getGroup(const std::string &ID) const
 
 bool Manager::addAccount(const User &account_to_add)
 {
-  size_t pos=_graph.find(account_to_add.getID());
-  if (pos!=_graph.nodesNumber())
-  {
-    return false; //L'ID esiste già!
-  }
+  if (!_exist_as_node(account_to_add.getID()))
+    return false;
   
   insert_sorted<User, User>(_users, account_to_add);
   _graph.addNode(account_to_add.getID());
@@ -94,11 +91,8 @@ bool Manager::addAccount(const User &account_to_add)
 
 bool Manager::addAccount(const Company &account_to_add)
 {
-  size_t pos=_graph.find(account_to_add.getID());
-  if (pos!=_graph.nodesNumber())
-  {
-    return false; //L'ID esiste già!
-  }
+  if (!_exist_as_node(account_to_add.getID()))
+    return false;
   
   insert_sorted<Company, Company>(_companies, account_to_add);
   _graph.addNode(account_to_add.getID());
@@ -107,11 +101,8 @@ bool Manager::addAccount(const Company &account_to_add)
 
 bool Manager::addAccount(const Group &account_to_add)
 {
-  size_t pos=_graph.find(account_to_add.getID());
-  if (pos!=_graph.nodesNumber())
-  {
-    return false; //L'ID esiste già!
-  }
+  if (!_exist_as_node(account_to_add.getID()))
+    return false;
   
   insert_sorted<Group, Group>(_groups, account_to_add);
   _graph.addNode(account_to_add.getID());
@@ -155,13 +146,10 @@ void Manager::deleteRelationship(const std::string &root, const std::string &tar
 
 bool Manager::replaceAccount(const std::string &ID_to_replace, const User &new_account)
 {
-  size_t pos=_graph.find(new_account.getID());
-  if (pos!=_graph.nodesNumber())
-  {
-    return false; //L'ID esiste già!
-  }
+  if (!_exist_as_node(new_account.getID()))
+    return false;
   
-  pos=FindPosbyID(_users, ID_to_replace);
+  size_t pos=FindPosbyID(_users, ID_to_replace);
   if (pos!=_users.size())
   {
     _users[pos]=new_account;
@@ -173,13 +161,10 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const User &new_a
 
 bool Manager::replaceAccount(const std::string &ID_to_replace, const Company &new_account)
 {
-  size_t pos=_graph.find(new_account.getID());
-  if (pos!=_graph.nodesNumber())
-  {
-    return false; //L'ID esiste già!
-  }
+  if (!_exist_as_node(new_account.getID()))
+    return false;
   
-  pos=FindPosbyID(_companies, ID_to_replace);
+  size_t pos=FindPosbyID(_companies, ID_to_replace);
   if (pos!=_companies.size())
   {
     _companies[pos]=new_account;
@@ -191,13 +176,10 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const Company &ne
 
 bool Manager::replaceAccount(const std::string &ID_to_replace, const Group &new_account)
 {
-  size_t pos=_graph.find(new_account.getID());
-  if (pos!=_graph.nodesNumber())
-  {
-    return false; //L'ID esiste già!
-  }
+  if (!_exist_as_node(new_account.getID()))
+    return false;
   
-  pos=FindPosbyID(_groups, ID_to_replace);
+  size_t pos=FindPosbyID(_groups, ID_to_replace);
   if (pos!=_groups.size())
   {
     _groups[pos]=new_account;
@@ -267,4 +249,14 @@ void Manager::_setNodes()
   }
 }
 
+bool Manager::_exist_as_node(const string &ID_to_check)
+{
+  size_t pos=_graph.find(ID_to_check);
+  if (pos!=_graph.nodesNumber())
+  {
+    return false; //L'ID esiste già!
+  }
+  else
+    return true;
+}
 

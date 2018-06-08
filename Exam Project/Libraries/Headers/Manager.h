@@ -81,7 +81,7 @@ private:
   Graph<string, string> _graph;
   
   void _setNodes();
-  bool _exist_as_node();
+  bool _exist_as_node(const string &ID_to_check);
 };
 
 template <typename AccountType>
