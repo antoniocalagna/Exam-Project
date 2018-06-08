@@ -6,8 +6,8 @@
 #include <iostream>
 
 unsigned char fh::getHexDigit(unsigned int number, unsigned int digit_pos) {
-  digit_pos = 7 - digit_pos;
-  if (digit_pos > 7) {
+  digit_pos = 7 - digit_pos + 1;              //La cifra 1 è la cifra più a sinistra
+  if (digit_pos > 7) {                    //Un int ha massimo 8 cifre
     return 16;
   }
   number >>= digit_pos * 4;               //Shifta 4 bit per cifra
@@ -17,25 +17,13 @@ unsigned char fh::getHexDigit(unsigned int number, unsigned int digit_pos) {
 
 std::string fh::error(unsigned int code) {
   std::string err;
+  //Controlli di base:
   switch (code) {
-    //Format or integrity problems
     case 0:
       err = "File formattato correttamente.";
       break;
     case 0xFFFFFFFF:
-      err = "File non aperto o danneggiato.";
-      break;
-    case 0xF0000000:
-      err = "Errore di formato.";
-      break;
-      
-      //Data problems
-    case 0x10000001:
-      err = "ID non valido.";
-      break;
-    
-    default:
-      err = "Errore " + std::to_string(code) + " sconosciuto.";
+      err = "File non apribile o danneggiato";
       break;
   }
   return err;
