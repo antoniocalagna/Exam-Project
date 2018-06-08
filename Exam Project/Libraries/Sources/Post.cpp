@@ -88,7 +88,7 @@ bool Post::operator<(const Post &is_greater) {
 
 ostream &operator<<(ostream &stream, const Post &p) {
   int i;
-  stream << p._iduser << ": < " << p._news << ">, like: {";
+  stream << p._iduser << ", " << p._news <<", " << p._time <<", like: {";
   if(p._likes.size()!=0) {
     for (i = 0; i < (p._likes.size() - 1); i++) {
       stream << p._likes[i] << ", ";
