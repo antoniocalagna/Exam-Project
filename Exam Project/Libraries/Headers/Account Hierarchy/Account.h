@@ -44,6 +44,7 @@ public:
   static const char company_type = 'C';
   static const char group_type = 'G';
   
+  
   //Static functions
   static bool IDValid(const std::string &id);       //Controlla la validità di un ID
   static bool typeValid(char type);                 //Controlla la validità di un tipo

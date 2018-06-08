@@ -15,7 +15,7 @@ std::string fh::error(int code) {
     case 0xFFFFFFFF:
       err = "File non aperto o danneggiato.";
       break;
-    case 0xF0000001:
+    case 0xF0000000:
       err = "Errore di formato.";
       break;
       
@@ -76,4 +76,5 @@ int fh::checkAccountsFile(std::ifstream &f) {
     std::getline(f, info, '}');     //Qui bisogna fermarsi alla graffa
     if (!f.good()) { return 0xF0000001; }
   }
+  return 0;
 }

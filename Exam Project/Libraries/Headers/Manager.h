@@ -145,36 +145,6 @@ void Manager::addAccount(const AccountType &account_to_add)
   _graph.addNode(account_to_add.getID());
 }
 
-void Manager::deleteAccount (const string &ID)
-{
-  size_t pos=0;
-  
-  pos=FindPosbyID(_users, ID);
-  if (pos!=_users.size())
-  {
-    _users.erase(_users.begin()+pos);
-  }
-  
-  pos=FindPosbyID(_companies, ID);
-  if (pos!=_companies.size())
-  {
-    _companies.erase(_companies.begin()+pos);
-  }
-  
-  pos=FindPosbyID(_groups, ID);
-  if (pos!=_groups.size())
-  {
-    _groups.erase(_groups.begin()+pos);
-  }
-  
-  if (pos==_groups.size())
-  {
-    return;
-  }
-  
-  _graph.popNode(ID);
-}
-
 template <typename AccountType>
 AccountType Manager::getAccount(const std::string &ID)
 {
