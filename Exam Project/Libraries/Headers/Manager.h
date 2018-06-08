@@ -49,9 +49,9 @@ public:
   vector<Group> getGroups() const;
   
   //Functions
-  template <typename AccountType>
-  void addAccount (const AccountType &account_to_add);
-  template <> void addAccount<User>(const User &account_to_add);
+  bool addAccount(const User &account_to_add);
+  bool addAccount(const Company &account_to_add);
+  bool addAccount(const Group &account_to_add);
   
   void deleteAccount (const string &ID);
   void deleteRelationship (const string &root, const string &target);
@@ -120,35 +120,6 @@ size_t FindPosbyID (const vector<AccountType> &v, const string &ID)
    * L'elemento non era presente.
    */
   return v.size();
-}
-
-template <typename AccountType>
-void Manager::addAccount(const AccountType &account_to_add)
-{
-  size_t pos=_graph.find(account_to_add.getID());
-  if (pos!=_graph.nodesNumber())
-  {
-    return; //L'ID esiste già!
-  }
-  
-  if (account_to_add.getType()==Account::user_type)
-  {
-    insert_sorted<User, User>(_users, account_to_add);
-  }
-  else if (account_to_add.getType()==Account::company_type)
-  {
-    insert_sorted<Company, Company>(_companies, account_to_add);
-  }
-  else if (account_to_add.getType()==Account::group_type)
-  {
-    insert_sorted<Group, Group>(_groups, account_to_add);
-  }
-  else
-  {
-    return;
-  }
-  
-  _graph.addNode(account_to_add.getID());
 }
 
 template <typename AccountType>

@@ -141,3 +141,42 @@ void Manager::_setNodes()
     _graph.addNode(it_g->getID());
   }
 }
+
+bool Manager::addAccount(const User &account_to_add)
+{
+  size_t pos=_graph.find(account_to_add.getID());
+  if (pos!=_graph.nodesNumber())
+  {
+    return false; //L'ID esiste già!
+  }
+  
+  insert_sorted<User, User>(_users, account_to_add);
+  _graph.addNode(account_to_add.getID());
+  return true;
+}
+
+bool Manager::addAccount(const Company &account_to_add)
+{
+  size_t pos=_graph.find(account_to_add.getID());
+  if (pos!=_graph.nodesNumber())
+  {
+    return false; //L'ID esiste già!
+  }
+  
+  insert_sorted<Company, Company>(_companies, account_to_add);
+  _graph.addNode(account_to_add.getID());
+  return true;
+}
+
+bool Manager::addAccount(const Group &account_to_add)
+{
+  size_t pos=_graph.find(account_to_add.getID());
+  if (pos!=_graph.nodesNumber())
+  {
+    return false; //L'ID esiste già!
+  }
+  
+  insert_sorted<Group, Group>(_groups, account_to_add);
+  _graph.addNode(account_to_add.getID());
+  return true;
+}
