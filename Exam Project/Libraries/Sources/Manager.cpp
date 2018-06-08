@@ -79,13 +79,12 @@ Group Manager::getGroup(const std::string &ID) const
     return Group();
 }
 
+//addAccount polimorfica controlla che l'ID non sia già esistente e poi lo aggiunge ordinatamente nel vettore opportuno
+
 bool Manager::addAccount(const User &account_to_add)
 {
-  size_t pos=_graph.find(account_to_add.getID());
-  if (pos!=_graph.nodesNumber())
-  {
-    return false; //L'ID esiste già!
-  }
+  if (!_exist_as_node(account_to_add.getID()))
+    return false;
   
   insert_sorted<User, User>(_users, account_to_add);
   _graph.addNode(account_to_add.getID());
@@ -94,11 +93,8 @@ bool Manager::addAccount(const User &account_to_add)
 
 bool Manager::addAccount(const Company &account_to_add)
 {
-  size_t pos=_graph.find(account_to_add.getID());
-  if (pos!=_graph.nodesNumber())
-  {
-    return false; //L'ID esiste già!
-  }
+  if (!_exist_as_node(account_to_add.getID()))
+    return false;
   
   insert_sorted<Company, Company>(_companies, account_to_add);
   _graph.addNode(account_to_add.getID());
@@ -107,11 +103,8 @@ bool Manager::addAccount(const Company &account_to_add)
 
 bool Manager::addAccount(const Group &account_to_add)
 {
-  size_t pos=_graph.find(account_to_add.getID());
-  if (pos!=_graph.nodesNumber())
-  {
-    return false; //L'ID esiste già!
-  }
+  if (!_exist_as_node(account_to_add.getID()))
+    return false;
   
   insert_sorted<Group, Group>(_groups, account_to_add);
   _graph.addNode(account_to_add.getID());
@@ -153,6 +146,52 @@ void Manager::deleteRelationship(const std::string &root, const std::string &tar
   _graph.setEdge(root, target, _graph.no_edge);
 }
 
+//replaceAccount polimorfica controlla che il nuovo ID non sia già esistente, cerca la posizione dell'ID da sostituire e procede.
+
+bool Manager::replaceAccount(const std::string &ID_to_replace, const User &new_account)
+{
+  if (!_exist_as_node(new_account.getID()))
+    return false;
+  
+  size_t pos=FindPosbyID(_users, ID_to_replace);
+  if (pos!=_users.size())
+  {
+    _users[pos]=new_account;
+    return true;
+  }
+  else
+    return false;
+}
+
+bool Manager::replaceAccount(const std::string &ID_to_replace, const Company &new_account)
+{
+  if (!_exist_as_node(new_account.getID()))
+    return false;
+  
+  size_t pos=FindPosbyID(_companies, ID_to_replace);
+  if (pos!=_companies.size())
+  {
+    _companies[pos]=new_account;
+    return true;
+  }
+  else
+    return false;
+}
+
+bool Manager::replaceAccount(const std::string &ID_to_replace, const Group &new_account)
+{
+  if (!_exist_as_node(new_account.getID()))
+    return false;
+  
+  size_t pos=FindPosbyID(_groups, ID_to_replace);
+  if (pos!=_groups.size())
+  {
+    _groups[pos]=new_account;
+    return true;
+  }
+  else
+    return false;
+}
 vector<Account> Manager::getAllAccounts() const
 {
   vector<Account> all;
@@ -175,7 +214,7 @@ vector<Account> Manager::getAllAccounts() const
     insert_sorted(all, *it_g);
   }
   
-  return all;
+  return all; //vettore binary-sorted
 }
 
 void Manager::addDirectedRelationship(const string &ID_start, const string &ID_target, const string &relationship)
@@ -192,6 +231,8 @@ vector<string> Manager::getListConnection(const std::string &starting_ID, const 
 {
   return _graph.branches(starting_ID, relationship);
 }
+
+//PRIVATE METHODS
 
 void Manager::_setNodes()
 {
@@ -214,4 +255,14 @@ void Manager::_setNodes()
   }
 }
 
+bool Manager::_exist_as_node(const string &ID_to_check)
+{
+  size_t pos=_graph.find(ID_to_check);
+  if (pos!=_graph.nodesNumber())
+  {
+    return false; //ID already exists!
+  }
+  else
+    return true;
+}
 
