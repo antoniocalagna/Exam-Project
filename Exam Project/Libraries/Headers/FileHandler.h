@@ -10,13 +10,16 @@
 #include "Account.h"
 
 namespace fh { //File handler;
+//Ritorna la cifra richiesta in un numero esadecimale (La cifra 1 è quella più a sinistra
+unsigned char getHexDigit(unsigned int number, unsigned int digit_pos);
+
 //Traduce il codice errore nella stringa corrispondente
 std::string error(unsigned int code);
 
+//Legge un campo formattato come "nome_campo:{......}" ignorando le parentesi graffe
 std::string readField(const std::string &field_name, const std::string &raw_str);
 
 unsigned int checkAccountsFile(std::ifstream &f);
-
 } //Namespace fh
 
 #endif //SOCIAL_NETWORK_FILEHANDLER_H

@@ -5,6 +5,16 @@
 #include "FileHandler.h"
 #include <iostream>
 
+unsigned char fh::getHexDigit(unsigned int number, unsigned int digit_pos) {
+  digit_pos = 7 - digit_pos;
+  if (digit_pos > 7) {
+    return 16;
+  }
+  number >>= digit_pos * 4;               //Shifta 4 bit per cifra
+  number &= 0x0000000F;                   //Azzera tutti i bit antecedenti
+  return (unsigned char)(number);
+}
+
 std::string fh::error(unsigned int code) {
   std::string err;
   switch (code) {
@@ -32,11 +42,11 @@ std::string fh::error(unsigned int code) {
 }
 
 std::string fh::readField(const std::string &field_name, const std::string &raw_str) {
-  size_t field_pos = raw_str.find(field_name);  //Ricerca del campo
-  if (field_pos == std::string::npos) {          //Il campo non è presente
+  size_t field_pos = raw_str.find(field_name);      //Ricerca del campo
+  if (field_pos == std::string::npos) {             //Il campo non è presente
     return "";
   }
-  if (field_pos != 0) {                          //La stringa contiene altri dati. Per scelta non devono esserci.
+  if (field_pos != 0) {                            //La stringa contiene altri dati. Per scelta non devono esserci.
     return "";
   }
   
@@ -60,15 +70,15 @@ unsigned int fh::checkAccountsFile(std::ifstream &f) {
     //Acquisisci l'ID
     std::string id;
     std::getline(f, id, ',');                                   //L'ID non contiene virgole
-    if (!f.good()) { return 0xF0000001; }
-    if (!Account::IDValid(id)) { return 0x10000001; }
+    if (!f.good()) { return 0x10000000; }
+    if (!Account::IDValid(id)) { return 0x21000000; }
     
     //Acquisici il tipo di account
     std::string type;
     std::getline(f, type, ',');
     if (!f.good()) { return 0xF0000001; }                       //Problema di formato
     if (type.size() != 1 || !Account::typeValid(type[0])) {
-      return 0x10000001;                                        //ID non valido
+      return 0x10000001;                                        //Tipo non valido
     }
     
     //Raccogli tutte le informazioni sull'utente
