@@ -8,15 +8,22 @@
 std::string fh::error(int code) {
   std::string err;
   switch (code) {
+    //Format or integrity problems
     case 0:
       err = "File formattato correttamente.";
       break;
     case 0xFFFFFFFF:
       err = "File non aperto o danneggiato.";
       break;
-    case 0x00000001:
+    case 0xF0000001:
       err = "Errore di formato.";
       break;
+      
+      //Data problems
+    case 0x10000001:
+      err = "ID non valido.";
+      break;
+    
     default:
       err = "Errore " + std::to_string(code) + " sconosciuto.";
       break;
@@ -53,16 +60,20 @@ int fh::checkAccountsFile(std::ifstream &f) {
     //Acquisisci l'ID
     std::string id;
     std::getline(f, id, ',');                                   //L'ID non contiene virgole
-    if (!f.good()) { return 0x00000001; }
+    if (!f.good()) { return 0xF0000001; }
+    if (!Account::IDValid(id)) { return 0x10000001; }
     
     //Acquisici il tipo di account
     std::string type;
     std::getline(f, type, ',');
-    if (!f.good()) { return 0x00000001; }                       //Problema di formato
+    if (!f.good()) { return 0xF0000001; }                       //Problema di formato
+    if (type.size() != 1 || !Account::typeValid(type[0])) {
+      return 0x10000001;                                        //ID non valido
+    }
     
     //Raccogli tutte le informazioni sull'utente
     std::string info;
     std::getline(f, info, '}');     //Qui bisogna fermarsi alla graffa
-    if (!f.good()) { return 0x00000001; }
+    if (!f.good()) { return 0xF0000001; }
   }
 }

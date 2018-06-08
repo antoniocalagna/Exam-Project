@@ -7,6 +7,7 @@
 
 #include <string>
 #include <fstream>
+#include "Account.h"
 
 namespace fh { //File handler;
 //Traduce il codice errore nella stringa corrispondente
