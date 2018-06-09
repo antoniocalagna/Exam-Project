@@ -155,7 +155,7 @@ size_t FindPosbyID (const vector<AccountType> &v, const string &ID)
     b--;
   }
   /*
-   * Arrivati a questo punto, l'intervallo è stato suddiviso così tante volte che a = b oppure a = b-1.
+   * Arrivati a questo punto, l'intervallo è stato suddiviso così tante volte che a >= b.
    * L'elemento non era presente.
    */
   return v.size();

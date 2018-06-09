@@ -25,6 +25,9 @@ std::string fh::error(unsigned int code) {
     case 0xFFFFFFFF:
       err = "File non apribile o danneggiato";
       break;
+    default:
+      err = "Errore sconosciuto";
+      break;
   }
   return err;
 }
@@ -42,37 +45,40 @@ std::string fh::readField(const std::string &field_name, const std::string &raw_
   return raw_str.substr(field_name.size() + 2, raw_str.size() - (field_name.size() + 3));
 }
 
-unsigned int fh::checkAccountsFile(std::ifstream &f) {
+fh::Error fh::checkAccountsFile(std::ifstream &f) {
   //Controlla se il file è aperto
   if (!f.is_open()) {
-    return 0xFFFFFFFF;
+    return {0xFFFFFFFF, 0};
   }
   
   //Riporta il cursore di get all'inizio e controlla che il file sia leggibile
   f.seekg(0);
   if (!f.good()) {
-    return 0xFFFFFFFF;                                          //Errore nel file
+    return {0xFFFFFFFF, 0};                                          //Errore nel file
   }
   
+  unsigned int line = 0;
   while (f.good()) {
     //Acquisisci l'ID
     std::string id;
     std::getline(f, id, ',');                                   //L'ID non contiene virgole
-    if (!f.good()) { return 0x10000000; }
-    if (!Account::IDValid(id)) { return 0x21000000; }
+    if (!f.good()) { return {0x10000000, line}; }
+    if (!Account::IDValid(id)) { return {0x21000000, line}; }
     
     //Acquisici il tipo di account
     std::string type;
     std::getline(f, type, ',');
-    if (!f.good()) { return 0xF0000001; }                       //Problema di formato
+    if (!f.good()) { return {0xF0000001, line}; }                       //Problema di formato
     if (type.size() != 1 || !Account::typeValid(type[0])) {
-      return 0x10000001;                                        //Tipo non valido
+      return {0x10000001, line};                                        //Tipo non valido
     }
     
     //Raccogli tutte le informazioni sull'utente
     std::string info;
     std::getline(f, info, '}');     //Qui bisogna fermarsi alla graffa
-    if (!f.good()) { return 0xF0000001; }
+    if (!f.good()) { return {0xF0000001, line}; }
+    
+    line++;
   }
-  return 0;
+  return {0, 0};
 }
