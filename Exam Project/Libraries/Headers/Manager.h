@@ -25,8 +25,6 @@ namespace relation
   
   const string fatherhood = "father";
   const string motherhood = "mother";
-  const string unclehood = "uncle/aunt";
-  const string grandpas = "granddad/granny";
   const string partner = "partner";
   const string engaged = "fiance";
   
