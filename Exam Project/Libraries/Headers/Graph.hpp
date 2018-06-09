@@ -13,18 +13,18 @@ template<typename node_T, typename edge_T>
 class Graph {
 public:
   /**Aliases */
-  using NodeEdges = std::map<std::size_t, edge_T>;
+  using NodeEdges = std::map<size_t, edge_T>;
   using Nodes = std::vector<node_T>;
   using Edges = std::vector<NodeEdges>;
   
   /**Static members */
   static const edge_T no_edge;
-  
+
 private:
   /**Data */
   Nodes _nodes;
   Edges _edges;
-  
+
 public:
   /**Constructors & Destructor */
   Graph() = default;
@@ -32,11 +32,12 @@ public:
   ~Graph() = default;
   
   /**Getters */
-  std::size_t nodesNumber() const;                                                  //Numero di nodi
-  std::size_t degree() const;                                                 //Numero di archi
-  std::size_t degree(const node_T &node) const;                               //Grado complessivo di un nodo
-  std::size_t inDegree(const node_T &node) const;                             //Grado input
-  std::size_t outDegree(const node_T &node) const;                            //Grado output
+  size_t nodesNumber() const;                                                  //Numero di nodi
+  size_t degree() const;                                                 //Numero di archi
+  size_t degree(const node_T &node) const;                               //Grado complessivo di un nodo
+  size_t inDegree(const node_T &node) const;                             //Grado input
+  size_t outDegree(const node_T &node) const;                            //Grado output
+  size_t outDegree_withEdge(const node_T &node, const edge_T &edge) const;   //Grado output considerando solo un peso
   edge_T edge(const node_T &starting_node, const node_T &target_node) const;  //Arco tra due nodi
   
   /*References*/
@@ -45,7 +46,7 @@ public:
   
   /**General*/
   void clear();
-  std::size_t find(const node_T &node) const;   //Ritorna la posizione di un nodo
+  size_t find(const node_T &node) const;   //Ritorna la posizione di un nodo
   size_t size() const;  //Ritorna la dimensione del vettore dei nodi
   void addNode(const node_T &new_node);         //Aggiungi un nodo
   void popNode(const node_T &to_erase);         //Rimuovi un nodo
@@ -83,17 +84,17 @@ Graph<node_T, edge_T>::Graph(const Graph<node_T, edge_T> &to_copy) {
  */
 
 template<typename node_T, typename edge_T>
-std::size_t Graph<node_T, edge_T>::nodesNumber() const {
+size_t Graph<node_T, edge_T>::nodesNumber() const {
   return _nodes.size();
 }
 
 template<typename node_T, typename edge_T>
-std::size_t Graph<node_T, edge_T>::degree() const {
+size_t Graph<node_T, edge_T>::degree() const {
   //Ritorna il numero totale di archi nel grafo
-  std::size_t count = 0;
+  size_t count = 0;
   
   for (int i = 0; i < _edges.size(); i++) {
-    count += (std::size_t) std::distance(_edges[i].begin(), _edges[i].end());
+    count += (size_t) std::distance(_edges[i].begin(), _edges[i].end());
   }
   
   return count;
@@ -103,8 +104,8 @@ template<typename node_T, typename edge_T>
 edge_T Graph<node_T, edge_T>::edge(const node_T &starting_node, const node_T &target_node) const {
   //Ritorna una copia dell'arco (DIRETTO) tra starting_node e target_node.
   //Trova le posizioni dei due archi
-  std::size_t pos_starting = find(starting_node);
-  std::size_t pos_target = find(target_node);
+  size_t pos_starting = find(starting_node);
+  size_t pos_target = find(target_node);
   
   if (pos_starting == _nodes.size() ||
       pos_target == _nodes.size()) { return no_edge; } //Controlla che entrambi esistano
@@ -117,13 +118,13 @@ edge_T Graph<node_T, edge_T>::edge(const node_T &starting_node, const node_T &ta
 }
 
 template<typename node_T, typename edge_T>
-std::size_t Graph<node_T, edge_T>::inDegree(const node_T &node) const {
+size_t Graph<node_T, edge_T>::inDegree(const node_T &node) const {
   //Ritorna il grado di ingresso del nodo richiesto
   //Ricerca il nodo
-  std::size_t pos = find(node);
+  size_t pos = find(node);
   
   //Conta i nodi entranti in esso
-  std::size_t count = 0;
+  size_t count = 0;
   for (int i = 0; i < _edges.size(); i++) {
     count += _edges[i].count(pos);
   }
@@ -132,15 +133,27 @@ std::size_t Graph<node_T, edge_T>::inDegree(const node_T &node) const {
 }
 
 template<typename node_T, typename edge_T>
-std::size_t Graph<node_T, edge_T>::outDegree(const node_T &node) const {
+size_t Graph<node_T, edge_T>::outDegree(const node_T &node) const {
   //Ritorna il grado di uscita del nodo richiesto
   //Ricerca il nodo
-  std::size_t pos = find(node);
+  size_t pos = find(node);
   return _edges[pos].size();
 }
 
 template<typename node_T, typename edge_T>
-std::size_t Graph<node_T, edge_T>::degree(const node_T &node) const {
+size_t Graph<node_T, edge_T>::outDegree_withEdge(const node_T &node, const edge_T &edge) const {
+  size_t pos = find(node);
+  size_t count = 0;
+  for (auto it = _edges[pos].begin(); it != _edges[pos].end(); it++) {
+    if (it->second == edge) {
+      count++;
+    }
+  }
+  return count;
+}
+
+template<typename node_T, typename edge_T>
+size_t Graph<node_T, edge_T>::degree(const node_T &node) const {
   return inDegree(node) + outDegree(node);
 }
 
@@ -164,6 +177,7 @@ const std::vector<node_T> &Graph<node_T, edge_T>::nodesVector() const {
    */
   return _nodes;
 }
+
 /**#############
  * ## General ##
  * #############
@@ -176,12 +190,12 @@ void Graph<node_T, edge_T>::clear() {
 }
 
 template<typename node_T, typename edge_T>
-std::size_t Graph<node_T, edge_T>::find(const node_T &node) const {
+size_t Graph<node_T, edge_T>::find(const node_T &node) const {
   /* Ritorna la posizione del nodo richiesto all'interno del vettore. Se il nodo non esiste, ritorna
    * la size() del vettore (cioè la posizione successiva all'ultimo elemento)
    */
   //Ricerca il nodo e ritorna la distanza del suo iteratore dal _nodes.begin()
-  return (std::size_t) std::distance(_nodes.begin(), std::find(_nodes.begin(), _nodes.end(), node));
+  return (size_t) std::distance(_nodes.begin(), std::find(_nodes.begin(), _nodes.end(), node));
 }
 
 template<typename node_T, typename edge_T>
@@ -193,7 +207,7 @@ void Graph<node_T, edge_T>::addNode(const node_T &new_node) {
 template<typename node_T, typename edge_T>
 void Graph<node_T, edge_T>::popNode(const node_T &to_erase) {
   //Elimina il nodo dal grafo
-  std::size_t pos = find(to_erase);
+  size_t pos = find(to_erase);
   if (pos == _nodes.size()) { return; }    //Controlla che il nodo esista
   
   _nodes.erase(_nodes.begin() + pos);
@@ -203,8 +217,8 @@ void Graph<node_T, edge_T>::popNode(const node_T &to_erase) {
 template<typename node_T, typename edge_T>
 void Graph<node_T, edge_T>::setEdge(const node_T &starting_node, const node_T &target_node, const edge_T &new_value) {
   //Imposta il valore dell'arco (DIRETTO) tra starting_node e target_node con il valore richiesto.
-  std::size_t pos_starting = find(starting_node);
-  std::size_t pos_target = find(target_node);
+  size_t pos_starting = find(starting_node);
+  size_t pos_target = find(target_node);
   
   if (pos_starting == _nodes.size() ||
       pos_target == _nodes.size()) { return; } //Controlla che entrambi esistano
@@ -232,7 +246,7 @@ std::vector<node_T> Graph<node_T, edge_T>::branches(const node_T &starting_node,
   if (edge == Graph<node_T, edge_T>::no_edge) { return branches; }    //E' stata richiesta la non connessione
   
   //Controlla che il nodo richiesto esista
-  std::size_t pos = find(starting_node);
+  size_t pos = find(starting_node);
   
   if (pos == _nodes.size()) { return branches; }  //Nodo non trovato
   
