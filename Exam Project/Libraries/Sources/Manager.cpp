@@ -8,12 +8,18 @@
 
 #include "Manager.h"
 
+/*size_t byFriends (const string &whose_ID, const Graph<string, string> &_graph)
+{
+  return _graph.outDegree_withEdge(whose_ID, relation::friendship);
+}*/
+
 Manager::Manager(const vector<User> &users, const vector<Company> &companies, const vector<Group> &groups)
 {
   _users=users;
   _companies=companies;
   _groups=groups;
   _setNodes();
+  _setKeys();
 }
 
 void Manager::setUsers(const vector<User> &users_to_set)
@@ -30,6 +36,12 @@ void Manager::setGroups(const vector<Group> &groups_to_set)
 {
   _groups=groups_to_set;
 }
+
+void Manager::setPosts(const vector<Post> &all_posts_of_account, const std::string &whose_ID)
+{
+  _map.at(whose_ID)=all_posts_of_account;
+}
+
 
 vector<User> Manager::getAllUsers() const
 {
@@ -79,6 +91,11 @@ Group Manager::getGroup(const std::string &ID) const
     return Group();
 }
 
+vector<Post> Manager::getPosts(const std::string &ID) const
+{
+  return _map.at(ID);
+}
+
 //addAccount polimorfica controlla che l'ID non sia già esistente e poi lo aggiunge ordinatamente nel vettore opportuno
 
 bool Manager::addAccount(const User &account_to_add)
@@ -88,6 +105,7 @@ bool Manager::addAccount(const User &account_to_add)
   
   insert_sorted<User, User>(_users, account_to_add);
   _graph.addNode(account_to_add.getID());
+  _addKey(account_to_add.getID());
   return true;
 }
 
@@ -98,6 +116,7 @@ bool Manager::addAccount(const Company &account_to_add)
   
   insert_sorted<Company, Company>(_companies, account_to_add);
   _graph.addNode(account_to_add.getID());
+  _addKey(account_to_add.getID());
   return true;
 }
 
@@ -108,6 +127,7 @@ bool Manager::addAccount(const Group &account_to_add)
   
   insert_sorted<Group, Group>(_groups, account_to_add);
   _graph.addNode(account_to_add.getID());
+  _addKey(account_to_add.getID());
   return true;
 }
 
@@ -139,6 +159,7 @@ void Manager::deleteAccount (const string &ID)
   }
   
   _graph.popNode(ID);
+  _map.erase(ID);
 }
 
 void Manager::deleteRelationship(const std::string &root, const std::string &target)
@@ -157,6 +178,10 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const User &new_a
   if (pos!=_users.size())
   {
     _users[pos]=new_account;
+    _graph.popNode(ID_to_replace);
+    _graph.addNode(new_account.getID());
+    _map.erase(ID_to_replace);
+    _addKey(new_account.getID());
     return true;
   }
   else
@@ -172,6 +197,10 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const Company &ne
   if (pos!=_companies.size())
   {
     _companies[pos]=new_account;
+    _graph.popNode(ID_to_replace);
+    _graph.addNode(new_account.getID());
+    _map.erase(ID_to_replace);
+    _addKey(new_account.getID());
     return true;
   }
   else
@@ -187,6 +216,10 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const Group &new_
   if (pos!=_groups.size())
   {
     _groups[pos]=new_account;
+    _graph.popNode(ID_to_replace);
+    _graph.addNode(new_account.getID());
+    _map.erase(ID_to_replace);
+    _addKey(new_account.getID());
     return true;
   }
   else
@@ -232,6 +265,17 @@ vector<string> Manager::getListConnection(const std::string &starting_ID, const 
   return _graph.branches(starting_ID, relationship);
 }
 
+void Manager::addPost(const Post &post_to_add, const std::string &whose_ID)
+{
+  _map.at(whose_ID).push_back(post_to_add);
+}
+
+void Manager::deletePost(const Post &post_to_delete, const std::string &whose_ID)
+{
+  vector<Post>::iterator it=find(_map.at(whose_ID).begin(), _map.at(whose_ID).end(), post_to_delete);
+  _map[whose_ID].erase(it);
+}
+
 //PRIVATE METHODS
 
 void Manager::_setNodes()
@@ -264,6 +308,19 @@ bool Manager::_exist_as_node(const string &ID_to_check)
   }
   else
     return true;
+}
+
+void Manager::_addKey(const std::string &newID)
+{
+  _map[newID]=vector<Post>();
+}
+
+void Manager::_setKeys()
+{
+  for (auto it=_users.begin(); it!=_users.end(); it++)
+  {
+    _addKey(it->getID());
+  }
 }
 
 //STATISTICS
@@ -410,7 +467,7 @@ string Manager::UserWithMostAcquaintances() const
   return best.getID();
 }
 
-float Manager::UsersMiddleAge() const
+float Manager::UsersAverageAge() const
 {
   float sum=0;
   Date now = Date::Now();
@@ -420,4 +477,46 @@ float Manager::UsersMiddleAge() const
     sum=sum+tmp.yearsFrom(now);
   }
   return (float)sum/(_users.size());
+}
+
+Post Manager::MostLikedPost() const
+{
+  vector<Post> tmp;
+  Post ext_best;
+  for (auto it=_users.begin(); it!=_users.end(); it++)
+  {
+    tmp=_map.at(it->getID());
+    vector<Post>::iterator it2 = tmp.begin();
+    Post best = *it2;
+    for (; it2!=tmp.end(); it2++)
+    {
+      if (*it2>best)
+        best=*it2;
+    }
+    
+    if(best>ext_best)
+      ext_best=best;
+  }
+  return ext_best;
+}
+
+Post Manager::MostDislikedPost() const
+{
+  vector<Post> tmp;
+  Post ext_best;
+  for (auto it=_users.begin(); it!=_users.end(); it++)
+  {
+    tmp=_map.at(it->getID());
+    vector<Post>::iterator it2 = tmp.begin();
+    Post best = *it2;
+    for (; it2!=tmp.end(); it2++)
+    {
+      if (it2->NumDislikes()>best.NumDislikes())
+        best=*it2;
+    }
+    
+    if(best>ext_best)
+      ext_best=best;
+  }
+  return ext_best;
 }

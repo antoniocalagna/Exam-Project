@@ -143,8 +143,18 @@ int Date::yearsFrom(const Date &d) const
 {
   if (!((this->_isValid()) && (d._isValid())))
     return -1;
-  
-  return d._year-_year;
+  if (d._month-_month>0)
+    return d._year-_year;
+  if (d._month-_month<0)
+    return d._year-_year-1;
+  if (d._month==_month)
+  {
+    if (d._day-_day>0)
+      return d._year-_year;
+    if (d._day-_day<0)
+      return d._year-_year-1;
+  }
+  return -1;
 }
 
 void Date::acquireDateByString(string s)

@@ -24,8 +24,8 @@ public:
   void setNews(const string &news);
   void setIdUser(const string &iduser);
   void setTime(const Clock &time);
-  void setLike(const vector<string> &likes);
-  void setDislike(const vector<string> &dislikes);
+  void setLikes(const vector<string> &likes);
+  void setDislikes(const vector<string> &dislikes);
   
   //Getters
   string getNews() const;
@@ -35,7 +35,7 @@ public:
   vector<string> getDislikes() const;
   
   //Overloading operators
-  bool operator==(const Post &to_be_compared);//non comparo i likes perchè mi sembrano parametri troppo variabili
+  bool operator==(const Post &to_be_compared); //non comparo i likes perchè mi sembrano parametri troppo variabili
   bool operator!=(const Post &to_be_compared);
   bool operator>(const Post &is_smaller); //potrebbero basarsi sul numero di likes
   bool operator<(const Post &is_greater);

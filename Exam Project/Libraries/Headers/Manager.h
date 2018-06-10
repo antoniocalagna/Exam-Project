@@ -9,6 +9,7 @@
 #ifndef Manager_h
 #define Manager_h
 
+#include <map>
 #include "User.h"
 #include "Company.h"
 #include "Group.h"
@@ -16,7 +17,9 @@
 #include "Post.h"
 #include "TemplateFunctions.hpp"
 
-#define MAX 6
+#define MAX 6 //Gender's array.
+
+//NAMESPACES
 
 namespace relation
 {
@@ -40,6 +43,10 @@ namespace gender
   const char genders[MAX] = {'M', 'F', 'N', 'A', 'B', 'O'};
 }
 
+/*
+//STATISTICS FUNCTIONS TO PASS
+size_t byFriends (const string &whose_ID, const Graph<string, string> &_graph);*/
+
 class Manager
 {
 public:
@@ -53,6 +60,7 @@ public:
   void setUsers (const vector<User> &users_to_set);
   void setCompanies (const vector<Company> &companies_to_set);
   void setGroups (const vector<Group> &groups_to_set);
+  void setPosts (const vector<Post> &all_posts_of_account, const string &whose_ID);
   
   //Getters
   vector<User> getAllUsers() const;
@@ -62,6 +70,7 @@ public:
   User getUser (const string &ID) const;
   Company getCompany (const string &ID) const;
   Group getGroup (const string &ID) const;
+  vector<Post> getPosts (const string &ID) const;
   
   //Management Functions
   bool addAccount(const User &account_to_add);
@@ -83,12 +92,17 @@ public:
   
   vector<string> getListConnection (const string &starting_ID, const string &relationship);
   
+  void addPost (const Post &post_to_add, const string &whose_ID);
+  void deletePost (const Post &post_to_delete, const string &whose_ID);
+  
   //Statistics Functions
   
   size_t NumAccounts() const;
   size_t NumUsers() const;
   size_t NumCompanies() const;
   size_t NumGroups() const;
+  
+  //size_t NumberOf (const string &ID, size_t (*f)(const string &ID, const Graph<string, string> &graph));
   
   size_t NumFriends (const string &whose_ID) const;
   size_t NumRelatives (const string &whose_ID) const;
@@ -102,7 +116,7 @@ public:
   string UserWithMostFriends() const;
   string UserWithMostAcquaintances() const;
   
-  float UsersMiddleAge() const;
+  float UsersAverageAge() const;
   
   Post MostLikedPost() const;
   Post MostDislikedPost() const;
@@ -112,9 +126,12 @@ private:
   vector<Company> _companies;
   vector<Group> _groups;
   Graph<string, string> _graph;
+  map<string, vector<Post>> _map;
   
   void _setNodes();
   bool _exist_as_node(const string &ID_to_check);
+  void _addKey(const string &newID);
+  void _setKeys();
 };
 
 template <typename AccountType>

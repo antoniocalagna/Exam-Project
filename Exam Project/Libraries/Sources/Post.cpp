@@ -38,11 +38,11 @@ void Post::setTime(const Clock &time) {
   _time = time;
 }
 
-void Post::setLike(const vector<string> &likes) {
+void Post::setLikes(const vector<string> &likes) {
   _likes=likes;
 }
 
-void Post::setDislike(const vector<string> &dislikes) {
+void Post::setDislikes(const vector<string> &dislikes) {
   _dislikes=dislikes;
 }
 
@@ -70,8 +70,6 @@ vector<string> Post::getDislikes() const {
 //Operators
 bool Post::operator==(const Post &to_be_compared) {
   return ((_iduser == to_be_compared._iduser) && (_news == to_be_compared._news) && (_time == to_be_compared._time));
-  
-  
 }
 
 bool Post::operator!=(const Post &to_be_compared) {
@@ -113,14 +111,12 @@ ostream &operator<<(ostream &stream, const Post &p) {
 
 //Others
 int Post::SearchLike(const string &ID) const {
-  
   for (int i = 0; i < _likes.size(); i++) {
     if (ID == _likes[i]) {
       return i;
     }
   }
   return -1;
-  
 }
 
 int Post::SearchDislike(const string &ID) const {
