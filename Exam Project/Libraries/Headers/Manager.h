@@ -26,10 +26,10 @@ namespace relation
   const string friendship = "friend";
   const string knowings = "acquaintances";
   
-  const string fatherhood = "father";
-  const string motherhood = "mother";
+  const string parent = "mother/father";
+  const string born = "daughter/son";
+  
   const string partner = "partner";
-  const string engaged = "fiance";
   
   const string employee = "hired";
   const string co_worker = "subsidiaries";
@@ -74,7 +74,7 @@ public:
   bool addAccount(const Company &account_to_add);
   bool addAccount(const Group &account_to_add);
   
-  void deleteAccount (const string &ID);
+  bool deleteAccount (const string &ID);
   void deleteRelationship (const string &root, const string &target);
   
   bool replaceAccount (const string &ID_to_replace, const User &new_account);
@@ -89,9 +89,9 @@ public:
   
   vector<string> getListConnection (const string &starting_ID, const string &relationship);
   
-  void addPost (const Post &post_to_add, const string &whose_ID);
-  void deletePost (const Post &post_to_delete, const string &whose_ID);
-  void addLike_Dislike (const bool &like_1_dislike_0, const Post &post_liked, const string &ID);
+  bool addPost (const Post &post_to_add, const string &whose_ID);
+  bool deletePost (const Post &post_to_delete, const string &whose_ID);
+  bool addLike_Dislike (const bool &like_1_dislike_0, const Post &post_liked, const string &ID);
   
   //Statistics Functions
   
