@@ -285,15 +285,9 @@ void Manager::addLike_Dislike(const bool &like_1_dislike_0, const Post &post_lik
 {
   vector<Post>::iterator it=find(_map.at(ID).begin(), _map.at(ID).end(), post_liked);
   if (like_1_dislike_0==true)
-  {
-    if (it->SearchLike(ID)==-1) //evitiamo like multipli
-      it->AddLike(ID);
-  }
+    it->AddLike(ID);
   if (like_1_dislike_0==false)
-  {
-    if (it->SearchDislike(ID)==-1)
-      it->AddDislike(ID);
-  }
+    it->AddDislike(ID);
 }
 
 //PRIVATE METHODS
