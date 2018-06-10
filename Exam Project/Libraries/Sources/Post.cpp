@@ -146,10 +146,14 @@ float Post::RatioReaction(){
 }
 
 void Post::AddLike(const string &id){
+  if (SearchLike(id)!=-1)
+    return;
   _likes.push_back(id);
 }
 
 void Post::AddDislike(const string &id){
+  if (SearchDislike(id)!=-1)
+    return;
   _dislikes.push_back(id);
 }
 
