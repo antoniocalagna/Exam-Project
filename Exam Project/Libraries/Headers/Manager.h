@@ -116,6 +116,8 @@ public:
   Post MostLikedPost() const;
   Post MostDislikedPost() const;
   string MostLiked_DislikedAccount(const bool &like_1_dislike_0) const;
+  Post RatioReactionPost(const bool &best_1_worst_0) const;
+  string RatioReactionAccount(const bool &best_1_worst_0) const;
   
 private:
   vector<User> _users;

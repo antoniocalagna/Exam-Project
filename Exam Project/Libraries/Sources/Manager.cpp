@@ -495,11 +495,12 @@ float Manager::UsersAverageAge() const
 
 Post Manager::MostLikedPost() const
 {
+  vector<string> all_ids=_graph.nodesVector();
   vector<Post> tmp;
   Post ext_best;
-  for (auto it=_users.begin(); it!=_users.end(); it++)
+  for (auto it=all_ids.begin(); it!=all_ids.end(); it++)
   {
-    tmp=_map.at(it->getID());
+    tmp=_map.at(*it);
     vector<Post>::iterator it2 = tmp.begin();
     Post best = *it2;
     for (; it2!=tmp.end(); it2++)
@@ -516,11 +517,12 @@ Post Manager::MostLikedPost() const
 
 Post Manager::MostDislikedPost() const
 {
+  vector<string> all_ids=_graph.nodesVector();
   vector<Post> tmp;
   Post ext_best;
-  for (auto it=_users.begin(); it!=_users.end(); it++)
+  for (auto it=all_ids.begin(); it!=all_ids.end(); it++)
   {
-    tmp=_map.at(it->getID());
+    tmp=_map.at(*it);
     vector<Post>::iterator it2 = tmp.begin();
     Post best = *it2;
     for (; it2!=tmp.end(); it2++)
@@ -537,12 +539,13 @@ Post Manager::MostDislikedPost() const
 
 string Manager::MostLiked_DislikedAccount(const bool &like_1_dislike_0) const
 {
+  vector<string> all_ids=_graph.nodesVector();
   vector<Post> tmp;
   string best_ID;
   int likes=0, best_likes=0;
-  for (auto it=_users.begin(); it!=_users.end(); it++)
+  for (auto it=all_ids.begin(); it!=all_ids.end(); it++)
   {
-    tmp=_map.at(it->getID());
+    tmp=_map.at(*it);
     vector<Post>::iterator it2 = tmp.begin();
     for (; it2!=tmp.end(); it2++)
     {
@@ -553,9 +556,81 @@ string Manager::MostLiked_DislikedAccount(const bool &like_1_dislike_0) const
     }
    if (likes>best_likes)
    {
-     best_ID=it->getID();
+     best_ID=*it;
      best_likes=likes;
    }
+  }
+  return best_ID;
+}
+
+Post Manager::RatioReactionPost(const bool &best_1_worst_0) const
+{
+  vector<string> all_ids=_graph.nodesVector();
+  vector<Post> tmp;
+  Post ext_best;
+  for (auto it=all_ids.begin(); it!=all_ids.end(); it++)
+  {
+    tmp=_map.at(*it);
+    vector<Post>::iterator it2 = tmp.begin();
+    Post best = *it2;
+    for (; it2!=tmp.end(); it2++)
+    {
+      if (best_1_worst_0==true)
+      {
+        if (it2->RatioReaction()>best.RatioReaction())
+          best=*it2;
+      }
+      if (best_1_worst_0==false)
+      {
+        if (it2->RatioReaction()<best.RatioReaction())
+          best=*it2;
+      }
+    }
+    if (best_1_worst_0==true)
+    {
+      if(best>ext_best)
+        ext_best=best;
+    }
+    if (best_1_worst_0==false)
+    {
+      if(best<ext_best)
+        ext_best=best;
+    }
+  }
+  return ext_best;
+}
+
+string Manager::RatioReactionAccount(const bool &best_1_worst_0) const
+{
+  vector<string> all_ids=_graph.nodesVector();
+  vector<Post> tmp;
+  string best_ID;
+  float ratio=0, best_ratio=0;
+  for (auto it=all_ids.begin(); it!=all_ids.end(); it++)
+  {
+    tmp=_map.at(*it);
+    vector<Post>::iterator it2 = tmp.begin();
+    for (; it2!=tmp.end(); it2++)
+    {
+      ratio=ratio+it2->RatioReaction();
+    }
+    ratio=ratio/tmp.size();
+    if (best_1_worst_0==true)
+    {
+      if (ratio>best_ratio)
+      {
+        best_ID=*it;
+        best_ratio=ratio;
+      }
+    }
+    if (best_1_worst_0==false)
+    {
+      if (ratio<best_ratio)
+      {
+        best_ID=*it;
+        best_ratio=ratio;
+      }
+    }
   }
   return best_ID;
 }
