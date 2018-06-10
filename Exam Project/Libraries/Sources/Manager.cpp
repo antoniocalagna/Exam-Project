@@ -8,10 +8,10 @@
 
 #include "Manager.h"
 
-/*size_t byFriends (const string &whose_ID, const Graph<string, string> &_graph)
+bool relation::belong(const std::string &r)
 {
-  return _graph.outDegree_withEdge(whose_ID, relation::friendship);
-}*/
+  return ((r!=(relation::friendship))&&(r!=(relation::knowings))&&(r!=(relation::fatherhood))&&(r!=(relation::motherhood))&&(r!=(relation::partner))&&(r!=(relation::engaged))&&(r!=(relation::employee))&&(r!=(relation::co_worker))&&(r!=(relation::membership)));
+}
 
 Manager::Manager(const vector<User> &users, const vector<Company> &companies, const vector<Group> &groups)
 {
@@ -249,14 +249,20 @@ vector<Account> Manager::getAllAccounts() const
   return all; //vettore binary-sorted
 }
 
-void Manager::addDirectedRelationship(const string &ID_start, const string &ID_target, const string &relationship)
+bool Manager::addDirectedRelationship(const string &ID_start, const string &ID_target, const string &relationship)
 {
+  if(!relation::belong(relationship))
+    return false;
   _graph.setEdge(ID_start, ID_target, relationship);
+  return true;
 }
 
-void Manager::addUndirectedRelationship (const string &ID_start, const string &ID_target, const string &relationship)
+bool Manager::addUndirectedRelationship (const string &ID_start, const string &ID_target, const string &relationship)
 {
+  if(!relation::belong(relationship))
+    return false;
   _graph.bsetEdge(ID_start, ID_target, relationship);
+  return true;
 }
 
 vector<string> Manager::getListConnection(const std::string &starting_ID, const std::string &relationship)

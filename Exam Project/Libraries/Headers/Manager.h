@@ -31,11 +31,12 @@ namespace relation
   const string partner = "partner";
   const string engaged = "fiance";
   
-  //const string employer = "boss";
   const string employee = "hired";
   const string co_worker = "subsidiaries";
   
   const string membership = "member";
+  
+  bool belong (const string &r);
 }
 
 namespace gender
@@ -82,9 +83,9 @@ public:
   
   vector<Account> getAllAccounts() const;
   
-  void addDirectedRelationship (const string &ID_start, const string &ID_target, const string &relationship);
+  bool addDirectedRelationship (const string &ID_start, const string &ID_target, const string &relationship);
   
-  void addUndirectedRelationship (const string &ID_start, const string &ID_target, const string &relationship);
+  bool addUndirectedRelationship (const string &ID_start, const string &ID_target, const string &relationship);
   
   vector<string> getListConnection (const string &starting_ID, const string &relationship);
   
