@@ -47,7 +47,7 @@ std::string fh::readField(const std::string &field_name, const std::string &raw_
 
 bool fh::deleteLine(std::fstream &f, const std::string &line, long long pos){
   std::ofstream f2;
-  
+  return true;
 }
 
 fh::Error fh::checkAccountsFile(std::ifstream &f) {
