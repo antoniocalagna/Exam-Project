@@ -10,7 +10,7 @@
 
 bool relation::belong(const std::string &r)
 {
-  return ((r!=(relation::friendship))&&(r!=(relation::knowings))&&(r!=(relation::fatherhood))&&(r!=(relation::motherhood))&&(r!=(relation::partner))&&(r!=(relation::engaged))&&(r!=(relation::employee))&&(r!=(relation::co_worker))&&(r!=(relation::membership)));
+  return ((r!=(relation::friendship))&&(r!=(relation::knowings))&&(r!=(relation::parent))&&(r!=(relation::partner))&&(r!=(relation::employee))&&(r!=(relation::co_worker))&&(r!=(relation::membership)));
 }
 
 Manager::Manager(const vector<User> &users, const vector<Company> &companies, const vector<Group> &groups)
@@ -145,7 +145,7 @@ bool Manager::addAccount(const Group &account_to_add)
   return true;
 }
 
-void Manager::deleteAccount (const string &ID)
+bool Manager::deleteAccount (const string &ID)
 {
   size_t count=0;
   
@@ -169,11 +169,12 @@ void Manager::deleteAccount (const string &ID)
   
   if (count==0)
   {
-    return;
+    return false;
   }
   
   _graph.popNode(ID);
   _map_posts.erase(ID);
+  return true;
 }
 
 void Manager::deleteRelationship(const std::string &root, const std::string &target)
@@ -281,24 +282,39 @@ vector<string> Manager::getListConnection(const std::string &starting_ID, const 
   return _graph.branches(starting_ID, relationship);
 }
 
-void Manager::addPost(const Post &post_to_add, const std::string &whose_ID)
+bool Manager::addPost(const Post &post_to_add, const std::string &whose_ID)
 {
+  if (_map_posts.count(whose_ID)==0)
+    return false;
   _map_posts.at(whose_ID).push_back(post_to_add);
+  return true;
 }
 
-void Manager::deletePost(const Post &post_to_delete, const std::string &whose_ID)
+bool Manager::deletePost(const Post &post_to_delete, const std::string &whose_ID)
 {
+  if (_map_posts.count(whose_ID)==0)
+    return false;
   vector<Post>::iterator it=find(_map_posts.at(whose_ID).begin(), _map_posts.at(whose_ID).end(), post_to_delete);
   _map_posts.at(whose_ID).erase(it);
+  return true;
 }
 
-void Manager::addLike_Dislike(const bool &like_1_dislike_0, const Post &post_liked, const std::string &ID)
+bool Manager::addLike_Dislike(const bool &like_1_dislike_0, const Post &post_liked, const std::string &ID)
 {
+  if (_map_posts.count(ID)==0)
+    return false;
   vector<Post>::iterator it=find(_map_posts.at(ID).begin(), _map_posts.at(ID).end(), post_liked);
   if (like_1_dislike_0==true)
+  {
     it->AddLike(ID);
+    return true;
+  }
   if (like_1_dislike_0==false)
+  {
     it->AddDislike(ID);
+    return true;
+  }
+  return false;
 }
 
 //PRIVATE METHODS
@@ -400,8 +416,7 @@ size_t Manager::NumRelatives(const std::string &whose_ID) const
     return -1; //Controllo che sia un utente.
   
   size_t count=0;
-  count = _graph.outDegree_withEdge(whose_ID, relation::fatherhood);
-  count=count+_graph.outDegree_withEdge(whose_ID, relation::motherhood);
+  count = _graph.outDegree_withEdge(whose_ID, relation::parent);
   return count;
 }
 
