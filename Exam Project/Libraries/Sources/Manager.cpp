@@ -15,54 +15,69 @@ bool relation::belong(const std::string &r)
 
 Manager::Manager(const vector<User> &users, const vector<Company> &companies, const vector<Group> &groups)
 {
-  _users=users;
-  _companies=companies;
-  _groups=groups;
+  _setAccountKeys(users);
+  _setAccountKeys(companies);
+  _setAccountKeys(groups);
   _setNodes();
-  _setKeys();
+  _setPostKeys();
 }
 
 void Manager::setUsers(const vector<User> &users_to_set)
 {
-  _users=users_to_set;
+  _setAccountKeys(users_to_set);
 }
 
 void Manager::setCompanies(const vector<Company> &companies_to_set)
 {
-  _companies=companies_to_set;
+  _setAccountKeys(companies_to_set);
 }
 
 void Manager::setGroups(const vector<Group> &groups_to_set)
 {
-  _groups=groups_to_set;
+  _setAccountKeys(groups_to_set);
 }
 
 void Manager::setPosts(const vector<Post> &all_posts_of_account, const std::string &whose_ID)
 {
-  _map.at(whose_ID)=all_posts_of_account;
+  _map_posts[whose_ID]=all_posts_of_account;
 }
 
 vector<User> Manager::getAllUsers() const
 {
-  return _users;
+  vector<User> users;
+  for (auto it=_map_users.begin(); it!=_map_users.end(); it++)
+  {
+    users.push_back(it->second);
+  }
+  return users;
 }
 
 vector<Company> Manager::getAllCompanies() const
 {
-  return _companies;
+  vector<Company> companies;
+  for (auto it=_map_companies.begin(); it!=_map_companies.end(); it++)
+  {
+    companies.push_back(it->second);
+  }
+  return companies;
 }
 
 vector<Group> Manager::getAllGroups() const
 {
-  return _groups;
+  vector<Group> groups;
+  for (auto it=_map_groups.begin(); it!=_map_groups.end(); it++)
+  {
+    groups.push_back(it->second);
+  }
+  return groups;
 }
 
 User Manager::getUser(const std::string &ID) const
 {
-  size_t pos=FindPosbyID(_users, ID);
-  if (pos!=_users.size())
+  size_t count = _map_users.count(ID);
+  if (count!=0)
   {
-    return _users[pos];
+    return _map_users.at(ID);
   }
   else
     return User();
@@ -70,10 +85,10 @@ User Manager::getUser(const std::string &ID) const
 
 Company Manager::getCompany(const std::string &ID) const
 {
-  size_t pos=FindPosbyID(_companies, ID);
-  if (pos!=_companies.size())
+  size_t count = _map_companies.count(ID);
+  if (count!=0)
   {
-    return _companies[pos];
+    return _map_companies.at(ID);
   }
   else
     return Company();
@@ -81,10 +96,10 @@ Company Manager::getCompany(const std::string &ID) const
 
 Group Manager::getGroup(const std::string &ID) const
 {
-  size_t pos=FindPosbyID(_groups, ID);
-  if (pos!=_groups.size())
+  size_t count = _map_groups.count(ID);
+  if (count!=0)
   {
-    return _groups[pos];
+    return _map_groups.at(ID);
   }
   else
     return Group();
@@ -92,7 +107,7 @@ Group Manager::getGroup(const std::string &ID) const
 
 vector<Post> Manager::getPosts(const std::string &ID) const
 {
-  return _map.at(ID);
+  return _map_posts.at(ID);
 }
 
 //addAccount polimorfica controlla che l'ID non sia già esistente e poi lo aggiunge ordinatamente nel vettore opportuno
@@ -102,9 +117,9 @@ bool Manager::addAccount(const User &account_to_add)
   if (!_exist_as_node(account_to_add.getID()))
     return false;
   
-  insert_sorted<User, User>(_users, account_to_add);
+  _map_users[account_to_add.getID()]=account_to_add;
   _graph.addNode(account_to_add.getID());
-  _addKey(account_to_add.getID());
+  _map_posts[account_to_add.getID()]=vector<Post>();
   return true;
 }
 
@@ -113,9 +128,9 @@ bool Manager::addAccount(const Company &account_to_add)
   if (!_exist_as_node(account_to_add.getID()))
     return false;
   
-  insert_sorted<Company, Company>(_companies, account_to_add);
+  _map_companies[account_to_add.getID()]=account_to_add;
   _graph.addNode(account_to_add.getID());
-  _addKey(account_to_add.getID());
+  _map_posts[account_to_add.getID()]=vector<Post>();
   return true;
 }
 
@@ -124,41 +139,41 @@ bool Manager::addAccount(const Group &account_to_add)
   if (!_exist_as_node(account_to_add.getID()))
     return false;
   
-  insert_sorted<Group, Group>(_groups, account_to_add);
+  _map_groups[account_to_add.getID()]=account_to_add;
   _graph.addNode(account_to_add.getID());
-  _addKey(account_to_add.getID());
+  _map_posts[account_to_add.getID()]=vector<Post>();
   return true;
 }
 
 void Manager::deleteAccount (const string &ID)
 {
-  size_t pos=0;
+  size_t count=0;
   
-  pos=FindPosbyID(_users, ID);
-  if (pos!=_users.size())
+  count=_map_users.count(ID);
+  if (count!=0)
   {
-    _users.erase(_users.begin()+pos);
+    _map_users.erase(ID);
   }
   
-  pos=FindPosbyID(_companies, ID);
-  if (pos!=_companies.size())
+  count=_map_companies.count(ID);
+  if (count!=0)
   {
-    _companies.erase(_companies.begin()+pos);
+    _map_companies.erase(ID);
   }
   
-  pos=FindPosbyID(_groups, ID);
-  if (pos!=_groups.size())
+  count=_map_groups.count(ID);
+  if (count!=0)
   {
-    _groups.erase(_groups.begin()+pos);
+    _map_groups.erase(ID);
   }
   
-  if (pos==_groups.size())
+  if (count==0)
   {
     return;
   }
   
   _graph.popNode(ID);
-  _map.erase(ID);
+  _map_posts.erase(ID);
 }
 
 void Manager::deleteRelationship(const std::string &root, const std::string &target)
@@ -173,14 +188,13 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const User &new_a
   if (!_exist_as_node(new_account.getID()))
     return false;
   
-  size_t pos=FindPosbyID(_users, ID_to_replace);
-  if (pos!=_users.size())
+  size_t count=_map_users.count(ID_to_replace);
+  if (count!=0)
   {
-    _users[pos]=new_account;
-    _graph.popNode(ID_to_replace);
-    _graph.addNode(new_account.getID());
-    _map.erase(ID_to_replace);
-    _addKey(new_account.getID());
+    _map_users[ID_to_replace]=new_account;
+    _graph.editNode(ID_to_replace, new_account.getID());
+    _map_posts.erase(ID_to_replace);
+    _map_posts[new_account.getID()]=vector<Post>();
     return true;
   }
   else
@@ -192,14 +206,13 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const Company &ne
   if (!_exist_as_node(new_account.getID()))
     return false;
   
-  size_t pos=FindPosbyID(_companies, ID_to_replace);
-  if (pos!=_companies.size())
+  size_t count=_map_companies.count(ID_to_replace);
+  if (count!=0)
   {
-    _companies[pos]=new_account;
-    _graph.popNode(ID_to_replace);
-    _graph.addNode(new_account.getID());
-    _map.erase(ID_to_replace);
-    _addKey(new_account.getID());
+    _map_companies[ID_to_replace]=new_account;
+    _graph.editNode(ID_to_replace, new_account.getID());
+    _map_posts.erase(ID_to_replace);
+    _map_posts[new_account.getID()]=vector<Post>();
     return true;
   }
   else
@@ -211,14 +224,13 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const Group &new_
   if (!_exist_as_node(new_account.getID()))
     return false;
   
-  size_t pos=FindPosbyID(_groups, ID_to_replace);
-  if (pos!=_groups.size())
+  size_t count=_map_users.count(ID_to_replace);
+  if (count!=0)
   {
-    _groups[pos]=new_account;
-    _graph.popNode(ID_to_replace);
-    _graph.addNode(new_account.getID());
-    _map.erase(ID_to_replace);
-    _addKey(new_account.getID());
+    _map_groups[ID_to_replace]=new_account;
+    _graph.editNode(ID_to_replace, new_account.getID());
+    _map_posts.erase(ID_to_replace);
+    _map_posts[new_account.getID()]=vector<Post>();
     return true;
   }
   else
@@ -228,22 +240,19 @@ vector<Account> Manager::getAllAccounts() const
 {
   vector<Account> all;
   
-  vector<User>::const_iterator it_u=_users.begin();
-  for (; it_u!=_users.end(); it_u++)
+  for (auto it_u=_map_users.begin(); it_u!=_map_users.end(); it_u++)
   {
-    insert_sorted(all, *it_u);
+    insert_sorted(all, it_u->second);
   }
   
-  vector<Company>::const_iterator it_c=_companies.begin();
-  for (; it_c!=_companies.end(); it_c++)
+  for (auto it_c=_map_companies.begin(); it_c!=_map_companies.end(); it_c++)
   {
-    insert_sorted(all, *it_c);
+    insert_sorted(all, it_c->second);
   }
   
-  vector<Group>::const_iterator it_g=_groups.begin();
-  for (; it_g!=_groups.end(); it_g++)
+  for (auto it_g=_map_groups.begin(); it_g!=_map_groups.end(); it_g++)
   {
-    insert_sorted(all, *it_g);
+    insert_sorted(all, it_g->second);
   }
   
   return all; //vettore binary-sorted
@@ -267,23 +276,25 @@ bool Manager::addUndirectedRelationship (const string &ID_start, const string &I
 
 vector<string> Manager::getListConnection(const std::string &starting_ID, const std::string &relationship)
 {
+  if(!relation::belong(relationship))
+    return vector<string>();
   return _graph.branches(starting_ID, relationship);
 }
 
 void Manager::addPost(const Post &post_to_add, const std::string &whose_ID)
 {
-  _map.at(whose_ID).push_back(post_to_add);
+  _map_posts.at(whose_ID).push_back(post_to_add);
 }
 
 void Manager::deletePost(const Post &post_to_delete, const std::string &whose_ID)
 {
-  vector<Post>::iterator it=find(_map.at(whose_ID).begin(), _map.at(whose_ID).end(), post_to_delete);
-  _map.at(whose_ID).erase(it);
+  vector<Post>::iterator it=find(_map_posts.at(whose_ID).begin(), _map_posts.at(whose_ID).end(), post_to_delete);
+  _map_posts.at(whose_ID).erase(it);
 }
 
 void Manager::addLike_Dislike(const bool &like_1_dislike_0, const Post &post_liked, const std::string &ID)
 {
-  vector<Post>::iterator it=find(_map.at(ID).begin(), _map.at(ID).end(), post_liked);
+  vector<Post>::iterator it=find(_map_posts.at(ID).begin(), _map_posts.at(ID).end(), post_liked);
   if (like_1_dislike_0==true)
     it->AddLike(ID);
   if (like_1_dislike_0==false)
@@ -294,22 +305,19 @@ void Manager::addLike_Dislike(const bool &like_1_dislike_0, const Post &post_lik
 
 void Manager::_setNodes()
 {
-  vector<User>::const_iterator it_u=_users.begin();
-  for (; it_u!=_users.end(); it_u++)
+  for (auto it_u=_map_users.begin(); it_u!=_map_users.end(); it_u++)
   {
-    _graph.addNode(it_u->getID());
+    _graph.addNode(it_u->second.getID());
   }
   
-  vector<Company>::const_iterator it_c=_companies.begin();
-  for (; it_c!=_companies.end(); it_c++)
+  for (auto it_c=_map_companies.begin(); it_c!=_map_companies.end(); it_c++)
   {
-    _graph.addNode(it_c->getID());
+    _graph.addNode(it_c->second.getID());
   }
   
-  vector<Group>::const_iterator it_g=_groups.begin();
-  for (; it_g!=_groups.end(); it_g++)
+  for (auto it_g=_map_groups.begin(); it_g!=_map_groups.end(); it_g++)
   {
-    _graph.addNode(it_g->getID());
+    _graph.addNode(it_g->second.getID());
   }
 }
 
@@ -324,16 +332,35 @@ bool Manager::_exist_as_node(const string &ID_to_check)
     return true;
 }
 
-void Manager::_addKey(const std::string &newID)
+void Manager::_setPostKeys()
 {
-  _map[newID]=vector<Post>();
+  for (auto it=_map_users.begin(); it!=_map_users.end(); it++)
+  {
+    _map_posts[it->second.getID()]=vector<Post>();
+  }
 }
 
-void Manager::_setKeys()
+void Manager::_setAccountKeys(const vector<User> &users)
 {
-  for (auto it=_users.begin(); it!=_users.end(); it++)
+  for (auto it=users.begin(); it!=users.end(); it++)
   {
-    _addKey(it->getID());
+    _map_users[it->getID()]=*it;
+  }
+}
+
+void Manager::_setAccountKeys(const vector<Company> &companies)
+{
+  for (auto it=companies.begin(); it!=companies.end(); it++)
+  {
+    _map_companies[it->getID()]=*it;
+  }
+}
+
+void Manager::_setAccountKeys(const vector<Group> &groups)
+{
+  for (auto it=groups.begin(); it!=groups.end(); it++)
+  {
+    _map_groups[it->getID()]=*it;
   }
 }
 
@@ -346,22 +373,22 @@ size_t Manager::NumAccounts() const
 
 size_t Manager::NumUsers() const
 {
-  return _users.size();
+  return _map_users.size();
 }
 
 size_t Manager::NumCompanies() const
 {
-  return _companies.size();
+  return _map_companies.size();
 }
 
 size_t Manager::NumGroups() const
 {
-  return _groups.size();
+  return _map_groups.size();
 }
 
 size_t Manager::NumFriends(const std::string &whose_ID) const
 {
-  if (FindPosbyID(_users, whose_ID)==_users.size())
+  if (_map_users.count(whose_ID)==0)
     return -1; //Controllo che sia un utente.
   
   return _graph.outDegree_withEdge(whose_ID, relation::friendship);
@@ -369,7 +396,7 @@ size_t Manager::NumFriends(const std::string &whose_ID) const
 
 size_t Manager::NumRelatives(const std::string &whose_ID) const
 {
-  if (FindPosbyID(_users, whose_ID)==_users.size())
+  if (_map_users.count(whose_ID)==0)
     return -1; //Controllo che sia un utente.
   
   size_t count=0;
@@ -380,7 +407,7 @@ size_t Manager::NumRelatives(const std::string &whose_ID) const
 
 size_t Manager::NumEmployees(const std::string &company_employer) const
 {
-  if (FindPosbyID(_companies, company_employer)==_companies.size())
+  if (_map_companies.count(company_employer)==0)
     return -1; //Controllo che sia un'azienda.
   
   return _graph.outDegree_withEdge(company_employer, relation::employee);
@@ -388,7 +415,7 @@ size_t Manager::NumEmployees(const std::string &company_employer) const
 
 size_t Manager::NumSubsidiaries(const std::string &company_main) const
 {
-  if (FindPosbyID(_companies, company_main)==_companies.size())
+  if (_map_companies.count(company_main)==0)
     return -1; //Controllo che sia un'azienda.
   
   return _graph.outDegree_withEdge(company_main, relation::co_worker);
@@ -396,7 +423,7 @@ size_t Manager::NumSubsidiaries(const std::string &company_main) const
 
 size_t Manager::NumMembers(const std::string &group) const
 {
-  if (FindPosbyID(_groups, group)==_groups.size())
+  if (_map_groups.count(group)==0)
     return -1; //Controllo che sia un'azienda.
   
   return _graph.outDegree_withEdge(group, relation::membership);
@@ -408,9 +435,9 @@ size_t Manager::NumBornAfter(const Date &start_date) const
     return -1;
   
   int count=0;
-  for (auto it=_users.begin(); it!=_users.end(); it++)
+  for (auto it=_map_users.begin(); it!=_map_users.end(); it++)
   {
-    if (it->getBirth()>start_date)
+    if (it->second.getBirth()>start_date)
       count++;
   }
   return count;
@@ -420,11 +447,11 @@ string Manager::MostEmployingCompany() const
 {
   Company best;
   size_t num_members=0;
-  for (auto it=_companies.begin(); it!=_companies.end(); it++)
+  for (auto it=_map_companies.begin(); it!=_map_companies.end(); it++)
   {
-    if((_graph.outDegree_withEdge(it->getID(), relation::employee))>num_members)
+    if((_graph.outDegree_withEdge(it->second.getID(), relation::employee))>num_members)
     {
-      best=*it;
+      best=it->second;
     }
   }
   return best.getID();
@@ -435,11 +462,11 @@ string Manager::MostEmployingPartnership() const
   Company best;
   vector<string> subs;
   size_t num_members=0, num_prev=0;
-  for (auto it=_companies.begin(); it!=_companies.end(); it++)
+  for (auto it=_map_companies.begin(); it!=_map_companies.end(); it++)
   {
-    num_members=_graph.outDegree_withEdge(it->getID(), relation::employee);
+    num_members=_graph.outDegree_withEdge(it->second.getID(), relation::employee);
     
-    subs=_graph.branches(it->getID(), relation::co_worker);
+    subs=_graph.branches(it->second.getID(), relation::co_worker);
     for (auto it2=subs.begin(); it2!=subs.end(); it++)
     {
       num_members=num_members+_graph.outDegree_withEdge(*it2, relation::employee);
@@ -447,7 +474,7 @@ string Manager::MostEmployingPartnership() const
     
     if (num_members>num_prev)
     {
-      best=*it;
+      best=it->second;
     }
   }
   return best.getID();
@@ -457,11 +484,11 @@ string Manager::UserWithMostFriends() const
 {
   User best;
   size_t num_friends=0;
-  for (auto it=_users.begin(); it!=_users.end(); it++)
+  for (auto it=_map_users.begin(); it!=_map_users.end(); it++)
   {
-    if ((_graph.outDegree_withEdge(it->getID(), relation::friendship))>num_friends)
+    if ((_graph.outDegree_withEdge(it->second.getID(), relation::friendship))>num_friends)
     {
-      best=*it;
+      best=it->second;
     }
   }
   return best.getID();
@@ -471,11 +498,11 @@ string Manager::UserWithMostAcquaintances() const
 {
   User best;
   size_t num_acquaintances=0;
-  for (auto it=_users.begin(); it!=_users.end(); it++)
+  for (auto it=_map_users.begin(); it!=_map_users.end(); it++)
   {
-    if ((_graph.outDegree_withEdge(it->getID(), relation::knowings))>num_acquaintances)
+    if ((_graph.outDegree_withEdge(it->second.getID(), relation::knowings))>num_acquaintances)
     {
-      best=*it;
+      best=it->second;
     }
   }
   return best.getID();
@@ -485,12 +512,12 @@ float Manager::UsersAverageAge() const
 {
   float sum=0;
   Date now = Date::Now();
-  for (auto it=_users.begin(); it!=_users.end(); it++)
+  for (auto it=_map_users.begin(); it!=_map_users.end(); it++)
   {
-    Date tmp = it->getBirth();
+    Date tmp = it->second.getBirth();
     sum=sum+tmp.yearsFrom(now);
   }
-  return (float)sum/(_users.size());
+  return (float)sum/(_map_users.size());
 }
 
 Post Manager::MostLikedPost() const
@@ -500,7 +527,7 @@ Post Manager::MostLikedPost() const
   Post ext_best;
   for (auto it=all_ids.begin(); it!=all_ids.end(); it++)
   {
-    tmp=_map.at(*it);
+    tmp=_map_posts.at(*it);
     vector<Post>::iterator it2 = tmp.begin();
     Post best = *it2;
     for (; it2!=tmp.end(); it2++)
@@ -522,7 +549,7 @@ Post Manager::MostDislikedPost() const
   Post ext_best;
   for (auto it=all_ids.begin(); it!=all_ids.end(); it++)
   {
-    tmp=_map.at(*it);
+    tmp=_map_posts.at(*it);
     vector<Post>::iterator it2 = tmp.begin();
     Post best = *it2;
     for (; it2!=tmp.end(); it2++)
@@ -545,7 +572,7 @@ string Manager::MostLiked_DislikedAccount(const bool &like_1_dislike_0) const
   int likes=0, best_likes=0;
   for (auto it=all_ids.begin(); it!=all_ids.end(); it++)
   {
-    tmp=_map.at(*it);
+    tmp=_map_posts.at(*it);
     vector<Post>::iterator it2 = tmp.begin();
     for (; it2!=tmp.end(); it2++)
     {
@@ -570,7 +597,7 @@ Post Manager::RatioReactionPost(const bool &best_1_worst_0) const
   Post ext_best;
   for (auto it=all_ids.begin(); it!=all_ids.end(); it++)
   {
-    tmp=_map.at(*it);
+    tmp=_map_posts.at(*it);
     vector<Post>::iterator it2 = tmp.begin();
     Post best = *it2;
     for (; it2!=tmp.end(); it2++)
@@ -608,7 +635,7 @@ string Manager::RatioReactionAccount(const bool &best_1_worst_0) const
   float ratio=0, best_ratio=0;
   for (auto it=all_ids.begin(); it!=all_ids.end(); it++)
   {
-    tmp=_map.at(*it);
+    tmp=_map_posts.at(*it);
     vector<Post>::iterator it2 = tmp.begin();
     for (; it2!=tmp.end(); it2++)
     {

@@ -121,16 +121,20 @@ public:
   string RatioReactionAccount(const bool &best_1_worst_0) const;
   
 private:
-  vector<User> _users;
-  vector<Company> _companies;
-  vector<Group> _groups;
+  map<string, User> _map_users;
+  map<string, Company> _map_companies;
+  map<string, Group> _map_groups;
   Graph<string, string> _graph;
-  map<string, vector<Post>> _map;
+  map<string, vector<Post>> _map_posts;
   
   void _setNodes();
   bool _exist_as_node(const string &ID_to_check);
-  void _addKey(const string &newID);
-  void _setKeys();
+  
+  void _setPostKeys();
+  void _setAccountKeys(const vector<User> &users);
+  void _setAccountKeys(const vector<Company> &companies);
+  void _setAccountKeys(const vector<Group> &groups);
+  
 };
 
 template <typename AccountType>
