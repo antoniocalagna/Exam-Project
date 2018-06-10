@@ -15,26 +15,28 @@ bool relation::belong(const std::string &r)
 
 Manager::Manager(const vector<User> &users, const vector<Company> &companies, const vector<Group> &groups)
 {
-  _setAccountKeys(users);
-  _setAccountKeys(companies);
-  _setAccountKeys(groups);
+  _setKeys(users);
+  _setKeys(companies);
+  _setKeys(groups);
   _setNodes();
-  _setPostKeys();
 }
 
 void Manager::setUsers(const vector<User> &users_to_set)
 {
-  _setAccountKeys(users_to_set);
+  _setKeys(users_to_set);
+  _setNodes();
 }
 
 void Manager::setCompanies(const vector<Company> &companies_to_set)
 {
-  _setAccountKeys(companies_to_set);
+  _setKeys(companies_to_set);
+  _setNodes();
 }
 
 void Manager::setGroups(const vector<Group> &groups_to_set)
 {
-  _setAccountKeys(groups_to_set);
+  _setKeys(groups_to_set);
+  _setNodes();
 }
 
 void Manager::setPosts(const vector<Post> &all_posts_of_account, const std::string &whose_ID)
@@ -105,9 +107,9 @@ Group Manager::getGroup(const std::string &ID) const
     return Group();
 }
 
-vector<Post> Manager::getPosts(const std::string &ID) const
+pair<string,vector<Post>> Manager::getPosts(const std::string &ID) const
 {
-  return _map_posts.at(ID);
+  return pair<string,vector<Post>>(ID, _map_posts.at(ID));
 }
 
 //addAccount polimorfica controlla che l'ID non sia già esistente e poi lo aggiunge ordinatamente nel vettore opportuno
@@ -348,35 +350,33 @@ bool Manager::_exist_as_node(const string &ID_to_check)
     return true;
 }
 
-void Manager::_setPostKeys()
-{
-  for (auto it=_map_users.begin(); it!=_map_users.end(); it++)
-  {
-    _map_posts[it->second.getID()]=vector<Post>();
-  }
-}
-
-void Manager::_setAccountKeys(const vector<User> &users)
+void Manager::_setKeys(const vector<User> &users)
 {
   for (auto it=users.begin(); it!=users.end(); it++)
   {
     _map_users[it->getID()]=*it;
+    if (_map_posts.count(it->getID())==0)
+      _map_posts[it->getID()]=vector<Post>();
   }
 }
 
-void Manager::_setAccountKeys(const vector<Company> &companies)
+void Manager::_setKeys(const vector<Company> &companies)
 {
   for (auto it=companies.begin(); it!=companies.end(); it++)
   {
     _map_companies[it->getID()]=*it;
+    if (_map_posts.count(it->getID())==0)
+      _map_posts[it->getID()]=vector<Post>();
   }
 }
 
-void Manager::_setAccountKeys(const vector<Group> &groups)
+void Manager::_setKeys(const vector<Group> &groups)
 {
   for (auto it=groups.begin(); it!=groups.end(); it++)
   {
     _map_groups[it->getID()]=*it;
+    if (_map_posts.count(it->getID())==0)
+      _map_posts[it->getID()]=vector<Post>();
   }
 }
 
@@ -458,7 +458,7 @@ size_t Manager::NumBornAfter(const Date &start_date) const
   return count;
 }
 
-string Manager::MostEmployingCompany() const
+pair<string, Company> Manager::MostEmployingCompany() const
 {
   Company best;
   size_t num_members=0;
@@ -469,10 +469,10 @@ string Manager::MostEmployingCompany() const
       best=it->second;
     }
   }
-  return best.getID();
+  return pair<string, Company>(best.getID(), best);
 }
 
-string Manager::MostEmployingPartnership() const
+pair<string, Company> Manager::MostEmployingPartnership() const
 {
   Company best;
   vector<string> subs;
@@ -492,10 +492,10 @@ string Manager::MostEmployingPartnership() const
       best=it->second;
     }
   }
-  return best.getID();
+  return pair<string, Company>(best.getID(), best);
 }
 
-string Manager::UserWithMostFriends() const
+pair<string, User> Manager::UserWithMostFriends() const
 {
   User best;
   size_t num_friends=0;
@@ -506,10 +506,10 @@ string Manager::UserWithMostFriends() const
       best=it->second;
     }
   }
-  return best.getID();
+  return pair<string, User>(best.getID(), best);
 }
 
-string Manager::UserWithMostAcquaintances() const
+pair<string, User> Manager::UserWithMostAcquaintances() const
 {
   User best;
   size_t num_acquaintances=0;
@@ -520,7 +520,7 @@ string Manager::UserWithMostAcquaintances() const
       best=it->second;
     }
   }
-  return best.getID();
+  return pair<string, User>(best.getID(), best);
 }
 
 float Manager::UsersAverageAge() const
@@ -535,38 +535,48 @@ float Manager::UsersAverageAge() const
   return (float)sum/(_map_users.size());
 }
 
-Post Manager::MostLikedPost() const
+pair<string, Post> Manager::MostLikedPost() const
 {
   vector<string> all_ids=_graph.nodesVector();
   vector<Post> tmp;
   Post ext_best;
+  string id_best;
+  
   for (auto it=all_ids.begin(); it!=all_ids.end(); it++)
   {
     tmp=_map_posts.at(*it);
-    vector<Post>::iterator it2 = tmp.begin();
-    Post best = *it2;
-    for (; it2!=tmp.end(); it2++)
+    if (tmp.size()!=0)
     {
-      if (*it2>best)
-        best=*it2;
-    }
+      vector<Post>::iterator it2 = tmp.begin();
+      Post best = *it2;
+      for (; it2!=tmp.end(); it2++)
+      {
+        if (*it2>best)
+          best=*it2;
+      }
     
     if(best>ext_best)
+    {
       ext_best=best;
+      id_best=*it;
+    }
+    }
   }
-  return ext_best;
+  return pair<string, Post>(id_best,ext_best);
 }
 
-Post Manager::MostDislikedPost() const
+pair<string, Post> Manager::MostDislikedPost() const
 {
   vector<string> all_ids=_graph.nodesVector();
   vector<Post> tmp;
   Post ext_best;
+  string id_best;
   for (auto it=all_ids.begin(); it!=all_ids.end(); it++)
   {
     tmp=_map_posts.at(*it);
     vector<Post>::iterator it2 = tmp.begin();
     Post best = *it2;
+    
     for (; it2!=tmp.end(); it2++)
     {
       if (it2->NumDislikes()>best.NumDislikes())
@@ -574,9 +584,12 @@ Post Manager::MostDislikedPost() const
     }
     
     if(best>ext_best)
+    {
       ext_best=best;
+      id_best=*it;
+    }
   }
-  return ext_best;
+  return pair<string, Post>(id_best,ext_best);
 }
 
 string Manager::MostLiked_DislikedAccount(const bool &like_1_dislike_0) const
@@ -605,11 +618,13 @@ string Manager::MostLiked_DislikedAccount(const bool &like_1_dislike_0) const
   return best_ID;
 }
 
-Post Manager::RatioReactionPost(const bool &best_1_worst_0) const
+pair<string, Post> Manager::RatioReactionPost(const bool &best_1_worst_0) const
 {
   vector<string> all_ids=_graph.nodesVector();
   vector<Post> tmp;
   Post ext_best;
+  string best_ID;
+  
   for (auto it=all_ids.begin(); it!=all_ids.end(); it++)
   {
     tmp=_map_posts.at(*it);
@@ -631,15 +646,21 @@ Post Manager::RatioReactionPost(const bool &best_1_worst_0) const
     if (best_1_worst_0==true)
     {
       if(best>ext_best)
+      {
         ext_best=best;
+        best_ID=*it;
+      }
     }
     if (best_1_worst_0==false)
     {
       if(best<ext_best)
+      {
         ext_best=best;
+        best_ID=*it;
+      }
     }
   }
-  return ext_best;
+  return pair<string, Post>(best_ID, ext_best);
 }
 
 string Manager::RatioReactionAccount(const bool &best_1_worst_0) const

@@ -67,7 +67,7 @@ public:
   User getUser (const string &ID) const;
   Company getCompany (const string &ID) const;
   Group getGroup (const string &ID) const;
-  vector<Post> getPosts (const string &ID) const;
+  pair<string,vector<Post>> getPosts (const string &ID) const;
   
   //Management Functions
   bool addAccount(const User &account_to_add);
@@ -107,17 +107,17 @@ public:
   size_t NumMembers (const string &group) const;
   size_t NumBornAfter (const Date &start_date) const;
   
-  string MostEmployingCompany() const;
-  string MostEmployingPartnership() const;
-  string UserWithMostFriends() const;
-  string UserWithMostAcquaintances() const;
+  pair<string, Company> MostEmployingCompany() const;
+  pair<string, Company> MostEmployingPartnership() const;
+  pair<string, User> UserWithMostFriends() const;
+  pair<string, User> UserWithMostAcquaintances() const;
   
   float UsersAverageAge() const;
   
-  Post MostLikedPost() const;
-  Post MostDislikedPost() const;
+  pair<string, Post> MostLikedPost() const;
+  pair<string, Post> MostDislikedPost() const;
   string MostLiked_DislikedAccount(const bool &like_1_dislike_0) const;
-  Post RatioReactionPost(const bool &best_1_worst_0) const;
+  pair<string, Post> RatioReactionPost(const bool &best_1_worst_0) const;
   string RatioReactionAccount(const bool &best_1_worst_0) const;
   
 private:
@@ -130,10 +130,9 @@ private:
   void _setNodes();
   bool _exist_as_node(const string &ID_to_check);
   
-  void _setPostKeys();
-  void _setAccountKeys(const vector<User> &users);
-  void _setAccountKeys(const vector<Company> &companies);
-  void _setAccountKeys(const vector<Group> &groups);
+  void _setKeys(const vector<User> &users);
+  void _setKeys(const vector<Company> &companies);
+  void _setKeys(const vector<Group> &groups);
   
 };
 
