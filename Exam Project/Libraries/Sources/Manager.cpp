@@ -42,7 +42,6 @@ void Manager::setPosts(const vector<Post> &all_posts_of_account, const std::stri
   _map.at(whose_ID)=all_posts_of_account;
 }
 
-
 vector<User> Manager::getAllUsers() const
 {
   return _users;
@@ -273,7 +272,22 @@ void Manager::addPost(const Post &post_to_add, const std::string &whose_ID)
 void Manager::deletePost(const Post &post_to_delete, const std::string &whose_ID)
 {
   vector<Post>::iterator it=find(_map.at(whose_ID).begin(), _map.at(whose_ID).end(), post_to_delete);
-  _map[whose_ID].erase(it);
+  _map.at(whose_ID).erase(it);
+}
+
+void Manager::addLike_Dislike(const bool &like_1_dislike_0, const Post &post_liked, const std::string &ID)
+{
+  vector<Post>::iterator it=find(_map.at(ID).begin(), _map.at(ID).end(), post_liked);
+  if (like_1_dislike_0==true)
+  {
+    if (it->SearchLike(ID)==-1) //evitiamo like multipli
+      it->AddLike(ID);
+  }
+  if (like_1_dislike_0==false)
+  {
+    if (it->SearchDislike(ID)==-1)
+      it->AddDislike(ID);
+  }
 }
 
 //PRIVATE METHODS
@@ -519,4 +533,29 @@ Post Manager::MostDislikedPost() const
       ext_best=best;
   }
   return ext_best;
+}
+
+string Manager::MostLiked_DislikedAccount(const bool &like_1_dislike_0) const
+{
+  vector<Post> tmp;
+  string best_ID;
+  int likes=0, best_likes=0;
+  for (auto it=_users.begin(); it!=_users.end(); it++)
+  {
+    tmp=_map.at(it->getID());
+    vector<Post>::iterator it2 = tmp.begin();
+    for (; it2!=tmp.end(); it2++)
+    {
+      if (like_1_dislike_0==true)
+        likes=likes+it2->NumLikes();
+      if (like_1_dislike_0==false)
+        likes=likes+it2->NumDislikes();
+    }
+   if (likes>best_likes)
+   {
+     best_ID=it->getID();
+     best_likes=likes;
+   }
+  }
+  return best_ID;
 }

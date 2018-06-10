@@ -43,10 +43,6 @@ namespace gender
   const char genders[MAX] = {'M', 'F', 'N', 'A', 'B', 'O'};
 }
 
-/*
-//STATISTICS FUNCTIONS TO PASS
-size_t byFriends (const string &whose_ID, const Graph<string, string> &_graph);*/
-
 class Manager
 {
 public:
@@ -94,6 +90,7 @@ public:
   
   void addPost (const Post &post_to_add, const string &whose_ID);
   void deletePost (const Post &post_to_delete, const string &whose_ID);
+  void addLike_Dislike (const bool &like_1_dislike_0, const Post &post_liked, const string &ID);
   
   //Statistics Functions
   
@@ -101,8 +98,6 @@ public:
   size_t NumUsers() const;
   size_t NumCompanies() const;
   size_t NumGroups() const;
-  
-  //size_t NumberOf (const string &ID, size_t (*f)(const string &ID, const Graph<string, string> &graph));
   
   size_t NumFriends (const string &whose_ID) const;
   size_t NumRelatives (const string &whose_ID) const;
@@ -120,6 +115,7 @@ public:
   
   Post MostLikedPost() const;
   Post MostDislikedPost() const;
+  string MostLiked_DislikedAccount(const bool &like_1_dislike_0) const;
   
 private:
   vector<User> _users;
