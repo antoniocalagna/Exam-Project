@@ -14,7 +14,7 @@ namespace fh { //File handler;
 //Srtruttura utilizzata come ritorno delle funzioni per fornire informazioni più complete
 struct Error {
   unsigned int code;
-  int info;
+  unsigned int info;
 };
 
 //Ritorna la cifra richiesta in un numero esadecimale (La cifra 1 è quella più a sinistra
@@ -25,6 +25,8 @@ std::string error(unsigned int code);
 
 //Legge un campo formattato come "nome_campo:{......}" ignorando le parentesi graffe
 std::string readField(const std::string &field_name, const std::string &raw_str);
+
+bool deleteLine(std::fstream &f, const std::string &line, long long pos);
 
 Error checkAccountsFile(std::ifstream &f);
 } //Namespace fh

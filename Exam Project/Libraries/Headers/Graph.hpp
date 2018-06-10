@@ -7,15 +7,16 @@
 
 #include <vector>
 #include <map>
+#include <unordered_set>
 #include <algorithm>
 
 template<typename node_T, typename edge_T>
 class Graph {
 public:
   /**Aliases */
-  using NodeEdges = std::map<size_t, edge_T>;
-  using Nodes = std::vector<node_T>;
-  using Edges = std::vector<NodeEdges>;
+  using Nodes = std::unordered_set<node_T>;
+  using NodeEdges = std::map<node_T, edge_T>;
+  using Edges = std::map<node_T, NodeEdges>;
   
   /**Static members */
   static const edge_T no_edge;
@@ -32,24 +33,24 @@ public:
   ~Graph() = default;
   
   /**Getters */
-  size_t nodesNumber() const;                                                  //Numero di nodi
-  size_t degree() const;                                                 //Numero di archi
-  size_t degree(const node_T &node) const;                               //Grado complessivo di un nodo
-  size_t inDegree(const node_T &node) const;                             //Grado input
-  size_t outDegree(const node_T &node) const;                            //Grado output
+  size_t nodesNumber() const;                                                //Numero di nodi
+  size_t degree() const;                                                     //Numero di archi
+  size_t degree(const node_T &node) const;                                   //Grado complessivo di un nodo
+  size_t inDegree(const node_T &node) const;                                 //Grado input
+  size_t outDegree(const node_T &node) const;                                //Grado output
   size_t outDegree_withEdge(const node_T &node, const edge_T &edge) const;   //Grado output considerando solo un peso
-  edge_T edge(const node_T &starting_node, const node_T &target_node) const;  //Arco tra due nodi
+  edge_T edge(const node_T &starting_node, const node_T &target_node) const; //Arco tra due nodi
   
   /*References*/
-  node_T &node(unsigned int pos);                                             //Reference al nodo in posizione pos
-  const std::vector<node_T> &nodesVector() const;                             //Ritorna una const reference ai nodi
+  const node_T &node(unsigned int pos) const;                                 //Const reference al nodo in posizione pos
+  std::vector<node_T> nodesVector() const;                                    //Ritorna un vettore contenente i nodi
   
   /**General*/
   void clear();
-  size_t find(const node_T &node) const;   //Ritorna la posizione di un nodo
-  size_t size() const;  //Ritorna la dimensione del vettore dei nodi
-  void addNode(const node_T &new_node);         //Aggiungi un nodo
-  void popNode(const node_T &to_erase);         //Rimuovi un nodo
+  size_t find(const node_T &node) const;                                      //Ritorna la posizione di un nodo
+  void addNode(const node_T &new_node);                                       //Aggiungi un nodo
+  void editNode(const node_T &old_node, const node_T &new_node);               //Modifica un nodo
+  void popNode(const node_T &to_erase);                                       //Rimuovi un nodo
   //Imposta il valore di un arco UNIDIREZIONALE
   void setEdge(const node_T &starting_node, const node_T &target_node, const edge_T &new_value);
   //Imposta il valore di un arco BIDIREZIONALE
@@ -59,7 +60,7 @@ public:
   std::vector<node_T> branches(const node_T &starting_node, const edge_T &edge) const;
   
   /**Operators */
-  node_T &operator[](unsigned int pos);
+  const node_T &operator[](unsigned int pos) const;
   Graph<node_T, edge_T> &operator=(const Graph<node_T, edge_T> &to_copy);
 };
 
@@ -93,8 +94,10 @@ size_t Graph<node_T, edge_T>::degree() const {
   //Ritorna il numero totale di archi nel grafo
   size_t count = 0;
   
-  for (int i = 0; i < _edges.size(); i++) {
-    count += (size_t) std::distance(_edges[i].begin(), _edges[i].end());
+  /* Deferenziare un iteratore di una mappa restituisce uno std::pair. Il primo elemento è la chiave, il secondo
+   * è l'elemento mappato. */
+  for (auto it = _edges.begin(); it != _edges.end(); it++) {
+    count += (it->second).size();     //In questo caso vogliamo la size della mappa interna
   }
   
   return count;
@@ -103,30 +106,28 @@ size_t Graph<node_T, edge_T>::degree() const {
 template<typename node_T, typename edge_T>
 edge_T Graph<node_T, edge_T>::edge(const node_T &starting_node, const node_T &target_node) const {
   //Ritorna una copia dell'arco (DIRETTO) tra starting_node e target_node.
-  //Trova le posizioni dei due archi
-  size_t pos_starting = find(starting_node);
-  size_t pos_target = find(target_node);
   
-  if (pos_starting == _nodes.size() ||
-      pos_target == _nodes.size()) { return no_edge; } //Controlla che entrambi esistano
+  if (_nodes.find(starting_node) == _nodes.end() ||
+      _nodes.find(starting_node) == _nodes.end())   //Controlla che siano entrambi presenti
+    return no_edge;
+  if (_edges.at(starting_node)
+            .count(target_node) == 0)               //Controlla se esiste una connessione tra i due nodi
+    return no_edge;
   
-  if (_edges[pos_starting].count(pos_target) == 0) { return no_edge; }   //Controlla che esista un arco tra i nodi
-  /* La .count(const key_type& k) delle map conta il numero di elementi che hanno quella chiave. */
-  
-  return _edges[pos_starting].at(pos_target);
-  //Bisogna usare la funzione .at() perchè l'operatore [] non è const
+  return _edges.at(starting_node).at(target_node);
 }
 
 template<typename node_T, typename edge_T>
 size_t Graph<node_T, edge_T>::inDegree(const node_T &node) const {
   //Ritorna il grado di ingresso del nodo richiesto
   //Ricerca il nodo
-  size_t pos = find(node);
+  if (_nodes.find(node) == _nodes.end())
+    return 0;
   
-  //Conta i nodi entranti in esso
+  //Conta fli archi entranti in esso
   size_t count = 0;
-  for (int i = 0; i < _edges.size(); i++) {
-    count += _edges[i].count(pos);
+  for (auto it = _edges.begin(); it != _edges.end(); it++) {
+    count += _edges.at(it->first).count(node);
   }
   
   return count;
@@ -135,20 +136,23 @@ size_t Graph<node_T, edge_T>::inDegree(const node_T &node) const {
 template<typename node_T, typename edge_T>
 size_t Graph<node_T, edge_T>::outDegree(const node_T &node) const {
   //Ritorna il grado di uscita del nodo richiesto
-  //Ricerca il nodo
-  size_t pos = find(node);
-  return _edges[pos].size();
+  if (_nodes.find(node) == _nodes.end())      //Controlla che il nodo esista
+    return 0;
+  return _edges.at(node).size();
 }
 
 template<typename node_T, typename edge_T>
 size_t Graph<node_T, edge_T>::outDegree_withEdge(const node_T &node, const edge_T &edge) const {
-  size_t pos = find(node);
+  if (_nodes.find(node) == _nodes.end())                        //Controlla che sia presente
+    return 0;
+  
+  //Scorri tutti gli archi uscenti dal nodo e conta solo quelli con il valore richesto
   size_t count = 0;
-  for (auto it = _edges[pos].begin(); it != _edges[pos].end(); it++) {
-    if (it->second == edge) {
+  for (auto it = _edges.at(node).begin(); it != _edges.at(node).end(); it++) {
+    if (it->second == edge)                       //L'elemento mappato si trova nel .second di uno std::pair
       count++;
-    }
   }
+  
   return count;
 }
 
@@ -163,19 +167,23 @@ size_t Graph<node_T, edge_T>::degree(const node_T &node) const {
  */
 
 template<typename node_T, typename edge_T>
-node_T &Graph<node_T, edge_T>::node(unsigned int pos) {
-  return _nodes[pos];
+const node_T &Graph<node_T, edge_T>::node(unsigned int pos) const {
+  auto it = _nodes.begin();
+  
+  //Non vengono eseguiti controlli (la richiesta di una posizione troppo alta restituirà un'errore delle mappe)
+  std::advance(it, pos);
+  return *it;
 }
 
 template<typename node_T, typename edge_T>
-const std::vector<node_T> &Graph<node_T, edge_T>::nodesVector() const {
-  /*
-   * Questa funzione ritorna una const reference in maniera tale da:
-   * -Risparmiare memoria quando le funzioni lavorano sul vettore dei nodi se si passa questa funzione come parametro
-   * -Proteggere i dati del grafo nel caso in cui il ritorno della funzione venga assegnato ad una reference non const
-   * -Permettere la normale copia del vettore
-   */
-  return _nodes;
+std::vector<node_T> Graph<node_T, edge_T>::nodesVector() const {
+  //Ritorna una lista dei nodi sotto forma di vettore
+  std::vector<node_T> out(_nodes.size());             //Prepara un vettore della lunghezza corretta
+  auto it = _nodes.begin();
+  for (int i = 0; i < _nodes.size(); i++, it++) {     //Incrementa contatore e iteratore parallelamente
+    out[i] = *it;
+  }
+  return out;
 }
 
 /**#############
@@ -191,45 +199,62 @@ void Graph<node_T, edge_T>::clear() {
 
 template<typename node_T, typename edge_T>
 size_t Graph<node_T, edge_T>::find(const node_T &node) const {
-  /* Ritorna la posizione del nodo richiesto all'interno del vettore. Se il nodo non esiste, ritorna
-   * la size() del vettore (cioè la posizione successiva all'ultimo elemento)
-   */
-  //Ricerca il nodo e ritorna la distanza del suo iteratore dal _nodes.begin()
-  return (size_t) std::distance(_nodes.begin(), std::find(_nodes.begin(), _nodes.end(), node));
+  //Ritorna la posizione del nodo richiesto. Se il nodo non esiste, viene restituita la size di _nodes.
+  return (size_t) std::distance(_nodes.begin(), _nodes.find(node));
 }
 
 template<typename node_T, typename edge_T>
 void Graph<node_T, edge_T>::addNode(const node_T &new_node) {
-  _nodes.push_back(new_node);
-  _edges.resize(_nodes.size());
+  _nodes.insert(new_node);
+  _edges[new_node] = NodeEdges();                        //Alloca anche la mappa
+}
+
+template<typename node_T, typename edge_T>
+void Graph<node_T, edge_T>::editNode(const node_T &old_node, const node_T &new_node) {
+  /* Uno std::unordered_set ha gli elementi costanti. Per modificare un nodo del grafo bisogna creare un nuovo nodo,
+   * copiare gli archi di quello vecchio ed infine eliminare il nodo vecchio.
+   */
+  addNode(new_node);                                    //Aggiungi il nuovo nodo
+  _edges.at(new_node) = _edges.at(old_node);            //Copia gli archi in uscita
+  
+  //Copia gli archi in entrata
+  for (auto it = _edges.begin(); it != _edges.end(); it++) {
+    if ((it->second).count(old_node) == 1)             //Controlla se l'elemento puntato ha una connessione com iò nodo
+      (it->second)[new_node] = (it->second).at(old_node); //In questo caso copiane l'arco (usa [] per sicurezza)
+  }
+  popNode(old_node);                                  //Elimina il vecchio nodo
 }
 
 template<typename node_T, typename edge_T>
 void Graph<node_T, edge_T>::popNode(const node_T &to_erase) {
-  //Elimina il nodo dal grafo
-  size_t pos = find(to_erase);
-  if (pos == _nodes.size()) { return; }    //Controlla che il nodo esista
+  //Elimina un nodo
+  if (_nodes.find(to_erase) == _nodes.end())
+    return;                                          //Risparmiati tutte le operazioni
+  //Cerca tutti gli archi entranti in questo nodo
+  for (auto it = _edges.begin(); it != _edges.end(); it++) {
+    if ((it->second).count(to_erase) != 0) {
+      (it->second).erase(to_erase);
+    }
+  }
+  _edges.erase(to_erase);
+  _nodes.erase(to_erase);                    //Eliminalo dal set dei nodi
+  return;
   
-  _nodes.erase(_nodes.begin() + pos);
-  _edges.erase(_edges.begin() + pos);
 }
 
 template<typename node_T, typename edge_T>
 void Graph<node_T, edge_T>::setEdge(const node_T &starting_node, const node_T &target_node, const edge_T &new_value) {
   //Imposta il valore dell'arco (DIRETTO) tra starting_node e target_node con il valore richiesto.
-  size_t pos_starting = find(starting_node);
-  size_t pos_target = find(target_node);
+  if (_nodes.find(starting_node) == _nodes.end() ||
+      _nodes.find(target_node) == _nodes.end())             //Controlla che i nodi siano presenti
+    return;
   
-  if (pos_starting == _nodes.size() ||
-      pos_target == _nodes.size()) { return; } //Controlla che entrambi esistano
-  
-  if (new_value == Graph<node_T, edge_T>::no_edge) {
-    //Implicita richiesta di eliminazione del nodo
-    _edges[pos_starting].erase(pos_target);
+  if (new_value == no_edge) {                               //Implicita richiesta di eliminazione di un nodo
+    _edges.at(starting_node).erase(target_node);
     return;
   }
   
-  _edges[pos_starting][pos_target] = new_value;
+  _edges.at(starting_node)[target_node] = new_value;
 }
 
 template<typename node_T, typename edge_T>
@@ -241,23 +266,18 @@ void Graph<node_T, edge_T>::bsetEdge(const node_T &starting_node, const node_T &
 template<typename node_T, typename edge_T>
 std::vector<node_T> Graph<node_T, edge_T>::branches(const node_T &starting_node, const edge_T &edge) const {
   //Ritorna una lista di nodi connessi allo starting_node tramite un arco del valore richiesto
-  std::vector<node_T> branches;
+  std::vector<node_T> branches;                //Qui non è possibile conoscere la dimensione a priori
   
-  if (edge == Graph<node_T, edge_T>::no_edge) { return branches; }    //E' stata richiesta la non connessione
+  if (edge == no_edge) { return branches; }    //E' stata richiesta la non connessione
   
-  //Controlla che il nodo richiesto esista
-  size_t pos = find(starting_node);
-  
-  if (pos == _nodes.size()) { return branches; }  //Nodo non trovato
-  
-  for (auto it = _edges[pos].begin(); it != _edges[pos].end(); it++) {
+  if (_nodes.find(starting_node) == _nodes.end())
+    return branches;                          //Nodo non trovato
+  for (auto it = _edges.at(starting_node).begin(); it != _edges.at(starting_node).end(); it++) {
     if (it->second == edge) {
-      //In second è salvato il valore del contenuto mappato, in questo caso dell'arco (la chiave è l'indice!)
-      //In first, invece, è salvata la chiave, che in questo caso è corrispondente alle posizioni nel vettore!
-      branches.push_back(_nodes[it->first]);
+      //In second è salvato il valore del contenuto mappato, in questo caso dell'arco (la chiave è l'elemento!)
+      branches.push_back(it->first);
     }
   }
-  
   return branches;
 }
 
@@ -267,7 +287,7 @@ std::vector<node_T> Graph<node_T, edge_T>::branches(const node_T &starting_node,
  */
 
 template<typename node_T, typename edge_T>
-node_T &Graph<node_T, edge_T>::operator[](unsigned int pos) {
+const node_T &Graph<node_T, edge_T>::operator[](unsigned int pos) const {
   return node(pos);
 }
 

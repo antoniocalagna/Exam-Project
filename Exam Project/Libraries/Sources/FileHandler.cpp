@@ -12,7 +12,7 @@ unsigned char fh::getHexDigit(unsigned int number, unsigned int digit_pos) {
   }
   number >>= digit_pos * 4;               //Shifta 4 bit per cifra
   number &= 0x0000000F;                   //Azzera tutti i bit antecedenti
-  return (unsigned char)(number);
+  return (unsigned char) (number);
 }
 
 std::string fh::error(unsigned int code) {
@@ -43,6 +43,11 @@ std::string fh::readField(const std::string &field_name, const std::string &raw_
   
   //Non considerare il nome del campo, i : e le parentesi graffe
   return raw_str.substr(field_name.size() + 2, raw_str.size() - (field_name.size() + 3));
+}
+
+bool fh::deleteLine(std::fstream &f, const std::string &line, long long pos){
+  std::ofstream f2;
+  
 }
 
 fh::Error fh::checkAccountsFile(std::ifstream &f) {
