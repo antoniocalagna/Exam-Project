@@ -5,30 +5,33 @@
 #ifndef SOCIAL_NETWORK_FILEHANDLER_H
 #define SOCIAL_NETWORK_FILEHANDLER_H
 
-#include <string>
 #include <fstream>
-#include "Account.h"
-
-namespace fh { //File handler;
-
-//Srtruttura utilizzata come ritorno delle funzioni per fornire informazioni più complete
+#include <sstream>
+namespace FH {
 struct Error {
   unsigned int code;
-  unsigned int info;
+  unsigned int data;
 };
 
-//Ritorna la cifra richiesta in un numero esadecimale (La cifra 1 è quella più a sinistra
-unsigned char getHexDigit(unsigned int number, unsigned int digit_pos);
+class FileHandler {
+private:
+  std::fstream _file;        //File
+  std::string _filename;     //Nome del file
 
-//Traduce il codice errore nella stringa corrispondente
-std::string error(unsigned int code);
+public:
+  /**Constructors & Destructor*/
+  FileHandler() = default;
+  FileHandler(const std::string &filename);
+  ~FileHandler();
+  
+  /**General*/
+  bool open(const std::string &filename);
+  bool is_open();
+  void close();
+  bool updateInfo(const std::string &new_info, Error (*checker_func)(const std::stringstream &line));
+  Error checkLineFormat(Error (*checker_func)(const std::stringstream &), const std::string &line);
+  Error checkFile(Error (*checker_func)(const std::stringstream &));
+};
 
-//Legge un campo formattato come "nome_campo:{......}" ignorando le parentesi graffe
-std::string readField(const std::string &field_name, const std::string &raw_str);
-
-bool deleteLine(std::fstream &f, const std::string &line, long long pos);
-
-Error checkAccountsFile(std::ifstream &f);
-} //Namespace fh
-
+} //Namespace FH
 #endif //SOCIAL_NETWORK_FILEHANDLER_H
