@@ -56,3 +56,24 @@ FH::Error FH::FileHandler::checkFile(Error (*checker_func)(const std::stringstre
     current_line++;
   }
 }
+
+User FH::FileHandler::flushUser() {
+  if (_user_buffer.empty()) { return User(); }  //Controlla che la queue non sia vuota
+  const User &temp = _user_buffer.front();
+  _user_buffer.pop();
+  return temp;
+}
+
+Group FH::FileHandler::flushGroup() {
+  if (_group_buffer.empty()) { return Group(); }
+  const Group &temp = _group_buffer.front();
+  _group_buffer.pop();
+  return temp;
+}
+
+Company FH::FileHandler::flushCompany() {
+  if (_company_buffer.empty()) { return Company(); }
+  const Company &temp = _company_buffer.front();
+  _company_buffer.pop();
+  return temp;
+}
