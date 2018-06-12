@@ -73,7 +73,7 @@ void Account::operator=(const Account &to_be_assigned) {
 bool Account::IDValid(const std::string &ID) {
   size_t size = ID.size();
   if (size < 3 || size > 20) return false;                      //Limiti sulle dimensioni (per "convenzione")
-    //Scorri l'ID e controlla che sia puramente alfanumerico e che contenga al massimo underscore
+  //Scorri l'ID e controlla che sia puramente alfanumerico e che contenga al massimo underscore
   for (int i = 0; i < size; i++) {
     if (!isalnum(ID[i]) && ID[i] != '_')
       return false;
@@ -84,5 +84,15 @@ bool Account::IDValid(const std::string &ID) {
 bool Account::typeValid(char type) {
   if (type != user_type && type != group_type && type != company_type)
     return false;
+  return true;
+}
+
+bool Account::nameValid(const std::string &name) {
+  if (name.empty())
+    return false;
+  for (int i = 0; i < name.size(); i++) {
+    if (!isalnum(name[i] && !name[i] == ' ' && name[i] != '\''))               //Caratteri permessi
+      return false;
+  }
   return true;
 }

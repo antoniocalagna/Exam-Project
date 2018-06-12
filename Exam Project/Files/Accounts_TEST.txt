@@ -1,1 +1,1 @@
-domi_123,U,{nome:{Domenico},cognome:{Di Grusa},gender:{U},addr:{Viale Regione Siciliana 5300},sub:{20/07/2012},birth:{20/10/1997}}
+domi_123,U,{name:{Domenico},surname:{Di Grusa},gender:{U},addr:{Viale Regione Siciliana 5300},sub:{20/07/2012},birth:{20/10/1997}}
