@@ -26,6 +26,7 @@ bool FH::FileHandler::open(const std::string &filename) {
     close();
   }
   _file.open(filename);
+  _filename = filename;
   return _file.is_open();
 }
 
@@ -34,6 +35,7 @@ bool FH::FileHandler::is_open() {
 }
 
 void FH::FileHandler::close() {
+  _filename = "";
   _file.close();
 }
 
@@ -130,12 +132,23 @@ FH::Error FH::IDsfile(std::stringstream &line) {
     std::string name, surname, address;
     char gender;
     Date birth, subscription;
-    name = readField("name", name);
+    name = readField("name", info);
     if (name.empty()) { return {0x13000001, 0}; }
+    if (!Account::nameValid(name)) { return {0x23000001, 0}; }
+    
     surname = readField("surname", info);
     if (surname.empty()) { return {0x13000002, 0}; }
-    address = readField("address", info);
+    if (!Account::nameValid(surname)) { return {0x23000001, 0}; }
+    
+    address = readField("addr", info);
     if(address.empty()) { return {0x13000004, 0}; }
+    if(!Account::nameValid(address)) { return {0x23000004, 0}; }
+    
+    birth.acquireDateByString(readField("birth", info));
+    if(!Date::CheckDate(birth)) { return {0x23000006, 0}; }
+    
+    subscription.acquireDateByString(readField("sub", info));
+    if(!Date::CheckDate(subscription)) { return {0x23000005, 0}; }
   }
   else if (type == Account::group_type) {
     //L'account è un gruppo
