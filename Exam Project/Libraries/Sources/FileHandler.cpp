@@ -144,10 +144,10 @@ FH::Error FH::IDsfile(std::stringstream &line) {
     if(address.empty()) { return {0x13000004, 0}; }
     if(!Account::nameValid(address)) { return {0x23000004, 0}; }
     
-    birth.acquireDateByString(readField("birth", info));
+    birth.scanDateByStr(readField("birth", info));
     if(!Date::CheckDate(birth)) { return {0x23000006, 0}; }
     
-    subscription.acquireDateByString(readField("sub", info));
+    subscription.scanDateByStr(readField("sub", info));
     if(!Date::CheckDate(subscription)) { return {0x23000005, 0}; }
   }
   else if (type == Account::group_type) {

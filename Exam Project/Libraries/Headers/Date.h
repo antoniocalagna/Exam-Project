@@ -51,7 +51,7 @@ public:
   // Useful to compute the age of a person, where this is the person’s birth date
   int yearsFrom(const Date &d) const;
   // Sets the private attribute _date (the date as a string in the form dd/mm/yyyy)
-  void acquireDateByString(string s);
+  void scanDateByStr(const string &s);
   void correctValues();
   
   //Overloading operators:

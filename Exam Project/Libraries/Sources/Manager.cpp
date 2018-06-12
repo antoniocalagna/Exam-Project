@@ -265,6 +265,13 @@ bool Manager::addDirectedRelationship(const string &ID_start, const string &ID_t
 {
   if(!relation::belong(relationship))
     return false;
+  if((!_exist_as_node(ID_start))||(!_exist_as_node(ID_target)))
+    return false;
+  if((relationship==relation::parent)&&(_checkAge(ID_start, ID_target)))
+    return false;
+  if((relationship==relation::born)&&(_checkAge(ID_target, ID_start)))
+    return false;
+  
   _graph.setEdge(ID_start, ID_target, relationship);
   return true;
 }
@@ -272,6 +279,8 @@ bool Manager::addDirectedRelationship(const string &ID_start, const string &ID_t
 bool Manager::addUndirectedRelationship (const string &ID_start, const string &ID_target, const string &relationship)
 {
   if(!relation::belong(relationship))
+    return false;
+  if((!_exist_as_node(ID_start))||(!_exist_as_node(ID_target)))
     return false;
   _graph.bsetEdge(ID_start, ID_target, relationship);
   return true;
@@ -378,6 +387,11 @@ void Manager::_setKeys(const vector<Group> &groups)
     if (_map_posts.count(it->getID())==0)
       _map_posts[it->getID()]=vector<Post>();
   }
+}
+
+bool Manager::_checkAge(const std::string &ID_old, const std::string &ID_young) const
+{
+  return _map_users.at(ID_old).getBirth()<_map_users.at(ID_young).getBirth();
 }
 
 //STATISTICS

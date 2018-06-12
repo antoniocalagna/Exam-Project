@@ -25,7 +25,7 @@ Date::Date (const int &d, const int &m, const int &y)
 
 Date::Date (const string &date_to_set)
 {
-  acquireDateByString(date_to_set);
+  scanDateByStr(date_to_set);
 }
 
 Date::Date (const Date &to_copy)
@@ -157,7 +157,7 @@ int Date::yearsFrom(const Date &d) const
   return -1;
 }
 
-void Date::acquireDateByString(string s)
+void Date::scanDateByStr(const string &s)
 {
   //La funzione acquisisce una data da una stringa formattata nel seguente modo: dd/mm/yyyy
   int d_tmp,m_tmp,y_tmp;
