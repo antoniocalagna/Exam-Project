@@ -10,6 +10,7 @@
 #define Manager_h
 
 #include <map>
+#include <unordered_map>
 #include "User.h"
 #include "Company.h"
 #include "Group.h"
@@ -124,11 +125,11 @@ public:
   unordered_set<string> LonerPeople(const unsigned int &relations, const unsigned int &memberships, const bool &employed, const unsigned int &newsreactions);
   
 private:
-  map<string, User> _map_users;
-  map<string, Company> _map_companies;
-  map<string, Group> _map_groups;
+  unordered_map<string, User> _map_users;
+  unordered_map<string, Company> _map_companies;
+  unordered_map<string, Group> _map_groups;
   Graph<string, string> _graph;
-  map<string, vector<Post>> _map_posts;
+  unordered_map<string, vector<Post>> _map_posts;
   
   void _setNodes();
   bool _exist_as_node(const string &ID_to_check);
