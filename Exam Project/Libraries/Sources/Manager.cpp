@@ -10,7 +10,7 @@
 
 bool relation::belong(const std::string &r)
 {
-  return ((r!=(relation::friendship))&&(r!=(relation::knowings))&&(r!=(relation::parent))&&(r!=(relation::partner))&&(r!=(relation::employee))&&(r!=(relation::co_worker))&&(r!=(relation::membership)));
+  return ((r!=(relation::friendship))||(r!=(relation::knowings))||(r!=(relation::parent))||(r!=(relation::partner))||(r!=(relation::employee))||(r!=(relation::co_worker))||(r!=(relation::membership)));
 }
 
 Manager::Manager(const vector<User> &users, const vector<Company> &companies, const vector<Group> &groups)
@@ -116,7 +116,7 @@ pair<string,vector<Post>> Manager::getPosts(const std::string &ID) const
 
 bool Manager::addAccount(const User &account_to_add)
 {
-  if (!_exist_as_node(account_to_add.getID()))
+  if (_exist_as_node(account_to_add.getID()))
     return false;
   
   _map_users[account_to_add.getID()]=account_to_add;
@@ -127,7 +127,7 @@ bool Manager::addAccount(const User &account_to_add)
 
 bool Manager::addAccount(const Company &account_to_add)
 {
-  if (!_exist_as_node(account_to_add.getID()))
+  if (_exist_as_node(account_to_add.getID()))
     return false;
   
   _map_companies[account_to_add.getID()]=account_to_add;
@@ -138,7 +138,7 @@ bool Manager::addAccount(const Company &account_to_add)
 
 bool Manager::addAccount(const Group &account_to_add)
 {
-  if (!_exist_as_node(account_to_add.getID()))
+  if (_exist_as_node(account_to_add.getID()))
     return false;
   
   _map_groups[account_to_add.getID()]=account_to_add;
@@ -188,7 +188,7 @@ void Manager::deleteRelationship(const std::string &root, const std::string &tar
 
 bool Manager::replaceAccount(const std::string &ID_to_replace, const User &new_account)
 {
-  if (!_exist_as_node(new_account.getID()))
+  if (_exist_as_node(new_account.getID()))
     return false;
   
   size_t count=_map_users.count(ID_to_replace);
@@ -206,7 +206,7 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const User &new_a
 
 bool Manager::replaceAccount(const std::string &ID_to_replace, const Company &new_account)
 {
-  if (!_exist_as_node(new_account.getID()))
+  if (_exist_as_node(new_account.getID()))
     return false;
   
   size_t count=_map_companies.count(ID_to_replace);
@@ -224,7 +224,7 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const Company &ne
 
 bool Manager::replaceAccount(const std::string &ID_to_replace, const Group &new_account)
 {
-  if (!_exist_as_node(new_account.getID()))
+  if (_exist_as_node(new_account.getID()))
     return false;
   
   size_t count=_map_users.count(ID_to_replace);
@@ -272,7 +272,15 @@ bool Manager::addDirectedRelationship(const string &ID_start, const string &ID_t
   if((relationship==relation::born)&&(_checkAge(ID_target, ID_start)))
     return false;
   
+  if ((relationship==relation::friendship)||(relationship==relation::knowings)||(relationship==relation::partner))
+    _graph.bsetEdge(ID_start,ID_target,relationship);
+  else if (relationship==relation::parent)
+    _graph.setEdge(ID_target, ID_start, relation::born);
+  else if (relationship==relation::employee)
+    _graph.setEdge(ID_target, ID_start, relation::employer);
+  
   _graph.setEdge(ID_start, ID_target, relationship);
+
   return true;
 }
 
@@ -282,6 +290,9 @@ bool Manager::addUndirectedRelationship (const string &ID_start, const string &I
     return false;
   if((!_exist_as_node(ID_start))||(!_exist_as_node(ID_target)))
     return false;
+  if ((relationship==relation::parent)||(relationship==relation::born)||(relationship==relation::employee)||(relationship==relation::employer)||(relationship==relation::membership))
+    return false;
+  
   _graph.bsetEdge(ID_start, ID_target, relationship);
   return true;
 }
@@ -353,10 +364,10 @@ bool Manager::_exist_as_node(const string &ID_to_check)
   size_t pos=_graph.find(ID_to_check);
   if (pos!=_graph.nodesNumber())
   {
-    return false; //ID already exists!
+    return true; //ID already exists!
   }
   else
-    return true;
+    return false;
 }
 
 void Manager::_setKeys(const vector<User> &users)
@@ -716,6 +727,13 @@ unordered_set<string> Manager::LonerPeople(const unsigned int &relations, const 
 {
   unordered_set<string> set;
   bool isLoner = true;
+  bool isValid = false;
+  
+  if((relations!=0)||(memberships!=0)||(employed!=false)||(newsreactions!=0))
+    isValid=true;
+  else
+    return set;
+  
   for (auto it=_map_users.begin(); it!=_map_users.end(); it++)
   {
     if (memberships!=0)
@@ -755,22 +773,25 @@ unordered_set<string> Manager::LonerPeople(const unsigned int &relations, const 
     {
       int count_reactions=0;
       
-      for (auto it_post = it->second.begin(); it_post!=it->second.end(); it_post++)
+      if (_map_users.count(it->first)!=0)
       {
-        if (it_post->SearchLike(it->first)!=-1)
-          count_reactions++;
-        if (it_post->SearchDislike(it->first)!=-1)
-          count_reactions++;
-      }
-      if (count_reactions<newsreactions)
-      {
-        if (set.count(it->first)==0)
-          set.insert(it->first);
-      }
-      else
-      {
-        if (set.count(it->first)!=0)
-          set.erase(it->first);
+        for (auto it_post = it->second.begin(); it_post!=it->second.end(); it_post++)
+        {
+          if (it_post->SearchLike(it->first)!=-1)
+            count_reactions++;
+          if (it_post->SearchDislike(it->first)!=-1)
+            count_reactions++;
+        }
+        if (count_reactions<newsreactions)
+        {
+          if (set.count(it->first)==0)
+            set.insert(it->first);
+        }
+        else
+        {
+          if (set.count(it->first)!=0)
+            set.erase(it->first);
+        }
       }
     }
   }
