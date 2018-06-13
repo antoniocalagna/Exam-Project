@@ -7,7 +7,6 @@
 
 #include <fstream>
 #include <sstream>
-#include "IOBuffer.hpp"
 #include "User.h"
 #include "Group.h"
 #include "Company.h"
@@ -43,10 +42,6 @@ public:
   Error checkFile(Error (*checker_func)(std::stringstream &));
   
   /**File data exchange*/
-  Error pushToFile(Error (*checker_func)(std::stringstream &), const std::string &new_data);
-  
-  template<typename data_T>
-  void pullFromFile(bool (*getter_func)(std::stringstream &, IOBuffer<data_T> &), IOBuffer<data_T> &buffer);
 };  //Class FileHandler
 
 bool isFormatChar(const std::string &s, size_t pos);
@@ -57,25 +52,5 @@ Error IDsfile(std::stringstream &line);
 Error relationsFile(std::stringstream &line);
 Error postsFile(std::stringstream &line);
 
-//Acquisizione dati
-template <typename data_T>
-bool IDsfile(std::stringstream &line, IOBuffer<data_T> &buffer);
-
-std::string err(Error e);
-} //Namespace FH
-
-//Implementazione della funzione template
-template<typename data_T>
-void FH::FileHandler::pullFromFile(bool (*getter_func)(stringstream &, IOBuffer<data_T> &),
-                                   IOBuffer<data_T> &buffer) {
-  if (!_file.is_open()) { return; }
-  std::string line;
-  while (_file.good()) {
-    std::getline(_file, line);
-    std::stringstream line_stream(line);
-    bool success = getter_func(line_stream, buffer);
-    if (!success) { return; }
-  }
-}
-
+};//Namespace FH
 #endif //SOCIAL_NETWORK_FILEHANDLER_H

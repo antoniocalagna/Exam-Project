@@ -15,12 +15,12 @@ set(HDR Libraries/Headers)
 set(                                                #Qui si fa una sorta di assegnazione: chiamando "${SOURCE_FILES}"
         SOURCE_FILES                                #è come se scrivessi tutta questa roba
         ${HDR}/Graph.hpp
-        ${HDR}/IOBuffer.hpp
         ${HDR}/Clock.h          ${SRC}/Clock.cpp
         ${HDR}/Date.h           ${SRC}/Date.cpp
         ${HDR}/FileHandler.h    ${SRC}/FileHandler.cpp
         ${HDR}/Manager.h        ${SRC}/Manager.cpp
         ${HDR}/Post.h           ${SRC}/Post.cpp
+        ${HDR}/IOBuffer.h           ${SRC}/IOBuffer.cpp
 
         ${HDR}/Account\ Hierarchy/Account.h     ${SRC}/Account\ Hierarchy/Account.cpp
         ${HDR}/Account\ Hierarchy/Company.h     ${SRC}/Account\ Hierarchy/Company.cpp
