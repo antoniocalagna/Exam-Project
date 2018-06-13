@@ -31,6 +31,7 @@ namespace relation
   
   const string partner = "partner";
   
+  const string employer = "boss";
   const string employee = "hired";
   const string co_worker = "subsidiaries";
   
@@ -119,6 +120,8 @@ public:
   string MostLiked_DislikedAccount(const bool &like_1_dislike_0) const;
   pair<string, Post> RatioReactionPost(const bool &best_1_worst_0) const;
   string RatioReactionAccount(const bool &best_1_worst_0) const;
+  
+  unordered_set<string> LonerPeople(const unsigned int &relations, const unsigned int &memberships, const bool &employed, const unsigned int &newsreactions);
   
 private:
   map<string, User> _map_users;

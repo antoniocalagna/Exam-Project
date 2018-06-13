@@ -711,3 +711,69 @@ string Manager::RatioReactionAccount(const bool &best_1_worst_0) const
   }
   return best_ID;
 }
+
+unordered_set<string> Manager::LonerPeople(const unsigned int &relations, const unsigned int &memberships, const bool &employed, const unsigned int &newsreactions)
+{
+  unordered_set<string> set;
+  bool isLoner = true;
+  for (auto it=_map_users.begin(); it!=_map_users.end(); it++)
+  {
+    if (memberships!=0)
+    {
+      if(_graph.outDegree_withEdge(it->first, relation::membership)>memberships)
+        isLoner=false;
+    }
+    
+    if ((employed!=false)&&(isLoner==true))
+    {
+      if (_graph.outDegree_withEdge(it->first, relation::employee)!=0)
+        isLoner=false;
+    }
+    
+    if ((relations!=0)&&(isLoner==true))
+    {
+      int count_relations=0;
+      count_relations=(int)_graph.outDegree_withEdge(it->first, relation::friendship);
+      count_relations=count_relations+(int)_graph.outDegree_withEdge(it->first, relation::knowings);
+      count_relations=count_relations+(int)_graph.outDegree_withEdge(it->first, relation::parent);
+      count_relations=count_relations+(int)_graph.outDegree_withEdge(it->first, relation::born);
+      count_relations=count_relations+(int)_graph.outDegree_withEdge(it->first, relation::partner);
+      
+      if (count_relations>relations)
+        isLoner=false;
+    }
+    
+    if(isLoner==true)
+      set.insert(it->second.getID());
+    else
+      isLoner=true; //per ricominciare il ciclo correttamente
+  }
+  
+  if (newsreactions!=0)
+  {
+    for (auto it=_map_posts.begin(); it!=_map_posts.end(); it++)
+    {
+      int count_reactions=0;
+      
+      for (auto it_post = it->second.begin(); it_post!=it->second.end(); it_post++)
+      {
+        if (it_post->SearchLike(it->first)!=-1)
+          count_reactions++;
+        if (it_post->SearchDislike(it->first)!=-1)
+          count_reactions++;
+      }
+      if (count_reactions<newsreactions)
+      {
+        if (set.count(it->first)==0)
+          set.insert(it->first);
+      }
+      else
+      {
+        if (set.count(it->first)!=0)
+          set.erase(it->first);
+      }
+    }
+  }
+  
+  return set;
+}
