@@ -30,7 +30,7 @@ bool FH::FileHandler::open(const std::string &filename) {
   return _file.is_open();
 }
 
-bool FH::FileHandler::is_open() {
+bool FH::FileHandler::is_open() const {
   return _file.is_open();
 }
 
@@ -40,7 +40,7 @@ void FH::FileHandler::close() {
 }
 
 FH::Error FH::FileHandler::checkLineFormat(Error (*checker_func)(std::stringstream &),
-                                           const std::string &line) {
+                                           const std::string &line) const {
   std::stringstream line_s(line);
   return checker_func(line_s);
 }
@@ -61,27 +61,6 @@ FH::Error FH::FileHandler::checkFile(Error (*checker_func)(std::stringstream &))
     current_line++;
   }
   return {0, current_line};
-}
-
-User FH::FileHandler::flushUser() {
-  if (_user_buffer.empty()) { return User(); }  //Controlla che la queue non sia vuota
-  User temp = _user_buffer.front();
-  _user_buffer.pop();
-  return temp;
-}
-
-Group FH::FileHandler::flushGroup() {
-  if (_group_buffer.empty()) { return Group(); }
-  Group temp = _group_buffer.front();
-  _group_buffer.pop();
-  return temp;
-}
-
-Company FH::FileHandler::flushCompany() {
-  if (_company_buffer.empty()) { return Company(); }
-  Company temp = _company_buffer.front();
-  _company_buffer.pop();
-  return temp;
 }
 
 ///////////////////////////////////////////////  NAMESPACE FH FUNCTIONS  ///////////////////////////////////////////////
@@ -141,14 +120,14 @@ FH::Error FH::IDsfile(std::stringstream &line) {
     if (!Account::nameValid(surname)) { return {0x23000001, 0}; }
     
     address = readField("addr", info);
-    if(address.empty()) { return {0x13000004, 0}; }
-    if(!Account::nameValid(address)) { return {0x23000004, 0}; }
+    if (address.empty()) { return {0x13000004, 0}; }
+    if (!Account::nameValid(address)) { return {0x23000004, 0}; }
     
     birth.scanDateByStr(readField("birth", info));
-    if(!Date::CheckDate(birth)) { return {0x23000006, 0}; }
+    if (!Date::CheckDate(birth)) { return {0x23000006, 0}; }
     
     subscription.scanDateByStr(readField("sub", info));
-    if(!Date::CheckDate(subscription)) { return {0x23000005, 0}; }
+    if (!Date::CheckDate(subscription)) { return {0x23000005, 0}; }
   }
   else if (type == Account::group_type) {
     //L'account è un gruppo
