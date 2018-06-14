@@ -16,20 +16,18 @@ class Post {
 public:
   //Constructors & Destructor
   Post();
-  Post(/*const string &iduser,*/ const string &news, const Clock &time, const vector<string> &likes,
+  Post(const string &news, const Clock &time, const vector<string> &likes,
        const vector<string> &dislikes);
   ~Post();
   
   //Setters
   void setNews(const string &news);
-  //void setIdUser(const string &iduser);
   void setTime(const Clock &time);
   void setLikes(const vector<string> &likes);
   void setDislikes(const vector<string> &dislikes);
   
   //Getters
   string getNews() const;
-  //string getIdUser() const;
   Clock getTime() const;
   vector<string> getLikes() const;
   vector<string> getDislikes() const;
@@ -55,7 +53,6 @@ public:
   
 private:
   string _news;
-  //string _iduser;
   Clock _time;
   vector<string> _likes, _dislikes; //empty constructors
   

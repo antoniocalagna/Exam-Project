@@ -7,13 +7,11 @@
 //Constructors & Destructor
 Post::Post() {
   _news = "blank";
-  //_iduser = "blank";
   _time = Clock();
 }
 
 Post::Post(/*const string &iduser, */const string &news, const Clock &time, const vector<string> &likes,
            const vector<string> &dislikes) {
-  //_iduser = iduser;
   _news = news;
   _time = time;
   _likes = likes;
@@ -29,10 +27,6 @@ Post::~Post() {
 void Post::setNews(const string &news) {
   _news = news;
 }
-
-/*void Post::setIdUser(const string &iduser) {
-  _iduser = iduser;
-}*/
 
 void Post::setTime(const Clock &time) {
   _time = time;
@@ -51,10 +45,6 @@ string Post::getNews() const {
   return _news;
 }
 
-/*string Post::getIdUser() const {
-  return _iduser;
-}*/
-
 Clock Post::getTime() const {
   return _time;
 }
@@ -69,7 +59,7 @@ vector<string> Post::getDislikes() const {
 
 //Operators
 bool Post::operator==(const Post &to_be_compared) {
-  return (/*(_iduser == to_be_compared._iduser) &&*/ (_news == to_be_compared._news) && (_time == to_be_compared._time));
+  return ((_news == to_be_compared._news) && (_time == to_be_compared._time));
 }
 
 bool Post::operator!=(const Post &to_be_compared) {
@@ -86,7 +76,7 @@ bool Post::operator<(const Post &is_greater) {
 
 ostream &operator<<(ostream &stream, const Post &p) {
   int i;
-  stream << /*p._iduser << ", " << */p._news <<", " << p._time <<"like: {";
+  stream << p._news <<", " << p._time <<"like: {";
   if(p._likes.size()!=0) {
     for (i = 0; i < (p._likes.size() - 1); i++) {
       stream << p._likes[i] << ", ";

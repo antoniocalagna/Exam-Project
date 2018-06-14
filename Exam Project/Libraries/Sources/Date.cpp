@@ -104,18 +104,19 @@ void Date::setCurrentDate() {
   //Definisco le variabili di tipo "tempo" e la struttura richiesta da ctime.h
   time_t rawtime;
   struct tm *timeinfo;
-  char buffer[10]; //Richiesto dalla funzione ahimé..
+  char buffer[11];
   
-  //La procedura per il calcolo di data (ed eventualmente ora) al momento dell'esecuzione prevede i seguenti passaggi:
   time(&rawtime); //Restituisce il tempo in secondi a partire da una data di default
   timeinfo = localtime(&rawtime); //Strutturizza quel tempo
   strftime(buffer, 10, "%F", timeinfo); //Estraggo da tale struttura le informazioni desiderate convertendole in un vettore di caratteri. Lo specificatore "%x" determina il tipo di informazione, in rete sono reperibili tutti gli specificatori.
-  string s(&buffer[0]); //Tale costruttore stringa converte il vettore di caratteri in una stringa C++
   
-  // istringstream (s) >> _month >> _day >> _year; //Ho tentato con uno stream ad estrarre i singoli elementi della stringa ma non ha funzionato: BAD INPUT
-  
-  sscanf(buffer, "%d-%d-%d", &_year, &_month, &_day); //Analisi formattata dell'array all'antica.
-  
+  stringstream sstream(buffer); //Traspongo il buffer in uno stringstream
+
+  sstream>>_year; //Analisi formattata
+  sstream.ignore(1);
+  sstream>>_month;
+  sstream.ignore(1);
+  sstream>>_day;
 }
 
 int Date::yearsFrom(const Date &d) const {

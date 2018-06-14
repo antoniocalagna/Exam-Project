@@ -117,16 +117,27 @@ void Clock::SetCurrentTime()
 {
   time_t raw;
   struct tm * timeinfo;
-  char buffer [8];
+  char buffer [9];
   time (&raw); //Tempo in secondi
   timeinfo = localtime(&raw); //Strutturizza
   strftime(buffer, 8, "%X", timeinfo); //Formatta
-  sscanf(buffer, "%d/%d/%d", &_hours, &_minutes, &_seconds); //Analisi e set
+  
+  stringstream sstream (buffer);
+  sstream>>_hours;
+  sstream.ignore(1);
+  sstream>>_minutes;
+  sstream.ignore(1);
+  sstream>>_seconds;
 }
 
 void Clock::Acquire(std::string s)
 {
-  sscanf(s.c_str(), "%d:%d:%d", &_hours, &_minutes, &_seconds);
+  stringstream sstream (s);
+  sstream>>_hours;
+  sstream.ignore(1);
+  sstream>>_minutes;
+  sstream.ignore(1);
+  sstream>>_seconds;
 }
 
 ostream &operator<< (ostream &stream, const Clock& c)
