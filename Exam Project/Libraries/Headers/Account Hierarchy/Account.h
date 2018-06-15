@@ -59,4 +59,21 @@ protected:
   
 };
 
+namespace relation {
+const string friendship = "friend";
+const string knowings = "acquaintance";
+
+const string parent = "parent";
+const string born = "son";
+
+const string partner = "partner";
+
+const string employer = "boss";
+const string employee = "hired";
+const string co_worker = "subsidiary";
+
+const string membership = "member";
+
+bool belong (const string &r);
+}
 #endif /* Account_h */

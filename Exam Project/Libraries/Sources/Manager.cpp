@@ -8,11 +8,6 @@
 
 #include "Manager.h"
 
-bool relation::belong(const std::string &r)
-{
-  return ((r!=(relation::friendship))||(r!=(relation::knowings))||(r!=(relation::parent))||(r!=(relation::partner))||(r!=(relation::employee))||(r!=(relation::co_worker))||(r!=(relation::membership)));
-}
-
 Manager::Manager(const vector<User> &users, const vector<Company> &companies, const vector<Group> &groups)
 {
   _setKeys(users);
