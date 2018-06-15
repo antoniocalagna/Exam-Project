@@ -86,3 +86,11 @@ void User::operator=(const User &to_be_assigned)
   this -> _birth = to_be_assigned._birth;
 }
 
+bool gender::isValid(char g) {
+  int n_genders = sizeof(genders)/sizeof(genders[0]);
+  for(int i = 0; i < n_genders; i++) {
+    if (g == genders[i])
+      return true;
+  }
+  return false;
+}

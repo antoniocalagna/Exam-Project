@@ -1,4 +1,0 @@
-domi_123,U,{name:{Domenico},surname:{Di Grusa},gender:{U},addr:{Viale Regione Siciliana 5300},sub:{20/07/2012},birth:{20/10/1997}}
-sofa000,U,{name:{Sofia},surname:{Faiella},gender:{D},addr:{Via Amari 63},sub:{21/2/2012},birth:{09/05/1998}}
-CsanG,U,{name:{Claudio},surname:{Sangari},gender:{U},addr:{Via Libera Russia 10},sub:{07/01/2013},birth:{16/02/1997}}
-totina,U,{name:{Antonio},surname:{Calagna}, gender:{N},addr:{Porta Venezia},sub:{22/10/2016},birth:{27/10/1998}}
