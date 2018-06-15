@@ -120,7 +120,7 @@ void Clock::SetCurrentTime()
   char buffer [9];
   time (&raw); //Tempo in secondi
   timeinfo = localtime(&raw); //Strutturizza
-  strftime(buffer, 8, "%X", timeinfo); //Formatta
+  strftime(buffer, 9, "%H %M %S", timeinfo); //Formatta
   
   stringstream sstream (buffer);
   sstream>>_hours;

@@ -108,7 +108,7 @@ void Date::setCurrentDate() {
   
   time(&rawtime); //Restituisce il tempo in secondi a partire da una data di default
   timeinfo = localtime(&rawtime); //Strutturizza quel tempo
-  strftime(buffer, 10, "%F", timeinfo); //Estraggo da tale struttura le informazioni desiderate convertendole in un vettore di caratteri. Lo specificatore "%x" determina il tipo di informazione, in rete sono reperibili tutti gli specificatori.
+  strftime(buffer, 11, "%Y %m %d", timeinfo); //Estraggo da tale struttura le informazioni desiderate convertendole in un vettore di caratteri. Lo specificatore "%x" determina il tipo di informazione, in rete sono reperibili tutti gli specificatori.
   
   stringstream sstream(buffer); //Traspongo il buffer in uno stringstream
 
