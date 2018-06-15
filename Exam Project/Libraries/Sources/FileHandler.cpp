@@ -4,6 +4,15 @@
 
 #include "FileHandler.h"
 
+/**#################
+ * ## Static Data ##
+ * #################
+ */
+const std::string FH::FileHandler::windows_relative_path = "../Files/";
+const std::string FH::FileHandler::mac_relative_path = "../../../Exam Project/Files/";
+const char FH::FileHandler::parser_char = '&';
+const char FH::FileHandler::format_chars[] = {'{', '}', '&'};
+
 /**###############################
  * ## Constructors & Destructor ##
  * ###############################
@@ -21,9 +30,21 @@ FH::FileHandler::~FileHandler() {
  * ## General ##
  * #############
  */
-bool FH::FileHandler::open(const std::string &filename) {
+const std::string &FH::FileHandler::filename() const {
+  return _filename;
+}
+
+bool FH::FileHandler::open(std::string filename, bool windows_system, bool direct_access) {
   if (_file.is_open()) {
     close();
+  }
+  //Accesso al file tramite path relativo
+  if (direct_access) {
+    if (windows_system) {
+      filename = FileHandler::windows_relative_path + filename;
+    } else {
+      filename = FileHandler::mac_relative_path + filename;
+    }
   }
   _file.open(filename);
   _filename = filename;
@@ -128,11 +149,9 @@ FH::Error FH::IDsfile(std::stringstream &line) {
     
     subscription.scanDateByStr(readField("sub", info));
     if (!Date::CheckDate(subscription)) { return {0x23000005, 0}; }
-  }
-  else if (type == Account::group_type) {
+  } else if (type == Account::group_type) {
     //L'account è un gruppo
-  }
-  else if (type == Account::company_type) {
+  } else if (type == Account::company_type) {
     //L'account è una compagnia
   }
   return {0, 0};
