@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <iterator>
+#include <set>
 #include "Clock.h"
 
 using namespace std;
@@ -16,21 +17,21 @@ class Post {
 public:
   //Constructors & Destructor
   Post();
-  Post(const string &news, const Clock &time, const vector<string> &likes,
-       const vector<string> &dislikes);
+  Post(const string &news, const Clock &time, const set<string> &likes,
+       const set<string> &dislikes);
   ~Post();
   
   //Setters
   void setNews(const string &news);
   void setTime(const Clock &time);
-  void setLikes(const vector<string> &likes);
-  void setDislikes(const vector<string> &dislikes);
+  void setLikes(const set<string> &likes);
+  void setDislikes(const set<string> &dislikes);
   
   //Getters
   string getNews() const;
   Clock getTime() const;
-  vector<string> getLikes() const;
-  vector<string> getDislikes() const;
+  set<string> getLikes() const;
+  set<string> getDislikes() const;
   
   //Overloading operators
   bool operator==(const Post &to_be_compared); //non comparo i likes perchè mi sembrano parametri troppo variabili
@@ -44,8 +45,8 @@ public:
   void AddDislike(const string &id);
   void RemoveLike(const string &id);
   void RemoveDislike(const string &id);
-  int SearchLike(const string &ID) const; //passo un ID, ritorna l'indice del vettore se il likes c'è, sennò ritorna -1
-  int SearchDislike(const string &ID)const;
+  int SearchLike(const string &ID) const; //ANTO QUESTE SONO QUELLE IN CUI DOVREBBE RITORNARE UN ITERATORE
+  int SearchDislike(const string &ID)const;//IO HO FATTO LA VERSIONE DA BAMBINI: passo un ID, ritorna 1 se il likes c'è, sennò ritorna -1
   int NumLikes(); //numero likes
   int NumDislikes();
   float RatioReaction(); //rapporto LIKE/(DISLIKE+LIKE) così da poter studiare i post più 'popolari'
@@ -54,10 +55,8 @@ public:
 private:
   string _news;
   Clock _time;
-  vector<string> _likes, _dislikes; //empty constructors
-  
-  //ho deciso di usare VETTORI e non LISTE, perchè così posso accedervi tramite indice, senza dover sfogliare dall'inizio
-  //(((((me l'ha detto Scisca, se non è vero ha sbagliato lui.))))) :-) tvb
+  set<string> _likes, _dislikes; //empty constructors
+
   
 };
 
