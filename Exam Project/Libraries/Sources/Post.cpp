@@ -10,7 +10,7 @@ Post::Post() {
   _time = Clock();
 }
 
-Post::Post(/*const string &iduser, */const string &news, const Clock &time, const vector<string> &likes,
+Post::Post(const string &news, const Clock &time, const vector<string> &likes,
            const vector<string> &dislikes) {
   _news = news;
   _time = time;
