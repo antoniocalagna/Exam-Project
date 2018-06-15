@@ -29,7 +29,7 @@ T FindByID(const string &ID, const vector<T> &vect_accounts)
 }
 
 //La funzione ritorna un iteratore all'elemento aggiunto nel vettore.
-//L'algoritmo di inserimento è di complessità N*log(N), il massimo desiderabile.
+//L'algoritmo di inserimento è di complessità N*log(N), il massimo desiderabile per i vettori.
 //Esso fa uso della upper_bound dei vettori, sfrutta il fatto che il vettore sia già ordinato per determinare la posizione di inserimento corretta per il nuovo elemento.
 //La upper_bound, basata su binary_search è molto veloce ed efficace, il colpevole del rallentamento è l'inserimento nel vettore.
 //La funzione consente quindi l'inserimento di un derivato (ad es. User di tipo T) in un vettore ordinato di Account (tipo E)
