@@ -73,4 +73,4 @@ void Group::operator=(const Group &to_be_assigned)
   this -> _type_of_activity = to_be_assigned._type_of_activity;
   this -> _inception = to_be_assigned._inception;
 }
-
+ 

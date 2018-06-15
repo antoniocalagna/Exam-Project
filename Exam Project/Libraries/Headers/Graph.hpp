@@ -297,4 +297,4 @@ Graph<node_T, edge_T> &Graph<node_T, edge_T>::operator=(const Graph<node_T, edge
   this->_edges = to_copy._edges;
 }
 
-#endif //GRAPH2_GRAPH_HPP
+#endif //GRAPH2_GRAPH_HPP 

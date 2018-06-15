@@ -47,4 +47,4 @@ private:
 };
 
 
-#endif /* Company_h */
+#endif /* Company_h */ 

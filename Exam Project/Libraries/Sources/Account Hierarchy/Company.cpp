@@ -85,5 +85,5 @@ void Company::operator=(const Company &to_be_assigned)
   this -> _operative_location = to_be_assigned._operative_location;
   this -> _type_of_product = to_be_assigned._type_of_product;
   this -> _inception = to_be_assigned._inception;
-}
+} 
 

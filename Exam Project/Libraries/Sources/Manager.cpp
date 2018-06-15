@@ -792,4 +792,4 @@ unordered_set<string> Manager::LonerPeople(const unsigned int &relations, const 
   }
   
   return set;
-}
+} 

@@ -158,4 +158,4 @@ size_t FindPosbyID (const vector<AccountType> &v, const string &ID)
 }
 
 
-#endif /* Manager_h */
+#endif /* Manager_h */ 

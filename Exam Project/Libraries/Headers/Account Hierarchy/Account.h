@@ -76,4 +76,4 @@ const string membership = "member";
 
 bool belong (const string &r);
 }
-#endif /* Account_h */
+#endif /* Account_h */ 

@@ -52,4 +52,4 @@ const char genders[] = {'M', 'F', 'N', 'A', 'B', 'O'};
 bool isValid(char g);
 }
 
-#endif /* User_h */
+#endif /* User_h */ 

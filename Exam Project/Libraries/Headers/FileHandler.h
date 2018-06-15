@@ -65,4 +65,4 @@ Error postsFile(std::stringstream &line);
 //Stampa su file
 
 };//Namespace FH
-#endif //SOCIAL_NETWORK_FILEHANDLER_H
+#endif //SOCIAL_NETWORK_FILEHANDLER_H 

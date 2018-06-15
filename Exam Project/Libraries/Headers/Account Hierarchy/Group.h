@@ -44,4 +44,4 @@ private:
   
 };
 
-#endif /* Group_h */
+#endif /* Group_h */ 

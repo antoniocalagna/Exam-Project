@@ -93,4 +93,4 @@ bool gender::isValid(char g) {
       return true;
   }
   return false;
-}
+} 

@@ -39,4 +39,4 @@ typename std::vector<E>::iterator insert_sorted (vector<E> &vec, T const &item)
 {
   return vec.insert (upper_bound(vec.begin(), vec.end(), item), item);
 }
-#endif /* Main_Functions_h */
+#endif /* Main_Functions_h */ 

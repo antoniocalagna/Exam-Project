@@ -203,4 +203,4 @@ bool Clock::operator>(const Clock &is_smaller)
 {
   return !(*this < is_smaller || *this == is_smaller);
 }
-
+ 
