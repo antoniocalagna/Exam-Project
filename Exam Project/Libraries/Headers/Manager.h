@@ -18,6 +18,33 @@
 #include "Post.h"
 #include "TemplateFunctions.hpp"
 
+#define MAX 6 //Gender's array.
+
+//NAMESPACES
+
+namespace relation
+{
+  const string friendship = "friend";
+  const string knowings = "acquaintances";
+  
+  const string parent = "mother/father";
+  const string born = "daughter/son";
+  
+  const string partner = "partner";
+  
+  const string employer = "boss";
+  const string employee = "hired";
+  const string co_worker = "subsidiaries";
+  
+  const string membership = "member";
+  
+  bool belong (const string &r);
+}
+
+namespace gender
+{
+  const char genders[MAX] = {'M', 'F', 'N', 'A', 'B', 'O'};
+}
 
 class Manager
 {

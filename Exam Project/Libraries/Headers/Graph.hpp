@@ -6,7 +6,7 @@
 #define GRAPH2_GRAPH_HPP
 
 #include <vector>
-#include <unordered_map>
+#include <map>
 #include <unordered_set>
 #include <algorithm>
 
@@ -15,8 +15,8 @@ class Graph {
 public:
   /**Aliases */
   using Nodes = std::unordered_set<node_T>;
-  using NodeEdges = std::unordered_map<node_T, edge_T>;
-  using Edges = std::unordered_map<node_T, NodeEdges>;
+  using NodeEdges = std::map<node_T, edge_T>;
+  using Edges = std::map<node_T, NodeEdges>;
   
   /**Static members */
   static const edge_T no_edge;
