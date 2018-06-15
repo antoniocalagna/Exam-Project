@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 project(Social_Network)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 #QUI le cartelle
 include_directories(Libraries/Headers               #Qui vengono aggiunti i percorsi di ricerca per la #include
@@ -20,7 +22,7 @@ set(                                                #Qui si fa una sorta di asse
         ${HDR}/FileHandler.h    ${SRC}/FileHandler.cpp
         ${HDR}/Manager.h        ${SRC}/Manager.cpp
         ${HDR}/Post.h           ${SRC}/Post.cpp
-        ${HDR}/IOBuffer.h           ${SRC}/IOBuffer.cpp
+        ${HDR}/IOBuffer.h       ${SRC}/IOBuffer.cpp
 
         ${HDR}/Account\ Hierarchy/Account.h     ${SRC}/Account\ Hierarchy/Account.cpp
         ${HDR}/Account\ Hierarchy/Company.h     ${SRC}/Account\ Hierarchy/Company.cpp
