@@ -113,9 +113,7 @@ void Date::setCurrentDate() {
   stringstream sstream(buffer); //Traspongo il buffer in uno stringstream
 
   sstream>>_year; //Analisi formattata
-  sstream.ignore(1);
   sstream>>_month;
-  sstream.ignore(1);
   sstream>>_day;
 }
 

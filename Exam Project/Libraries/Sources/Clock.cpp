@@ -124,9 +124,7 @@ void Clock::SetCurrentTime()
   
   stringstream sstream (buffer);
   sstream>>_hours;
-  sstream.ignore(1);
   sstream>>_minutes;
-  sstream.ignore(1);
   sstream>>_seconds;
 }
 
