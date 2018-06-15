@@ -93,6 +93,12 @@ void FH::FileHandler::close() {
 
 FH::Error FH::FileHandler::checkLineFormat(Error (*checker_func)(std::stringstream &),
                                            const std::string &line) const {
+  if(line.empty()) {
+    return {0,0};     //Ignora le righe vuote
+  }
+  if(line.size() >= 2 && (line[0] == '/' && line[1] == '/')) {
+    return {0, 0};    //Riga commento
+  }
   std::stringstream line_s(line);
   return checker_func(line_s);
 }
@@ -141,7 +147,7 @@ bool FH::isFormatChar(const std::string &s, size_t pos) {
 }
 
 std::string FH::readField(const std::string &field, const std::string &data) {
-  size_t field_pos = data.find(field + ":");                          //Ricerca del campo
+  size_t field_pos = data.find(field + ":{");                         //Ricerca del campo
   if (field_pos == std::string::npos) { return ""; }                  //Campo non presente
   
   size_t data_beg = field_pos + 2 + field.size();                     //Il dato comincia dopo i :{ e la size di field
@@ -196,14 +202,34 @@ FH::Error FH::IDsfile(std::stringstream &line) {
     gender = readField("gender", info);                         //Controllo genere
     if(gender.size() != 1 || !gender::isValid(gender[0])) { return {0x13000003, 0}; }
     
-    birth.scanDateByStr(readField("birth", info));
+    birth.scanDateByStr(readField("birth", info));              //Controllo data di nascita
     if (!Date::CheckDate(birth)) { return {0x23000006, 0}; }
     
-    subscription.scanDateByStr(readField("sub", info));
+    subscription.scanDateByStr(readField("sub", info));         //Controllo data di iscrizione
     if (!Date::CheckDate(subscription)) { return {0x23000005, 0}; }
   }
   else if (type == Account::group_type) {
     //L'account è un gruppo
+    std::string name, location, activity;
+    Date inception, subscription;
+    
+    name = readField("name", info);                               //Controllo nome
+    if (name.empty()) { return {0x13000001, 0}; }
+    if (!Account::nameValid(name)) { return {0x23000001, 0}; }
+    
+    location = readField("location", info);                       //Controllo posizione legale
+    if(location.empty()) { return {0x13000004, 0}; }
+    if(!Account::nameValid(location)) {return {0x23000004, 0}; }
+    
+    activity = readField("activity", info);
+    if(activity.empty()) { return {0x13000007, 0}; }
+    if(!Account::nameValid(activity)) {return {0x23000007, 0}; }
+  
+    inception.scanDateByStr(readField("inception", info));              //Controllo data di creazione del gruppo
+    if (!Date::CheckDate(inception)) { return {0x23000008, 0}; }
+    
+    subscription.scanDateByStr(readField("sub", info));              //Controllo data di iscrizione
+    if (!Date::CheckDate(subscription)) { return {0x23000005, 0}; }
   }
   else if (type == Account::company_type) {
     //L'account è una compagnia
