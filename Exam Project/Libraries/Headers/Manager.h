@@ -56,9 +56,7 @@ public:
   
   vector<Account> getAllAccounts() const;
   
-  bool addDirectedRelationship (const string &ID_start, const string &ID_target, const string &relationship);
-  
-  bool addUndirectedRelationship (const string &ID_start, const string &ID_target, const string &relationship);
+  bool addRelationship (const string &ID_start, const string &ID_target, const string &relationship);
   
   vector<string> getListConnection (const string &starting_ID, const string &relationship);
   
@@ -80,10 +78,10 @@ public:
   size_t NumMembers (const string &group) const;
   size_t NumBornAfter (const Date &start_date) const;
   
-  pair<string, Company> MostEmployingCompany() const;
-  pair<string, Company> MostEmployingPartnership() const;
-  pair<string, User> UserWithMostFriends() const;
-  pair<string, User> UserWithMostAcquaintances() const;
+  Company MostEmployingCompany() const;
+  vector<string> MostEmployingPartnership() const;
+  User UserWithMostFriends() const;
+  User UserWithMostAcquaintances() const;
   
   float UsersAverageAge() const;
   

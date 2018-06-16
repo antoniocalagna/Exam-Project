@@ -256,39 +256,36 @@ vector<Account> Manager::getAllAccounts() const
   return all; //vettore binary-sorted
 }
 
-bool Manager::addDirectedRelationship(const string &ID_start, const string &ID_target, const string &relationship)
+bool Manager::addRelationship(const string &ID_start, const string &ID_target, const string &relationship)
 {
   if(!relation::belong(relationship))
-    return false;
+    return false; //Controllo che la relazione esista.
   if((!_exist_as_node(ID_start))||(!_exist_as_node(ID_target)))
-    return false;
+    return false; //Controllo che gli ID esistano.
+  
+  //Controllo che l'età dei due utenti non entri in contraddizione con una parentela.
   if((relationship==relation::parent)&&(_checkAge(ID_start, ID_target)))
     return false;
   if((relationship==relation::born)&&(_checkAge(ID_target, ID_start)))
     return false;
   
-  if ((relationship==relation::friendship)||(relationship==relation::knowings)||(relationship==relation::partner))
+  //Le relazioni mutue richiedono un arco bi-direzionato
+  if ((relationship==relation::friendship)||(relationship==relation::knowings)||(relationship==relation::partner)||(relationship==relation::membership))
     _graph.bsetEdge(ID_start,ID_target,relationship);
+  
+  //Per ogni relazione non mutua fisso anche la complementare inversa.
   else if (relationship==relation::parent)
     _graph.setEdge(ID_target, ID_start, relation::born);
+  else if (relationship==relation::born)
+    _graph.setEdge(ID_target, ID_start, relation::parent);
+  
   else if (relationship==relation::employee)
     _graph.setEdge(ID_target, ID_start, relation::employer);
+  else if (relationship==relation::employer)
+    _graph.setEdge(ID_target, ID_start, relation::employee);
   
   _graph.setEdge(ID_start, ID_target, relationship);
 
-  return true;
-}
-
-bool Manager::addUndirectedRelationship (const string &ID_start, const string &ID_target, const string &relationship)
-{
-  if(!relation::belong(relationship))
-    return false;
-  if((!_exist_as_node(ID_start))||(!_exist_as_node(ID_target)))
-    return false;
-  if ((relationship==relation::parent)||(relationship==relation::born)||(relationship==relation::employee)||(relationship==relation::employer)||(relationship==relation::membership))
-    return false;
-  
-  _graph.bsetEdge(ID_start, ID_target, relationship);
   return true;
 }
 
@@ -453,7 +450,7 @@ size_t Manager::NumSubsidiaries(const std::string &company_main) const
   if (_map_companies.count(company_main)==0)
     return -1; //Controllo che sia un'azienda.
   
-  return _graph.outDegree_withEdge(company_main, relation::co_worker);
+  return _graph.outDegree_withEdge(company_main, relation::partnership);
 }
 
 size_t Manager::NumMembers(const std::string &group) const
@@ -467,7 +464,7 @@ size_t Manager::NumMembers(const std::string &group) const
 size_t Manager::NumBornAfter(const Date &start_date) const
 {
   if(!Date::CheckDate(start_date))
-    return -1;
+    return -1; //Controllo che la data abbia senso.
   
   int count=0;
   for (auto it=_map_users.begin(); it!=_map_users.end(); it++)
@@ -478,7 +475,7 @@ size_t Manager::NumBornAfter(const Date &start_date) const
   return count;
 }
 
-pair<string, Company> Manager::MostEmployingCompany() const
+Company Manager::MostEmployingCompany() const
 {
   Company best;
   size_t num_members=0;
@@ -489,19 +486,21 @@ pair<string, Company> Manager::MostEmployingCompany() const
       best=it->second;
     }
   }
-  return pair<string, Company>(best.getID(), best);
+  return best;
 }
 
-pair<string, Company> Manager::MostEmployingPartnership() const
+vector<string> Manager::MostEmployingPartnership() const
 {
   Company best;
   vector<string> subs;
   size_t num_members=0, num_prev=0;
+  
+  //Per ogni azienda calcolo il numero di impiegati della stessa e poi sommo ad esso il numero di impiegati delle consociate. Ritorno un vettore di ID contenente la partnership con più assunzioni.
   for (auto it=_map_companies.begin(); it!=_map_companies.end(); it++)
   {
     num_members=_graph.outDegree_withEdge(it->second.getID(), relation::employee);
     
-    subs=_graph.branches(it->second.getID(), relation::co_worker);
+    subs=_graph.branches(it->second.getID(), relation::partnership);
     for (auto it2=subs.begin(); it2!=subs.end(); it++)
     {
       num_members=num_members+_graph.outDegree_withEdge(*it2, relation::employee);
@@ -512,10 +511,12 @@ pair<string, Company> Manager::MostEmployingPartnership() const
       best=it->second;
     }
   }
-  return pair<string, Company>(best.getID(), best);
+  subs=_graph.branches(best.getID(), relation::partnership); //Ricavo il vettore delle consociate della azienda migliore.
+  subs.push_back(best.getID()); //Aggiungo anche l'azienda stessa che altrimenti sarebbe assente dalla lista della partnership.
+  return subs;
 }
 
-pair<string, User> Manager::UserWithMostFriends() const
+User Manager::UserWithMostFriends() const
 {
   User best;
   size_t num_friends=0;
@@ -526,10 +527,10 @@ pair<string, User> Manager::UserWithMostFriends() const
       best=it->second;
     }
   }
-  return pair<string, User>(best.getID(), best);
+  return best;
 }
 
-pair<string, User> Manager::UserWithMostAcquaintances() const
+User Manager::UserWithMostAcquaintances() const
 {
   User best;
   size_t num_acquaintances=0;
@@ -540,13 +541,14 @@ pair<string, User> Manager::UserWithMostAcquaintances() const
       best=it->second;
     }
   }
-  return pair<string, User>(best.getID(), best);
+  return best;
 }
 
 float Manager::UsersAverageAge() const
 {
   float sum=0;
   Date now = Date::Now();
+  //Sommo le età di tutti gli utenti e ne faccio la media aritmetica.
   for (auto it=_map_users.begin(); it!=_map_users.end(); it++)
   {
     Date tmp = it->second.getBirth();
@@ -618,11 +620,13 @@ string Manager::MostLiked_DislikedAccount(const bool &like_1_dislike_0) const
   vector<Post> tmp;
   string best_ID;
   int likes=0, best_likes=0;
+  
+  //Per ogni utente conto quanti likes/dislikes ai suoi post ha ricevuto in totale
   for (auto it=all_ids.begin(); it!=all_ids.end(); it++)
   {
     tmp=_map_posts.at(*it);
-    vector<Post>::iterator it2 = tmp.begin();
-    for (; it2!=tmp.end(); it2++)
+    
+    for (auto it2=tmp.begin(); it2!=tmp.end(); it2++)
     {
       if (like_1_dislike_0==true)
         likes=likes+it2->NumLikes();
@@ -645,6 +649,7 @@ pair<string, Post> Manager::RatioReactionPost(const bool &best_1_worst_0) const
   Post ext_best;
   string best_ID;
   
+  //Per ogni ID determino quale post abbia il miglior/peggior rapporto di gradimento
   for (auto it=all_ids.begin(); it!=all_ids.end(); it++)
   {
     tmp=_map_posts.at(*it);
@@ -659,7 +664,7 @@ pair<string, Post> Manager::RatioReactionPost(const bool &best_1_worst_0) const
       }
       if (best_1_worst_0==false)
       {
-        if (it2->RatioReaction()<best.RatioReaction())
+        if ((it2->RatioReaction()<best.RatioReaction())&&(it2->RatioReaction()!=0))
           best=*it2;
       }
     }
@@ -691,60 +696,67 @@ string Manager::RatioReactionAccount(const bool &best_1_worst_0) const
   float ratio=0, best_ratio=0;
   for (auto it=all_ids.begin(); it!=all_ids.end(); it++)
   {
+    //Per ogni ID calcolo il rapporto di gradimento e stabilisco quale ID abbia il migliore/peggiore.
     tmp=_map_posts.at(*it);
-    vector<Post>::iterator it2 = tmp.begin();
-    for (; it2!=tmp.end(); it2++)
+    for (auto it2 = tmp.begin(); it2!=tmp.end(); it2++)
     {
       ratio=ratio+it2->RatioReaction();
     }
     ratio=ratio/tmp.size();
-    if (best_1_worst_0==true)
+    
+    if (ratio!=0)
     {
-      if (ratio>best_ratio)
+      if (best_1_worst_0==true)
       {
-        best_ID=*it;
-        best_ratio=ratio;
+        if (ratio>best_ratio)
+        {
+          best_ID=*it;
+          best_ratio=ratio;
+        }
       }
-    }
-    if (best_1_worst_0==false)
-    {
-      if (ratio<best_ratio)
+      if (best_1_worst_0==false)
       {
-        best_ID=*it;
-        best_ratio=ratio;
+        if (ratio<best_ratio)
+        {
+          best_ID=*it;
+          best_ratio=ratio;
+        }
       }
     }
   }
   return best_ID;
 }
 
-unordered_set<string> Manager::LonerPeople(const unsigned int &relations, const unsigned int &memberships, const bool &employed, const unsigned int &newsreactions)
+unordered_set<string> Manager::LonerPeople(const unsigned int &relations, const unsigned int &memberships, const bool &not_employed, const unsigned int &newsreactions)
 {
   unordered_set<string> set;
-  bool isLoner = true;
-  bool isValid = false;
+  bool isLoner = true; //Controllo sul lupo solitario
+  bool isValid = false; //Controllo validità dei parametri
   
-  if((relations!=0)||(memberships!=0)||(employed!=false)||(newsreactions!=0))
+  if((relations!=0)||(memberships!=0)||(not_employed!=false)||(newsreactions!=0))
     isValid=true;
   else
-    return set;
+    return set; //Se i parametri non sono validi torna un set vuoto
   
   for (auto it=_map_users.begin(); it!=_map_users.end(); it++)
   {
+    //Per ogni utente semplice controllo se esso è lupo solitario o meno in base ai parametri forniti
     if (memberships!=0)
     {
       if(_graph.outDegree_withEdge(it->first, relation::membership)>memberships)
         isLoner=false;
     }
     
-    if ((employed!=false)&&(isLoner==true))
+    if ((not_employed==true)&&(isLoner==true))
     {
+      //Se è richiesto che il lupo solitario non sia impiegato in una azienda (employed==true) allora controllo che effettivamente non lo sia.
       if (_graph.outDegree_withEdge(it->first, relation::employee)!=0)
         isLoner=false;
     }
     
     if ((relations!=0)&&(isLoner==true))
     {
+      //Se è fornito un numero di relazioni considero come lupi solitari coloro che hanno meno relazioni del numero indicato.
       int count_relations=0;
       count_relations=(int)_graph.outDegree_withEdge(it->first, relation::friendship);
       count_relations=count_relations+(int)_graph.outDegree_withEdge(it->first, relation::knowings);
@@ -764,29 +776,36 @@ unordered_set<string> Manager::LonerPeople(const unsigned int &relations, const 
   
   if (newsreactions!=0)
   {
-    for (auto it=_map_posts.begin(); it!=_map_posts.end(); it++)
+    for (auto it_users=_map_users.begin(); it_users!=_map_users.end(); it_users++)
     {
+      //Per ogni utente conto in ogni vettore di post quante reazioni ha effettuato
       int count_reactions=0;
       
-      if (_map_users.count(it->first)!=0)
+      for (auto it=_map_posts.begin(); it!=_map_posts.end(); it++)
       {
-        for (auto it_post = it->second.begin(); it_post!=it->second.end(); it_post++)
+        if (it_users->first!=it->first) //Non conto le occorrenze di un utente tra i suoi post: non sono ammessi autolikes.
         {
-          if (it_post->LikeExists(it->first)!=false)
-            count_reactions++;
-          if (it_post->DislikeExists(it->first)!=false)
-            count_reactions++;
+          for (auto it_post = it->second.begin(); it_post!=it->second.end(); it_post++)
+          {
+            //Per ogni post controllo l'occorrenza dell'utente tra i likes e i dislikes.
+            if (it_post->LikeExists(it_users->first)!=false)
+              count_reactions++;
+            if (it_post->DislikeExists(it_users->first)!=false)
+              count_reactions++;
+          }
         }
-        if (count_reactions<newsreactions)
-        {
-          if (set.count(it->first)==0)
-            set.insert(it->first);
-        }
-        else
-        {
-          if (set.count(it->first)!=0)
-            set.erase(it->first);
-        }
+      }
+      if (count_reactions<newsreactions)
+      {
+        //Se il numero di reazioni è minore del parametro, l'utente è un lupo solitario
+        if (set.count(it_users->first)==0)
+          set.insert(it_users->first);
+      }
+      else
+      {
+        //Se il numero di reazioni è maggiore del parametro allora non è un lupo solitario, indipententemente da tutti gli altri fattori, quindi lo rimuovo dal set.
+        if (set.count(it_users->first)!=0)
+          set.erase(it_users->first);
       }
     }
   }

@@ -70,7 +70,7 @@ namespace relation {
   
   const string employer = "boss";
   const string employee = "hired";
-  const string co_worker = "subsidiary";
+  const string partnership = "subsidiary";
   
   const string membership = "member";
   
