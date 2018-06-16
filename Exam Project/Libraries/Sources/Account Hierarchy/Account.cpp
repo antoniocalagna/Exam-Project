@@ -76,7 +76,7 @@ Account& Account::operator=(const Account &to_be_assigned) {
 
 bool Account::IDValid(const std::string &ID) {
   size_t size = ID.size();
-  if (size < 3 || size > 20) return false;                      //Limiti sulle dimensioni (per "convenzione")
+  if (size < 3 || size > 30) return false;                      //Limiti sulle dimensioni (per "convenzione")
   //Scorri l'ID e controlla che sia puramente alfanumerico e che contenga al massimo underscore
   for (int i = 0; i < size; i++) {
     if (!isalnum(ID[i]) && ID[i] != '_')

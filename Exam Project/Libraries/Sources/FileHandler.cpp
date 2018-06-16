@@ -331,7 +331,7 @@ FH::Error FH::postsFile(std::stringstream &line) {
   std::string reactions;
   std::getline(line, reactions);                                      //Acquisici il resto della riga
   std::stringstream likes_ss(readField("likes", reactions));          //Metti i likes in uno stringstream
-  while (likes_ss.good()) {
+  while (likes_ss.good() && likes_ss.gcount() != 0) {
     std::getline(likes_ss, like, ',');
     if (!Account::IDValid(like)) {
       return {0x21000000, 0};
@@ -339,7 +339,7 @@ FH::Error FH::postsFile(std::stringstream &line) {
   }
   
   std::stringstream dislikes_ss(readField("dislikes", reactions));   //Metti i dislikes in uno stringstream
-  while (dislikes_ss.good()) {
+  while (dislikes_ss.good() && dislikes_ss.gcount() != 0) {
     std::getline(dislikes_ss, dislike);
     if (!Account::IDValid(dislike)) {
       return {0x21000000, 0};
