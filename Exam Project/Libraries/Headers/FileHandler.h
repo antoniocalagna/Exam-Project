@@ -7,6 +7,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <unordered_set>
 #include "User.h"
 #include "Group.h"
 #include "Company.h"

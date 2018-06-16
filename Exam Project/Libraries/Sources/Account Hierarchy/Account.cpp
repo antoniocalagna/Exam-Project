@@ -63,11 +63,12 @@ bool Account::operator<(const Account &is_greater) const {
   return (this->_ID < is_greater._ID);
 }
 
-void Account::operator=(const Account &to_be_assigned) {
+Account& Account::operator=(const Account &to_be_assigned) {
   this->_name = to_be_assigned._name;
   this->_ID = to_be_assigned._ID;
   this->_type = to_be_assigned._type;
   this->_subscription = to_be_assigned._subscription;
+  return *this;
 }
 
 bool Account::IDValid(const std::string &ID) {
