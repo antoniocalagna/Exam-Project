@@ -12,7 +12,7 @@
 #include "Account.h"
 
 class User :
-        public Account {
+public Account {
 public:
   
   //Constructors and Destructor
