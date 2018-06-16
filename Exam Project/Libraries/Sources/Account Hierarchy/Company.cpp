@@ -74,7 +74,7 @@ Date Company::getInception() const
   return _inception;
 }
 
-void Company::operator=(const Company &to_be_assigned)
+Company &Company::operator=(const Company &to_be_assigned)
 {
   this -> _name = to_be_assigned._name;
   this -> _ID = to_be_assigned._ID;
@@ -85,5 +85,6 @@ void Company::operator=(const Company &to_be_assigned)
   this -> _operative_location = to_be_assigned._operative_location;
   this -> _type_of_product = to_be_assigned._type_of_product;
   this -> _inception = to_be_assigned._inception;
+  return *this;
 } 
 

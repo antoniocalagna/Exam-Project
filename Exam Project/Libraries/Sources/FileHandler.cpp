@@ -19,32 +19,6 @@ const std::string FH::FileHandler::mac_relative_path = "../../../Exam Project/Fi
 const char FH::FileHandler::parser_char = '&';
 const char FH::FileHandler::format_chars[] = {'{', '}', '&'};
 
-/**#####################
- * ## Private methods ##
- * #####################
- */
-std::string FH::formatString(std::string str) {
-  for (size_t i = 0; i < str.size(); i++) {
-    if (isFormatChar(str, i)) {
-      std::string parser(1, FileHandler::parser_char);
-      str.insert(i, parser);
-      i++;
-      /*i avanza di uno perchè se l'i-esimo carattere è di formato e viene inserito un carattere segnalatore prima di
-      * esso, l'i-esimo carattere slitta di una posizione ed è necessario non considerarlo nuovamente. */
-    }
-  }
-  return str;
-}
-
-std::string FH::unformatString(std::string str) {
-  for (size_t i = 0; i < str.size(); i++) {
-    if (str[i] == FileHandler::parser_char) {
-      str.erase(i, 1);
-    }
-  }
-  return str;
-}
-
 /**###############################
  * ## Constructors & Destructor ##
  * ###############################
@@ -89,7 +63,7 @@ bool FH::FileHandler::is_open() const {
 }
 
 void FH::FileHandler::close() {
-  _filename = "";
+  _filename.clear();
   _file.close();
 }
 
@@ -98,8 +72,11 @@ FH::Error FH::FileHandler::checkLineFormat(Error (*checker_func)(std::stringstre
   if (line.empty()) {
     return {0, 0};     //Ignora le righe vuote
   }
-  if (line.size() >= 2 && (line[0] == '/' && line[1] == '/')) {
-    return {0, 0};    //Riga commento
+  
+  if (line.size() >= 2) {
+    if (line.substr(0, 2) == "//") {
+      return {0, 0};    //Riga commento
+    }
   }
   std::stringstream line_s(unformatString(line));
   return checker_func(line_s);
@@ -109,14 +86,16 @@ FH::Error FH::FileHandler::checkFile(Error (*checker_func)(std::stringstream &))
   if (!_file.is_open()) {
     return {0xFFFFFFFF, 0};
   }
-  _file.seekg(0, std::ios::beg);
+  
+  _file.close();
+  _file.open(_filename, std::ios::in);
   std::string line;                   //Per acquisire il contenuto
   unsigned int current_line = 0;      //Per contare le righe ed eventualmente segnalare la posizione degli errori
   
   while (_file.good()) {
     std::getline(_file, line);
     
-    FH::Error line_status = checkLineFormat(checker_func, line);    //Analizza la riga con la funzione adatta
+    Error line_status = checkLineFormat(checker_func, line);    //Analizza la riga con la funzione adatta
     if (line_status.code != 0)
       return {line_status.code, current_line + 1};                  //Errore! Ritorna il codice di errore ottenuto
     current_line++;
@@ -124,7 +103,56 @@ FH::Error FH::FileHandler::checkFile(Error (*checker_func)(std::stringstream &))
   return {0, current_line};
 }
 
+FH::Error FH::FileHandler::fetchData(Error (*fetcher_func)(stringstream &, IOBuffer &), IOBuffer &buff) {
+  _file.close();
+  _file.open(filename(), std::ios::in | std::ios::out | std::ios::trunc);   //Riapri il file in modalità IN/OUT
+  std::string line_to_parse;
+  
+  unsigned int current_line = 0;
+  while(_file.good()) {
+    std::getline(_file, line_to_parse);
+    if (line_to_parse.empty()) {
+      return {0, 0};     //Ignora le righe vuote
+    }
+  
+    if (line_to_parse.size() >= 2) {
+      if (line_to_parse.substr(0, 2) == "//") {
+        return {0, 0};    //Riga commento
+      }
+    }
+    std::stringstream line_s(unformatString(line_to_parse));
+    Error err = fetcher_func(line_s, buff);
+    if(err.code != 0) return {err.code, current_line + 1};
+    
+    current_line++;
+  }
+  return {0, 0};
+}
 ///////////////////////////////////////////////  NAMESPACE FH FUNCTIONS  ///////////////////////////////////////////////
+
+std::string FH::formatString(std::string str) {
+  for (size_t i = 0; i < str.size(); i++) {
+    if (isFormatChar(str, i)) {
+      std::string parser(1, FileHandler::parser_char);
+      str.insert(i, parser);
+      i++;
+      /*i avanza di uno perchè se l'i-esimo carattere è di formato e viene inserito un carattere segnalatore prima di
+      * esso, l'i-esimo carattere slitta di una posizione ed è necessario non considerarlo nuovamente. */
+    }
+  }
+  return str;
+}
+
+std::string FH::unformatString(std::string str) {
+  for (size_t i = 0; i < str.size(); i++) {
+    if (str[i] == FileHandler::parser_char) {
+      str.erase(i, 1);
+    }
+  }
+  return str;
+}
+
+
 bool FH::isFormatChar(const std::string &s, size_t pos) {
   //Controlla se il carattere nella posizione richiesta è un carattere di formato
   //Controlla innanzitutto che appaia nella lista dei caratteri di formato
@@ -268,11 +296,11 @@ FH::Error FH::relationsFile(std::stringstream &line) {
   
   std::getline(line, id1, ',');
   if (!line.good()) return {0x11000000, 0};
-  if(!Account::IDValid(id1)) return {0x21000000, 0};
+  if (!Account::IDValid(id1)) return {0x21000000, 0};
   
   std::getline(line, id2, ',');
   if (!line.good()) return {0x11000000, 0};
-  if(!Account::IDValid(id2)) return {0x21000000, 0};
+  if (!Account::IDValid(id2)) return {0x21000000, 0};
   
   std::getline(line, relation);
   if (!relation::belong(relation)) return {0x24000000, 0};

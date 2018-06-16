@@ -34,6 +34,7 @@ public:
   
   //Overloading Operators:
   bool operator==(const Account &to_be_compared) const;
+  virtual bool operator==(const string &string_to_compare) const;
   bool operator!=(const Account &to_be_compared) const;
   bool operator>(const Account &is_smaller) const;
   bool operator<(const Account &is_greater) const;

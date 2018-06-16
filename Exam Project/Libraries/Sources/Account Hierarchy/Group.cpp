@@ -62,7 +62,7 @@ Date Group::getInception() const
   return _inception;
 }
 
-void Group::operator=(const Group &to_be_assigned)
+Group &Group::operator=(const Group &to_be_assigned)
 {
   this -> _name = to_be_assigned._name;
   this -> _ID = to_be_assigned._ID;
@@ -72,5 +72,6 @@ void Group::operator=(const Group &to_be_assigned)
   this -> _legal_location = to_be_assigned._legal_location;
   this -> _type_of_activity = to_be_assigned._type_of_activity;
   this -> _inception = to_be_assigned._inception;
+  return *this;
 }
  

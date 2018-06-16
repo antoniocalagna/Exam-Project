@@ -33,7 +33,7 @@ public:
   Date getInception() const;
   
   //Overloading Operators
-  void operator=(const Group &to_be_assigned);
+  Group &operator=(const Group &to_be_assigned);
   
   
 private:

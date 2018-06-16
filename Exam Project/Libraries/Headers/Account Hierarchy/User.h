@@ -12,7 +12,7 @@
 #include "Account.h"
 
 class User :
-public Account {
+        public Account {
 public:
   
   //Constructors and Destructor
@@ -35,7 +35,7 @@ public:
   Date getBirth() const;
   
   //Overloading Operators
-  void operator=(const User &to_be_assigned);
+  User &operator=(const User &to_be_assigned);
 
 
 private:

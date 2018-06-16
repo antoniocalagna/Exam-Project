@@ -35,7 +35,7 @@ public:
   Date getInception() const;
   
   //Overloading Operators
-  void operator=(const Company &to_be_assigned);
+  Company &operator=(const Company &to_be_assigned);
   
 private:
   

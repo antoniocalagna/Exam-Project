@@ -51,6 +51,9 @@ bool Account::operator==(const Account &to_be_compared) const {
   return (this->_ID == to_be_compared._ID);
 }
 
+bool Account::operator==(const string &string_to_compare) const {
+  return (this->_ID == string_to_compare);
+}
 bool Account::operator!=(const Account &to_be_compared) const {
   return (!(this->_ID == to_be_compared._ID));
 }
