@@ -270,7 +270,7 @@ bool Manager::addRelationship(const string &ID_start, const string &ID_target, c
     return false;
   
   //Le relazioni mutue richiedono un arco bi-direzionato
-  if ((relationship==relation::friendship)||(relationship==relation::knowings)||(relationship==relation::partner)||(relationship==relation::membership))
+  if ((relationship==relation::friendship)||(relationship==relation::knowings)||(relationship==relation::partner)||(relationship==relation::membership)||(relationship==relation::partnership))
     _graph.bsetEdge(ID_start,ID_target,relationship);
   
   //Per ogni relazione non mutua fisso anche la complementare inversa.
@@ -394,6 +394,7 @@ void Manager::_setKeys(const vector<Group> &groups)
 
 bool Manager::_checkAge(const std::string &ID_old, const std::string &ID_young) const
 {
+  //Funzione chiamata a controlli già effettuati
   return _map_users.at(ID_old).getBirth()<_map_users.at(ID_young).getBirth();
 }
 
