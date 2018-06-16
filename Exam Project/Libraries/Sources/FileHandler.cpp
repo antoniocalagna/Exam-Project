@@ -17,7 +17,7 @@ const bool FH::FileHandler::win_system = false;
 const std::string FH::FileHandler::windows_relative_path = "../Files/";
 const std::string FH::FileHandler::mac_relative_path = "../../../Exam Project/Files/";
 const char FH::FileHandler::parser_char = '&';
-const char FH::FileHandler::format_chars[] = {'{', '}', '&'};
+const char FH::FileHandler::format_chars[] = {'{', '}', '&', ','};
 
 /**###############################
  * ## Constructors & Destructor ##
@@ -109,19 +109,19 @@ FH::Error FH::FileHandler::fetchData(Error (*fetcher_func)(stringstream &, IOBuf
   std::string line_to_parse;
   
   unsigned int current_line = 0;
-  while(_file.good()) {
+  while(_file.good()) {                                           //Cicla attraverso tutto il file
     std::getline(_file, line_to_parse);
     if (line_to_parse.empty()) {
-      return {0, 0};     //Ignora le righe vuote
+      return {0, 0};                                              //Ignora le righe vuote
     }
   
     if (line_to_parse.size() >= 2) {
       if (line_to_parse.substr(0, 2) == "//") {
-        return {0, 0};    //Riga commento
+        return {0, 0};                                            //Riga commento
       }
     }
-    std::stringstream line_s(unformatString(line_to_parse));
-    Error err = fetcher_func(line_s, buff);
+    std::stringstream line_s(unformatString(line_to_parse));      //Trasforma la riga in uno stringstream
+    Error err = fetcher_func(line_s, buff);                       //Controlla eventuali errori e acquisici i dati in buff
     if(err.code != 0) return {err.code, current_line + 1};
     
     current_line++;
@@ -145,7 +145,7 @@ std::string FH::formatString(std::string str) {
 
 std::string FH::unformatString(std::string str) {
   for (size_t i = 0; i < str.size(); i++) {
-    if (str[i] == FileHandler::parser_char) {
+    if (str[i] == FileHandler::parser_char) {                       //Controlla se il carattere i-esimo è un parser
       str.erase(i, 1);
     }
   }

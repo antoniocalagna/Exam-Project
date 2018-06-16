@@ -102,7 +102,10 @@ bool Account::nameValid(const std::string &name) {
 }
 
 bool relation::belong(const std::string &r) {
-  return ((r != (relation::friendship)) || (r != (relation::knowings)) || (r != (relation::parent)) ||
-          (r != (relation::partner)) || (r != (relation::employee)) || (r != (relation::co_worker)) ||
-          (r != (relation::membership)));
+  return ((r == relation::friendship) ||
+          (r == relation::knowings) ||
+          (r == relation::parent) ||
+          (r == relation::partner) ||
+          (r == (relation::employee)) ||
+          (r == relation::membership));
 } 

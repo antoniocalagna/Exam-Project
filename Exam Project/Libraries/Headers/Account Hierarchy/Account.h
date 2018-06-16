@@ -38,7 +38,7 @@ public:
   bool operator!=(const Account &to_be_compared) const;
   bool operator>(const Account &is_smaller) const;
   bool operator<(const Account &is_greater) const;
-  Account& operator=(const Account &to_be_assigned);
+  Account &operator=(const Account &to_be_assigned);
   
   //Static types
   static const char user_type = 'U';
@@ -50,7 +50,7 @@ public:
   static bool IDValid(const std::string &ID);       //Controlla la validità di un ID
   static bool typeValid(char type);                 //Controlla la validità di un tipo
   static bool nameValid(const std::string &name);   //Controlla la validità di un nome (o cognome)
-  
+
 protected:
   
   string _name;
@@ -61,20 +61,22 @@ protected:
 };
 
 namespace relation {
-  const string friendship = "friend";
-  const string knowings = "acquaintance";
-  
-  const string parent = "parent";
-  const string born = "son";
-  
-  const string partner = "partner";
-  
-  const string employer = "boss";
-  const string employee = "hired";
-  const string co_worker = "subsidiary";
-  
-  const string membership = "member";
-  
-  bool belong (const string &r);
+const string friendship = "friend";         //Amicizia tra utenti
+
+const string knowings = "acquaintance";     //Conoscenza tra utenti
+
+const string parent = "parent";             //Paternità tra utenti
+const string born = "son";                  //Paternità inversa
+
+const string partner = "partner";           //Coppie di utenti
+
+const string co_worker = "partner of";      //Partnership tra aziende ??? Nome più chiaro!!!!!!!!!
+
+const string employee = "worker";           //L'utente lavora per la compagnia
+const string employer = "employer";         //La compagnia da lavoro all'utente
+
+const string membership = "member";         //L'utente è membro del gruppo
+
+bool belong(const string &r);
 }
 #endif /* Account_h */
