@@ -7,5 +7,8 @@ totina,U,{name:{Antonio},surname:{Calagna}, gender:{N},addr:{Porta Venezia},sub:
 
 //Gruppi
 bal_spiagg,G,{name:{Balenottere Spiaggiate},location:{Spiaggia},activity:{Spiaggiarsi in spiaggia},inception:{15/01/1990},sub:{18/07/2011}}
+PoliTO,G,{name:{Politecnico di Torino},location:{Torino},activity:{Mangiare anime},inception:{15/01/1885},sub:{18/07/2000}}
 
 //Compagnie
+sams,C,{name:{Samsung},finantial_loc:{Bu Korea},operative_loc:{Sempre Korea},prod:{Tech},inception:{15/01/1933},sub:{18/10/2011}}
+stb,C,{name:{Stabilo},finantial_loc:{Germany},operative_loc:{Germany},prod:{Cartoleria},inception:{15/01/1940},sub:{5/07/2012}}

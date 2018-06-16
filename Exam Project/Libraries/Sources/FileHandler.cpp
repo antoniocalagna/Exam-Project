@@ -17,32 +17,8 @@ const bool FH::FileHandler::win_system = false;
 const std::string FH::FileHandler::windows_relative_path = "../Files/";
 const std::string FH::FileHandler::mac_relative_path = "../../../Exam Project/Files/";
 const char FH::FileHandler::parser_char = '&';
-const char FH::FileHandler::format_chars[] = {'{', '}', '&'};
+const char FH::FileHandler::format_chars[] = {'{', '}', '&', ','};
 
-/**#####################
- * ## Private methods ##
- * #####################
- */
-std::string FH::formatString(std::string str) {
-  for (size_t i = 0; i < str.size(); i++) {
-    if (isFormatChar(str, i)) {
-      std::string parser(1, FileHandler::parser_char);
-      str.insert(i, parser);
-      i++;
-      /*i avanza di uno perchè se l'i-esimo carattere è di formato e viene inserito un carattere segnalatore prima di
-      * esso, l'i-esimo carattere slitta di una posizione ed è necessario non considerarlo nuovamente. */
-    }
-  }
-  return str;
-}
-std::string FH::unformatString(std::string str) {
-  for(size_t i = 0; i < str.size(); i++) {
-    if (str[i] == FileHandler::parser_char) {
-      str.erase(i, 1);
-    }
-  }
-  return str;
-}
 /**###############################
  * ## Constructors & Destructor ##
  * ###############################
@@ -87,17 +63,20 @@ bool FH::FileHandler::is_open() const {
 }
 
 void FH::FileHandler::close() {
-  _filename = "";
+  _filename.clear();
   _file.close();
 }
 
 FH::Error FH::FileHandler::checkLineFormat(Error (*checker_func)(std::stringstream &),
                                            const std::string &line) const {
-  if(line.empty()) {
-    return {0,0};     //Ignora le righe vuote
+  if (line.empty()) {
+    return {0, 0};     //Ignora le righe vuote
   }
-  if(line.size() >= 2 && (line[0] == '/' && line[1] == '/')) {
-    return {0, 0};    //Riga commento
+  
+  if (line.size() >= 2) {
+    if (line.substr(0, 2) == "//") {
+      return {0, 0};    //Riga commento
+    }
   }
   std::stringstream line_s(line);
   return checker_func(line_s);
@@ -107,22 +86,73 @@ FH::Error FH::FileHandler::checkFile(Error (*checker_func)(std::stringstream &))
   if (!_file.is_open()) {
     return {0xFFFFFFFF, 0};
   }
-  _file.seekg(0, std::ios::beg);
+  
+  _file.close();
+  _file.open(_filename, std::ios::in);
   std::string line;                   //Per acquisire il contenuto
   unsigned int current_line = 0;      //Per contare le righe ed eventualmente segnalare la posizione degli errori
   
   while (_file.good()) {
     std::getline(_file, line);
     
-    FH::Error line_status = checkLineFormat(checker_func, line);    //Analizza la riga con la funzione adatta
+    Error line_status = checkLineFormat(checker_func, line);    //Analizza la riga con la funzione adatta
     if (line_status.code != 0)
-      return {line_status.code, current_line};                      //Errore! Ritorna il codice di errore ottenuto
+      return {line_status.code, current_line + 1};                  //Errore! Ritorna il codice di errore ottenuto
     current_line++;
   }
   return {0, current_line};
 }
 
+FH::Error FH::FileHandler::fetchData(Error (*fetcher_func)(stringstream &, IOBuffer &), IOBuffer &buff) {
+  _file.close();
+  _file.open(filename(), std::ios::in | std::ios::out | std::ios::trunc);   //Riapri il file in modalità IN/OUT
+  std::string line_to_parse;
+  
+  unsigned int current_line = 0;
+  while(_file.good()) {                                           //Cicla attraverso tutto il file
+    std::getline(_file, line_to_parse);
+    if (line_to_parse.empty()) {
+      return {0, 0};                                              //Ignora le righe vuote
+    }
+  
+    if (line_to_parse.size() >= 2) {
+      if (line_to_parse.substr(0, 2) == "//") {
+        return {0, 0};                                            //Riga commento
+      }
+    }
+    std::stringstream line_s(line_to_parse);      //Trasforma la riga in uno stringstream
+    Error err = fetcher_func(line_s, buff);                       //Controlla eventuali errori e acquisici i dati in buff
+    if(err.code != 0) return {err.code, current_line + 1};
+    
+    current_line++;
+  }
+  return {0, 0};
+}
 ///////////////////////////////////////////////  NAMESPACE FH FUNCTIONS  ///////////////////////////////////////////////
+
+std::string FH::formatString(std::string str) {
+  for (size_t i = 0; i < str.size(); i++) {
+    if (isFormatChar(str, i)) {
+      std::string parser(1, FileHandler::parser_char);
+      str.insert(i, parser);
+      i++;
+      /*i avanza di uno perchè se l'i-esimo carattere è di formato e viene inserito un carattere segnalatore prima di
+      * esso, l'i-esimo carattere slitta di una posizione ed è necessario non considerarlo nuovamente. */
+    }
+  }
+  return str;
+}
+
+std::string FH::unformatString(std::string str) {
+  for (size_t i = 0; i < str.size(); i++) {
+    if (str[i] == FileHandler::parser_char) {                       //Controlla se il carattere i-esimo è un parser
+      str.erase(i, 1);
+    }
+  }
+  return str;
+}
+
+
 bool FH::isFormatChar(const std::string &s, size_t pos) {
   //Controlla se il carattere nella posizione richiesta è un carattere di formato
   //Controlla innanzitutto che appaia nella lista dei caratteri di formato
@@ -168,11 +198,11 @@ FH::Error FH::IDsfile(std::stringstream &line) {
   std::string id, type_s;
   //Acquisisci e controlla l'ID
   std::getline(line, id, ',');
-  if (!line.good()) { return {0x11000000, 0}; }                //Errore nella lettura dell'ID
-  if (!Account::IDValid(id)) { return {0x21000000, 0}; }        //L'ID non rispetta le regole
+  if (!line.good()) return {0x11000000, 0};                //Errore nella lettura dell'ID
+  if (!Account::IDValid(id)) return {0x21000000, 0};        //L'ID non rispetta le regole
   //Acquisisci e controlla il tipo di account
   std::getline(line, type_s, ',');
-  if (!line.good()) { return {0x12000000, 0}; }                //Errore nella lettura del tipo di account
+  if (!line.good()) return {0x12000000, 0};                //Errore nella lettura del tipo di account
   if (type_s.size() != 1 || !Account::typeValid(type_s[0])) {      //Errore nel tipo di account
     return {0x22000000, 0};
   }
@@ -188,65 +218,132 @@ FH::Error FH::IDsfile(std::stringstream &line) {
     Date birth, subscription;
     
     name = readField("name", info);                             //Controllo nome
-    if (name.empty()) { return {0x13000001, 0}; }
-    if (!Account::nameValid(name)) { return {0x23000001, 0}; }
+    if (name.empty()) return {0x13000001, 0};
+    if (!Account::nameValid(name)) return {0x23000001, 0};
     
     surname = readField("surname", info);                       //Controllo cognome
-    if (surname.empty()) { return {0x13000002, 0}; }
-    if (!Account::nameValid(surname)) { return {0x23000001, 0}; }
+    if (surname.empty()) return {0x13000002, 0};
+    if (!Account::nameValid(surname)) return {0x23000001, 0};
     
     address = readField("addr", info);                          //Controllo indirizzo
     if (address.empty()) { return {0x13000004, 0}; }
-    if (!Account::nameValid(address)) { return {0x23000004, 0}; }
+    if (!Account::nameValid(address)) return {0x23000004, 0};
     
     gender = readField("gender", info);                         //Controllo genere
-    if(gender.size() != 1 || !gender::isValid(gender[0])) { return {0x13000003, 0}; }
+    if (gender.size() != 1 || !gender::isValid(gender[0])) return {0x13000003, 0};
     
     birth.scanDateByStr(readField("birth", info));              //Controllo data di nascita
-    if (!Date::CheckDate(birth)) { return {0x23000006, 0}; }
+    if (!Date::CheckDate(birth)) return {0x23000006, 0};
     
     subscription.scanDateByStr(readField("sub", info));         //Controllo data di iscrizione
-    if (!Date::CheckDate(subscription)) { return {0x23000005, 0}; }
+    if (!Date::CheckDate(subscription)) return {0x23000005, 0};
   }
   else if (type == Account::group_type) {
     //L'account è un gruppo
     std::string name, location, activity;
     Date inception, subscription;
     
-    name = readField("name", info);                               //Controllo nome
-    if (name.empty()) { return {0x13000001, 0}; }
-    if (!Account::nameValid(name)) { return {0x23000001, 0}; }
+    name = readField("name", info);                                     //Controllo nome
+    if (name.empty()) return {0x13000001, 0};
+    if (!Account::nameValid(name)) return {0x23000001, 0};
     
-    location = readField("location", info);                       //Controllo posizione legale
-    if(location.empty()) { return {0x13000004, 0}; }
-    if(!Account::nameValid(location)) {return {0x23000004, 0}; }
+    location = readField("location", info);                             //Controllo posizione legale
+    if (location.empty()) return {0x13000004, 0};
+    if (!Account::nameValid(location)) return {0x23000004, 0};
     
     activity = readField("activity", info);
-    if(activity.empty()) { return {0x13000007, 0}; }
-    if(!Account::nameValid(activity)) {return {0x23000007, 0}; }
-  
-    inception.scanDateByStr(readField("inception", info));              //Controllo data di creazione del gruppo
-    if (!Date::CheckDate(inception)) { return {0x23000008, 0}; }
+    if (activity.empty()) return {0x13000007, 0};
+    if (!Account::nameValid(activity)) return {0x23000007, 0};
     
-    subscription.scanDateByStr(readField("sub", info));              //Controllo data di iscrizione
-    if (!Date::CheckDate(subscription)) { return {0x23000005, 0}; }
+    inception.scanDateByStr(readField("inception", info));              //Controllo data di creazione del gruppo
+    if (!Date::CheckDate(inception)) return {0x23000008, 0};
+    
+    subscription.scanDateByStr(readField("sub", info));                 //Controllo data di iscrizione
+    if (!Date::CheckDate(subscription)) return {0x23000005, 0};
   }
   else if (type == Account::company_type) {
     //L'account è una compagnia
+    std::string name, f_location, op_location, prod;
+    Date inception, subscription;
+    
+    name = readField("name", info);                                     //Controllo nome
+    if (name.empty()) return {0x13000001, 0};
+    if (!Account::nameValid(name)) return {0x23000001, 0};
+    
+    prod = readField("prod", info);                                     //Controllo prodotto
+    if (prod.empty()) return {0x1300000A, 0};
+    if (!Account::nameValid(prod)) return {0x2300000A, 0};
+    
+    f_location = readField("finantial_loc", info);                      //Controllo della finantial location
+    if (f_location.empty()) return {0x13000004, 0};
+    if (!Account::nameValid(f_location)) return {0x23000004, 0};
+    
+    op_location = readField("operative_loc", info);                     //Controllo della operative location
+    if (op_location.empty()) return {0x13000004, 0};
+    if (!Account::nameValid(op_location)) return {0x23000004, 0};
+    
+    inception.scanDateByStr(readField("inception", info));              //Controllo data di creazione della compagnia
+    if (!Date::CheckDate(inception)) return {0x23000008, 0};
+    
+    subscription.scanDateByStr(readField("sub", info));                 //Controllo data di iscrizione
+    if (!Date::CheckDate(subscription)) return {0x23000005, 0};
   }
   return {0, 0};
 }
 
 FH::Error FH::relationsFile(std::stringstream &line) {
   std::string id1, id2, relation;
+  
   std::getline(line, id1, ',');
-  if(!line.good())
-    return {0x11000000, 0};
+  if (!line.good()) return {0x11000000, 0};
+  if (!Account::IDValid(id1)) return {0x21000000, 0};
+  
   std::getline(line, id2, ',');
-  if(!line.good())
-    return {0x11000000, 0};
+  if (!line.good()) return {0x11000000, 0};
+  if (!Account::IDValid(id2)) return {0x21000000, 0};
+  
   std::getline(line, relation);
-  if(!relation::belong(relation))
-    return {0x24000000, 0};
+  if (!relation::belong(relation)) return {0x24000000, 0};
   return {0, 0};
-} 
+}
+
+FH::Error FH::postsFile(std::stringstream &line) {
+  std::string id, message;
+  std::string like, dislike;
+  std::string date;
+  
+  std::getline(line, id, ',');                                        //Acquisici l'ID
+  if (!line.good()) { return {0x11000000, 0}; }                       //ID mal formattato
+  if (!Account::IDValid(id)) { return {0x21000000, 0}; }              //ID non valido
+  
+  std::getline(line, message, ',');
+  while(!isFormatChar(line.str(), message.size() + id.size() + 1)) {
+    std::string temp;
+    std::getline(line, temp, ',');
+    message += "," + temp;
+  }
+  if (!line.good()) { return {0x13000009, 0}; }                       //Errore di formattazione del messaggio
+  
+  std::getline(line, date, ',');
+  if(!line.good()) {return {0x1300000B, 0}; }
+  if(!Date::CheckDate(date)) { return {0x2300000B, 0}; }
+  
+  std::string reactions;
+  std::getline(line, reactions);                                      //Acquisici il resto della riga
+  std::stringstream likes_ss(readField("likes", reactions));          //Metti i likes in uno stringstream
+  while (likes_ss.good() && likes_ss.gcount() != 0) {
+    std::getline(likes_ss, like, ',');
+    if (!Account::IDValid(like)) {
+      return {0x21000000, 0};
+    }
+  }
+  
+  std::stringstream dislikes_ss(readField("dislikes", reactions));   //Metti i dislikes in uno stringstream
+  while (dislikes_ss.good() && dislikes_ss.gcount() != 0) {
+    std::getline(dislikes_ss, dislike);
+    if (!Account::IDValid(dislike)) {
+      return {0x21000000, 0};
+    }
+  }
+  return {0, 0};
+}

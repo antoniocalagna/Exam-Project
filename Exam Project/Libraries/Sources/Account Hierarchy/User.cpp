@@ -73,7 +73,7 @@ Date User::getBirth() const
   return _birth;
 }
 
-void User::operator=(const User &to_be_assigned)
+User &User::operator=(const User &to_be_assigned)
 {
   this -> _name = to_be_assigned._name;
   this -> _ID = to_be_assigned._ID;
@@ -84,6 +84,7 @@ void User::operator=(const User &to_be_assigned)
   this -> _address = to_be_assigned._address;
   this -> _gender = to_be_assigned._gender;
   this -> _birth = to_be_assigned._birth;
+  return *this;
 }
 
 bool gender::isValid(char g) {

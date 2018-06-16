@@ -34,10 +34,11 @@ public:
   
   //Overloading Operators:
   bool operator==(const Account &to_be_compared) const;
+  virtual bool operator==(const string &string_to_compare) const;
   bool operator!=(const Account &to_be_compared) const;
   bool operator>(const Account &is_smaller) const;
   bool operator<(const Account &is_greater) const;
-  void operator=(const Account &to_be_assigned);
+  Account &operator=(const Account &to_be_assigned);
   
   //Static types
   static const char user_type = 'U';
@@ -49,7 +50,7 @@ public:
   static bool IDValid(const std::string &ID);       //Controlla la validità di un ID
   static bool typeValid(char type);                 //Controlla la validità di un tipo
   static bool nameValid(const std::string &name);   //Controlla la validità di un nome (o cognome)
-  
+
 protected:
   
   string _name;

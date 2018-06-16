@@ -5,7 +5,8 @@
 #ifndef SOCIAL_NETWORK_IOBUFFER_H
 #define SOCIAL_NETWORK_IOBUFFER_H
 
-#include <queue>
+#include <deque>
+#include <algorithm>
 #include "User.h"
 #include "Group.h"
 #include "Company.h"
@@ -13,10 +14,19 @@
 
 class IOBuffer {
 private:
-  std::queue<User> _users;
-  std::queue<Group> _groups;
-  std::queue<Company> _companies;
-  std::queue<std::pair<std::string, Post>> _posts;
+  using Users = std::deque<User>;
+  using Groups = std::deque<Group>;
+  using Companies= std::deque<Company>;
+  using m_Post = std::pair<std::string, Post>;
+  using Posts = std::deque<m_Post>;
+  using Relation = std::pair<std::pair<std::string, std::string>, std::string>;
+  using Relations = std::deque<Relation>;
+  
+  Users _users;
+  Groups _groups;
+  Companies _companies;
+  Posts _posts;
+  Relations _relations;
 
 public:
   /**Constructors & Destructor*/
@@ -24,6 +34,7 @@ public:
   ~IOBuffer() = default;
   
   /**Getters*/
+  bool replicatedID(const std::string &ID) const;
   bool usersEmpty() const;
   bool groupsEmpty() const;
   bool companiesEmpty() const;
@@ -39,8 +50,10 @@ public:
   IOBuffer &operator>>(Company &to_return);
   IOBuffer &operator<<(const Group &to_get);
   IOBuffer &operator>>(Group &to_return);
-  IOBuffer &operator<<(const std::pair<std::string, Post> &to_get);
-  IOBuffer &operator>>(std::pair<std::string, Post> &to_return);
+  IOBuffer &operator<<(const m_Post &to_get);
+  IOBuffer &operator>>(m_Post &to_return);
+  IOBuffer &operator<<(const Relation &to_get);
+  IOBuffer &operator>>(Relation &to_return);
 };
 
 

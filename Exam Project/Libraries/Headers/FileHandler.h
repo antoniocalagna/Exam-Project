@@ -7,10 +7,12 @@
 
 #include <fstream>
 #include <sstream>
+#include <unordered_set>
 #include "User.h"
 #include "Group.h"
 #include "Company.h"
 #include "Post.h"
+#include "IOBuffer.h"
 
 namespace FH {
 
@@ -49,6 +51,10 @@ public:
   Error checkFile(Error (*checker_func)(std::stringstream &));
   
   /**File data exchange*/
+  //Viene assunto che tutte le righe siano correttamente formattate. Qui vengono eseguiti controlli quali ripetizioni.
+  Error fetchData(Error (*fetcher_func)(std::stringstream &, IOBuffer &), IOBuffer &buff);
+  Error putData(std::string(*printer_func)(IOBuffer &), IOBuffer &buff);
+  
 };  //Class FileHandler
 bool isFormatChar(const std::string &s, size_t pos);
 std::string formatString(std::string str);           //Aggiunge i parser_char per proteggere i caratteri di formato

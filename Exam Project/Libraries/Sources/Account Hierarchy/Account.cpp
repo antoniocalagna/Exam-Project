@@ -51,6 +51,9 @@ bool Account::operator==(const Account &to_be_compared) const {
   return (this->_ID == to_be_compared._ID);
 }
 
+bool Account::operator==(const string &string_to_compare) const {
+  return (this->_ID == string_to_compare);
+}
 bool Account::operator!=(const Account &to_be_compared) const {
   return (!(this->_ID == to_be_compared._ID));
 }
@@ -63,16 +66,17 @@ bool Account::operator<(const Account &is_greater) const {
   return (this->_ID < is_greater._ID);
 }
 
-void Account::operator=(const Account &to_be_assigned) {
+Account& Account::operator=(const Account &to_be_assigned) {
   this->_name = to_be_assigned._name;
   this->_ID = to_be_assigned._ID;
   this->_type = to_be_assigned._type;
   this->_subscription = to_be_assigned._subscription;
+  return *this;
 }
 
 bool Account::IDValid(const std::string &ID) {
   size_t size = ID.size();
-  if (size < 3 || size > 20) return false;                      //Limiti sulle dimensioni (per "convenzione")
+  if (size < 3 || size > 30) return false;                      //Limiti sulle dimensioni (per "convenzione")
   //Scorri l'ID e controlla che sia puramente alfanumerico e che contenga al massimo underscore
   for (int i = 0; i < size; i++) {
     if (!isalnum(ID[i]) && ID[i] != '_')
@@ -91,7 +95,7 @@ bool Account::nameValid(const std::string &name) {
   if (name.empty())
     return false;
   for (int i = 0; i < name.size(); i++) {
-    if (!isalnum(name[i]) && name[i] != ' ' && name[i] != '\'')               //Caratteri permessi
+    if (!isalnum(name[i]) && name[i] != ' ' && name[i] != '\'' && name[i] != '-')               //Caratteri permessi
       return false;
   }
   return true;
