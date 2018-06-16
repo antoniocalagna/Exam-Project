@@ -78,7 +78,7 @@ FH::Error FH::FileHandler::checkLineFormat(Error (*checker_func)(std::stringstre
       return {0, 0};    //Riga commento
     }
   }
-  std::stringstream line_s(unformatString(line));
+  std::stringstream line_s(line);
   return checker_func(line_s);
 }
 
@@ -120,7 +120,7 @@ FH::Error FH::FileHandler::fetchData(Error (*fetcher_func)(stringstream &, IOBuf
         return {0, 0};                                            //Riga commento
       }
     }
-    std::stringstream line_s(unformatString(line_to_parse));      //Trasforma la riga in uno stringstream
+    std::stringstream line_s(line_to_parse);      //Trasforma la riga in uno stringstream
     Error err = fetcher_func(line_s, buff);                       //Controlla eventuali errori e acquisici i dati in buff
     if(err.code != 0) return {err.code, current_line + 1};
     
@@ -309,38 +309,41 @@ FH::Error FH::relationsFile(std::stringstream &line) {
 
 FH::Error FH::postsFile(std::stringstream &line) {
   std::string id, message;
-  std::unordered_set<std::string> likes, dislikes;
+  std::string like, dislike;
+  std::string date;
+  
   std::getline(line, id, ',');                                        //Acquisici l'ID
   if (!line.good()) { return {0x11000000, 0}; }                       //ID mal formattato
   if (!Account::IDValid(id)) { return {0x21000000, 0}; }              //ID non valido
   
-  std::getline(line, message, ',');                                   //Acquisisci il messaggio
-  while (!isFormatChar(message, message.size() - 1)) {                //La virgola incontrata era 'falsa'. Vai avanti
+  std::getline(line, message, ',');
+  while(!isFormatChar(line.str(), message.size() + id.size() + 1)) {
     std::string temp;
-    std::getline(line, temp);
-    message += temp;
+    std::getline(line, temp, ',');
+    message += "," + temp;
   }
   if (!line.good()) { return {0x13000009, 0}; }                       //Errore di formattazione del messaggio
+  
+  std::getline(line, date, ',');
+  if(!line.good()) {return {0x1300000B, 0}; }
+  if(!Date::CheckDate(date)) { return {0x2300000B, 0}; }
   
   std::string reactions;
   std::getline(line, reactions);                                      //Acquisici il resto della riga
   std::stringstream likes_ss(readField("likes", reactions));          //Metti i likes in uno stringstream
   while (likes_ss.good()) {
-    std::string like_id;
-    if (!Account::IDValid(like_id)) {
+    std::getline(likes_ss, like, ',');
+    if (!Account::IDValid(like)) {
       return {0x21000000, 0};
     }
-    std::getline(likes_ss, like_id);
-    likes.insert(like_id);
   }
+  
   std::stringstream dislikes_ss(readField("dislikes", reactions));   //Metti i dislikes in uno stringstream
   while (dislikes_ss.good()) {
-    std::string dislike_id;
-    if (!Account::IDValid(dislike_id)) {
+    std::getline(dislikes_ss, dislike);
+    if (!Account::IDValid(dislike)) {
       return {0x21000000, 0};
     }
-    std::getline(likes_ss, dislike_id);
-    likes.insert(dislike_id);
   }
   return {0, 0};
 }
