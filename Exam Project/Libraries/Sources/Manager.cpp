@@ -772,9 +772,9 @@ unordered_set<string> Manager::LonerPeople(const unsigned int &relations, const 
       {
         for (auto it_post = it->second.begin(); it_post!=it->second.end(); it_post++)
         {
-          if (it_post->SearchLike(it->first)!=-1)
+          if (it_post->LikeExists(it->first)!=false)
             count_reactions++;
-          if (it_post->SearchDislike(it->first)!=-1)
+          if (it_post->DislikeExists(it->first)!=false)
             count_reactions++;
         }
         if (count_reactions<newsreactions)

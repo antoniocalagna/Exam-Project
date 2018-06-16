@@ -49,7 +49,7 @@ public:
   static bool IDValid(const std::string &ID);       //Controlla la validità di un ID
   static bool typeValid(char type);                 //Controlla la validità di un tipo
   static bool nameValid(const std::string &name);   //Controlla la validità di un nome (o cognome)
-
+  
 protected:
   
   string _name;
@@ -60,20 +60,20 @@ protected:
 };
 
 namespace relation {
-const string friendship = "friend";
-const string knowings = "acquaintance";
-
-const string parent = "parent";
-const string born = "son";
-
-const string partner = "partner";
-
-const string employer = "boss";
-const string employee = "hired";
-const string co_worker = "subsidiary";
-
-const string membership = "member";
-
-bool belong (const string &r);
+  const string friendship = "friend";
+  const string knowings = "acquaintance";
+  
+  const string parent = "parent";
+  const string born = "son";
+  
+  const string partner = "partner";
+  
+  const string employer = "boss";
+  const string employee = "hired";
+  const string co_worker = "subsidiary";
+  
+  const string membership = "member";
+  
+  bool belong (const string &r);
 }
-#endif /* Account_h */ 
+#endif /* Account_h */

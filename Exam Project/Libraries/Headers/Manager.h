@@ -9,7 +9,6 @@
 #ifndef Manager_h
 #define Manager_h
 
-#include <map>
 #include <unordered_map>
 #include "User.h"
 #include "Company.h"
@@ -17,7 +16,6 @@
 #include "Graph.hpp"
 #include "Post.h"
 #include "TemplateFunctions.hpp"
-
 
 class Manager
 {
@@ -114,48 +112,4 @@ private:
   bool _checkAge(const string &ID_old, const string &ID_young) const;
   
 };
-
-template <typename AccountType>
-size_t FindPosbyID (const vector<AccountType> &v, const string &ID)
-{
-  //Ricerchiamo l'id richiesto all'interno del vettore (opportunamente ordinato)
-  
-  size_t a = 0, b = v.size() - 1;  //Estremi di ricerca
-  size_t m;
-  
-  while (a < b)
-  {
-    m = (a + b) / 2;  //Dividiamo l'intervallo a metà
-    
-    if (v[a].getID() == ID) {
-      return a;
-    }
-    else if (v[b].getID() == ID) {
-      return b;
-    }
-    if(v[m].getID() == ID) {
-      //Abbiamo trovato l'elemento
-      return m;
-    }
-    //L'elemento non è stato trovato
-    else if(v[m].getID() < ID) {
-      //Abbiamo scelto un elemento che si trova prima di quello ricercato. Il nuovo intervallo è la seconda metà
-      a = m;
-    }
-    else {
-      //L'elemento ricercato si trova prima del punto medio (v[m] > id). L'intervallo è la prima metà
-      b = m;
-    }
-    
-    a++;
-    b--;
-  }
-  /*
-   * Arrivati a questo punto, l'intervallo è stato suddiviso così tante volte che a >= b.
-   * L'elemento non era presente.
-   */
-  return v.size();
-}
-
-
 #endif /* Manager_h */ 

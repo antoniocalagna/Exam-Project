@@ -17,9 +17,8 @@ class Post {
 public:
   //Constructors & Destructor
   Post();
-  Post(const string &news, const Clock &time, const set<string> &likes,
-       const set<string> &dislikes);
-  ~Post();
+  Post(const string &news, const Clock &time, const set<string> &likes, const set<string> &dislikes);
+  ~Post()=default;
   
   //Setters
   void setNews(const string &news);
@@ -34,9 +33,9 @@ public:
   set<string> getDislikes() const;
   
   //Overloading operators
-  bool operator==(const Post &to_be_compared); //non comparo i likes perchè mi sembrano parametri troppo variabili
+  bool operator==(const Post &to_be_compared);
   bool operator!=(const Post &to_be_compared);
-  bool operator>(const Post &is_smaller); //potrebbero basarsi sul numero di likes
+  bool operator>(const Post &is_smaller);
   bool operator<(const Post &is_greater);
   friend ostream &operator<<(ostream &stream, const Post &p);
   
@@ -45,8 +44,10 @@ public:
   void AddDislike(const string &id);
   void RemoveLike(const string &id);
   void RemoveDislike(const string &id);
-  int SearchLike(const string &ID) const; //ANTO QUESTE SONO QUELLE IN CUI DOVREBBE RITORNARE UN ITERATORE
-  int SearchDislike(const string &ID)const;//IO HO FATTO LA VERSIONE DA BAMBINI: passo un ID, ritorna 1 se il likes c'è, sennò ritorna -1
+  bool LikeExists(const string &ID) const;
+  bool DislikeExists(const string &ID) const;
+  set<string>::iterator FindLike(const string &id) const;
+  set<string>::iterator FindDislike(const string &id) const;
   int NumLikes(); //numero likes
   int NumDislikes();
   float RatioReaction(); //rapporto LIKE/(DISLIKE+LIKE) così da poter studiare i post più 'popolari'
@@ -55,9 +56,7 @@ public:
 private:
   string _news;
   Clock _time;
-  set<string> _likes, _dislikes; //empty constructors
-
-  
+  set<string> _likes, _dislikes;
 };
 
 

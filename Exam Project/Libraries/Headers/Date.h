@@ -68,11 +68,10 @@ public:
   bool operator<(const Date &is_greater);
   
 private:
-  bool _isValid() const;
-  
   int _year;
   int _month;
   int _day;
+  bool _isValid() const;
 };
 
 #endif /* Date_h */ 
