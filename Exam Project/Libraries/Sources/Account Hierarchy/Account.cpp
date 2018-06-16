@@ -92,7 +92,7 @@ bool Account::nameValid(const std::string &name) {
   if (name.empty())
     return false;
   for (int i = 0; i < name.size(); i++) {
-    if (!isalnum(name[i]) && name[i] != ' ' && name[i] != '\'')               //Caratteri permessi
+    if (!isalnum(name[i]) && name[i] != ' ' && name[i] != '\'' && name[i] != '-')               //Caratteri permessi
       return false;
   }
   return true;

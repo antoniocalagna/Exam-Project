@@ -118,7 +118,7 @@ FH::Error FH::FileHandler::checkFile(Error (*checker_func)(std::stringstream &))
     
     FH::Error line_status = checkLineFormat(checker_func, line);    //Analizza la riga con la funzione adatta
     if (line_status.code != 0)
-      return {line_status.code, current_line};                      //Errore! Ritorna il codice di errore ottenuto
+      return {line_status.code, current_line + 1};                  //Errore! Ritorna il codice di errore ottenuto
     current_line++;
   }
   return {0, current_line};
@@ -170,11 +170,11 @@ FH::Error FH::IDsfile(std::stringstream &line) {
   std::string id, type_s;
   //Acquisisci e controlla l'ID
   std::getline(line, id, ',');
-  if (!line.good()) { return {0x11000000, 0}; }                //Errore nella lettura dell'ID
-  if (!Account::IDValid(id)) { return {0x21000000, 0}; }        //L'ID non rispetta le regole
+  if (!line.good()) return {0x11000000, 0};                //Errore nella lettura dell'ID
+  if (!Account::IDValid(id)) return {0x21000000, 0};        //L'ID non rispetta le regole
   //Acquisisci e controlla il tipo di account
   std::getline(line, type_s, ',');
-  if (!line.good()) { return {0x12000000, 0}; }                //Errore nella lettura del tipo di account
+  if (!line.good()) return {0x12000000, 0};                //Errore nella lettura del tipo di account
   if (type_s.size() != 1 || !Account::typeValid(type_s[0])) {      //Errore nel tipo di account
     return {0x22000000, 0};
   }
@@ -190,80 +190,92 @@ FH::Error FH::IDsfile(std::stringstream &line) {
     Date birth, subscription;
     
     name = readField("name", info);                             //Controllo nome
-    if (name.empty()) { return {0x13000001, 0}; }
-    if (!Account::nameValid(name)) { return {0x23000001, 0}; }
+    if (name.empty()) return {0x13000001, 0};
+    if (!Account::nameValid(name)) return {0x23000001, 0};
     
     surname = readField("surname", info);                       //Controllo cognome
-    if (surname.empty()) { return {0x13000002, 0}; }
-    if (!Account::nameValid(surname)) { return {0x23000001, 0}; }
+    if (surname.empty()) return {0x13000002, 0};
+    if (!Account::nameValid(surname)) return {0x23000001, 0};
     
     address = readField("addr", info);                          //Controllo indirizzo
     if (address.empty()) { return {0x13000004, 0}; }
-    if (!Account::nameValid(address)) { return {0x23000004, 0}; }
+    if (!Account::nameValid(address)) return {0x23000004, 0};
     
     gender = readField("gender", info);                         //Controllo genere
-    if (gender.size() != 1 || !gender::isValid(gender[0])) { return {0x13000003, 0}; }
+    if (gender.size() != 1 || !gender::isValid(gender[0])) return {0x13000003, 0};
     
     birth.scanDateByStr(readField("birth", info));              //Controllo data di nascita
-    if (!Date::CheckDate(birth)) { return {0x23000006, 0}; }
+    if (!Date::CheckDate(birth)) return {0x23000006, 0};
     
     subscription.scanDateByStr(readField("sub", info));         //Controllo data di iscrizione
-    if (!Date::CheckDate(subscription)) { return {0x23000005, 0}; }
+    if (!Date::CheckDate(subscription)) return {0x23000005, 0};
   }
   else if (type == Account::group_type) {
     //L'account è un gruppo
     std::string name, location, activity;
     Date inception, subscription;
     
-    name = readField("name", info);                               //Controllo nome
-    if (name.empty()) { return {0x13000001, 0}; }
-    if (!Account::nameValid(name)) { return {0x23000001, 0}; }
+    name = readField("name", info);                                     //Controllo nome
+    if (name.empty()) return {0x13000001, 0};
+    if (!Account::nameValid(name)) return {0x23000001, 0};
     
-    location = readField("location", info);                       //Controllo posizione legale
-    if (location.empty()) { return {0x13000004, 0}; }
-    if (!Account::nameValid(location)) { return {0x23000004, 0}; }
+    location = readField("location", info);                             //Controllo posizione legale
+    if (location.empty()) return {0x13000004, 0};
+    if (!Account::nameValid(location)) return {0x23000004, 0};
     
     activity = readField("activity", info);
-    if (activity.empty()) { return {0x13000007, 0}; }
-    if (!Account::nameValid(activity)) { return {0x23000007, 0}; }
+    if (activity.empty()) return {0x13000007, 0};
+    if (!Account::nameValid(activity)) return {0x23000007, 0};
     
     inception.scanDateByStr(readField("inception", info));              //Controllo data di creazione del gruppo
-    if (!Date::CheckDate(inception)) { return {0x23000008, 0}; }
+    if (!Date::CheckDate(inception)) return {0x23000008, 0};
     
-    subscription.scanDateByStr(readField("sub", info));              //Controllo data di iscrizione
-    if (!Date::CheckDate(subscription)) { return {0x23000005, 0}; }
+    subscription.scanDateByStr(readField("sub", info));                 //Controllo data di iscrizione
+    if (!Date::CheckDate(subscription)) return {0x23000005, 0};
   }
   else if (type == Account::company_type) {
     //L'account è una compagnia
     std::string name, f_location, op_location, prod;
     Date inception, subscription;
     
-    name = readField("name", info);                               //Controllo nome
-    if (name.empty()) { return {0x13000001, 0}; }
-    if (!Account::nameValid(name)) { return {0x23000001, 0}; }
+    name = readField("name", info);                                     //Controllo nome
+    if (name.empty()) return {0x13000001, 0};
+    if (!Account::nameValid(name)) return {0x23000001, 0};
     
-    f_location = readField("finantial_loc", info);                //Controllo della finantial location
-    if (f_location.empty()) { return {0x13000004, 0}; }
-    if (!Account::nameValid(f_location)) { return {0x23000004, 0}; }
-  
-    op_location = readField("operative_loc", info);               //Controllo della operative location
-    if (op_location.empty()) { return {0x13000004, 0}; }
-    if (!Account::nameValid(op_location)) { return {0x23000004, 0}; }
+    prod = readField("prod", info);                                     //Controllo prodotto
+    if (prod.empty()) return {0x1300000A, 0};
+    if (!Account::nameValid(prod)) return {0x2300000A, 0};
+    
+    f_location = readField("finantial_loc", info);                      //Controllo della finantial location
+    if (f_location.empty()) return {0x13000004, 0};
+    if (!Account::nameValid(f_location)) return {0x23000004, 0};
+    
+    op_location = readField("operative_loc", info);                     //Controllo della operative location
+    if (op_location.empty()) return {0x13000004, 0};
+    if (!Account::nameValid(op_location)) return {0x23000004, 0};
+    
+    inception.scanDateByStr(readField("inception", info));              //Controllo data di creazione della compagnia
+    if (!Date::CheckDate(inception)) return {0x23000008, 0};
+    
+    subscription.scanDateByStr(readField("sub", info));                 //Controllo data di iscrizione
+    if (!Date::CheckDate(subscription)) return {0x23000005, 0};
   }
   return {0, 0};
 }
 
 FH::Error FH::relationsFile(std::stringstream &line) {
   std::string id1, id2, relation;
+  
   std::getline(line, id1, ',');
-  if (!line.good())
-    return {0x11000000, 0};
+  if (!line.good()) return {0x11000000, 0};
+  if(!Account::IDValid(id1)) return {0x21000000, 0};
+  
   std::getline(line, id2, ',');
-  if (!line.good())
-    return {0x11000000, 0};
+  if (!line.good()) return {0x11000000, 0};
+  if(!Account::IDValid(id2)) return {0x21000000, 0};
+  
   std::getline(line, relation);
-  if (!relation::belong(relation))
-    return {0x24000000, 0};
+  if (!relation::belong(relation)) return {0x24000000, 0};
   return {0, 0};
 }
 
