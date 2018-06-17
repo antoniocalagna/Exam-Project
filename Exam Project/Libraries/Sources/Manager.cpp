@@ -264,9 +264,9 @@ bool Manager::addRelationship(const string &ID_start, const string &ID_target, c
     return false; //Controllo che gli ID esistano.
   
   //Controllo che l'età dei due utenti non entri in contraddizione con una parentela.
-  if((relationship==relation::parent)&&(_checkAge(ID_start, ID_target)))
+  if((relationship==relation::parent)&&(!_checkAge(ID_start, ID_target)))
     return false;
-  if((relationship==relation::born)&&(_checkAge(ID_target, ID_start)))
+  if((relationship==relation::born)&&(!_checkAge(ID_target, ID_start)))
     return false;
   
   //Le relazioni mutue richiedono un arco bi-direzionato
