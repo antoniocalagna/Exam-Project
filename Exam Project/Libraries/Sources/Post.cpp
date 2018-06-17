@@ -150,12 +150,28 @@ float Post::RatioReaction() {
 }
 
 void Post::AddLike(const string &id) {
-  if (LikeExists(id) != false) { return; }
+  if (LikeExists(id) == true)
+  {
+    return; //Esiste già un like associato a quell'ID
+  }
+  if (DislikeExists(id)==true)
+  {
+    return; //Esiste già un dislike associato a quell'ID
+  }
+  
   _likes.insert(id);
 }
 
 void Post::AddDislike(const string &id) {
-  if (DislikeExists(id) != false) { return; }
+  if (LikeExists(id) == true)
+  {
+    return; //Esiste già un like associato a quell'ID
+  }
+  if (DislikeExists(id)==true)
+  {
+    return; //Esiste già un dislike associato a quell'ID
+  }
+  
   _dislikes.insert(id);
 }
 

@@ -315,20 +315,70 @@ bool Manager::deletePost(const Post &post_to_delete, const std::string &whose_ID
 
 bool Manager::addLike_Dislike(const bool &like_1_dislike_0, const Post &post_liked, const std::string &ID)
 {
+  //Controllo l'esistenza dell'ID nella mappa dei vettori di Post.
+  
   if (_map_posts.count(ID)==0)
     return false;
-  vector<Post>::iterator it=find(_map_posts.at(ID).begin(), _map_posts.at(ID).end(), post_liked);
-  if (like_1_dislike_0==true)
+  
+  //Non essendo fornito l'ID del proprietario del post devo scorrere tutta la mappa e ogni vettore alla ricerca di quel post.
+  for (auto it_map=_map_posts.begin(); it_map!=_map_posts.end(); it_map++)
   {
-    it->AddLike(ID);
-    return true;
+    //Per ogni vettore di post..
+    for (auto it_post=it_map->second.begin(); it_post!=it_map->second.begin(); it_post++)
+    {
+      //Lo scorro alla ricerca del post di interesse
+      if (*it_post==post_liked)
+      {
+        //Se lo trovo aggiungo il like/dislike
+        if (like_1_dislike_0==true)
+        {
+          it_post->AddLike(ID);
+          return true;
+        }
+        if (like_1_dislike_0==false)
+        {
+          it_post->AddDislike(ID);
+          return true;
+        }
+      }
+    }
   }
-  if (like_1_dislike_0==false)
+  
+  return false; //Il post non è stato trovato
+}
+
+bool Manager::addLike_Dislike(const bool &like_1_dislike_0, const pair<string,Post> &post_liked, const std::string &ID)
+{
+  //Controllo l'esistenza degli ID nella mappa dei vettori di Post.
+  //Per l'univocità degli ID questo controllo si riflette anche sull'esistenza dell'ID stesso in generale.
+  if (_map_posts.count(post_liked.first)==0) //Esiste il proprietario del post
+    return false;
+  if (_map_posts.count(ID)==0) //Esiste l'account che ha messo like
+    return false;
+  
+  //Cerco nella mappa il vettore di post associato al proprietario
+  auto it_map=_map_posts.find(post_liked.first);
+  
+  //Scorro in quel vettore alla ricerca del post desiderato
+  for (auto it_post=it_map->second.begin(); it_post!=it_map->second.end(); it_post++)
   {
-    it->AddDislike(ID);
-    return true;
+    if (*it_post==post_liked.second)
+    {
+      //Trovato il post di interesse aggiungo il like/dislike
+      if (like_1_dislike_0==true)
+      {
+        it_post->AddLike(ID);
+        return true;
+      }
+      if (like_1_dislike_0==false)
+      {
+        it_post->AddDislike(ID);
+        return true;
+      }
+    }
   }
-  return false;
+  
+  return false; //Il post non è stato trovato
 }
 
 //PRIVATE METHODS
