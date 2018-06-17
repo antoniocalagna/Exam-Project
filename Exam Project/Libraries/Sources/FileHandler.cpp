@@ -103,26 +103,31 @@ FH::Error FH::FileHandler::checkFile(Error (*checker_func)(std::stringstream &))
   return {0, current_line};
 }
 
+FH::Error FH::FileHandler::fetchLineData(Error (*fetcher_func)(stringstream &, IOBuffer &), const std::string &line, IOBuffer &buff) {
+  if (line.empty()) {
+    return {0, 0};     //Ignora le righe vuote
+  }
+  
+  if (line.size() >= 2) {
+    if (line.substr(0, 2) == "//") {
+      return {0, 0};    //Riga commento
+    }
+  }
+  std::stringstream line_s(line);
+  return fetcher_func(line_s, buff);
+}
+
 FH::Error FH::FileHandler::fetchData(Error (*fetcher_func)(stringstream &, IOBuffer &), IOBuffer &buff) {
   _file.close();
-  _file.open(filename(), std::ios::in | std::ios::out | std::ios::trunc);   //Riapri il file in modalità IN/OUT
+  _file.open(filename(), std::ios::in);                             //Riapri il file in modalità IN
   std::string line_to_parse;
   
   unsigned int current_line = 0;
-  while (_file.good()) {                                           //Cicla attraverso tutto il file
+  while (_file.good()) {                                            //Cicla attraverso tutto il file
     std::getline(_file, line_to_parse);
-    if (line_to_parse.empty()) {
-      return {0, 0};                                              //Ignora le righe vuote
-    }
-    
-    if (line_to_parse.size() >= 2) {
-      if (line_to_parse.substr(0, 2) == "//") {
-        return {0, 0};                                            //Riga commento
-      }
-    }
-    std::stringstream line_s(line_to_parse);      //Trasforma la riga in uno stringstream
-    Error err = fetcher_func(line_s, buff);                       //Controlla eventuali errori e acquisici i dati in buff
-    if (err.code != 0) return {err.code, current_line + 1};
+    Error err = fetchLineData(fetcher_func, line_to_parse, buff);
+    if(err.code != 0)
+      return {err.code, current_line +1};
     
     current_line++;
   }
@@ -294,15 +299,15 @@ FH::Error FH::IDsfile(std::stringstream &line) {
 FH::Error FH::relationsFile(std::stringstream &line) {
   std::string id1, id2, relation;
   
-  std::getline(line, id1, ',');
+  std::getline(line, id1, ',');                                         //Controllo del primo ID
   if (!line.good()) return {0x11000000, 0};
   if (!Account::IDValid(id1)) return {0x21000000, 0};
   
-  std::getline(line, id2, ',');
+  std::getline(line, id2, ',');                                         //Controllo del secondo ID
   if (!line.good()) return {0x11000000, 0};
   if (!Account::IDValid(id2)) return {0x21000000, 0};
   
-  std::getline(line, relation);
+  std::getline(line, relation);                                         //Controllo della relazione
   if (!relation::belong(relation)) return {0x24000000, 0};
   return {0, 0};
 }
@@ -416,7 +421,19 @@ FH::Error FH::IDsfile(std::stringstream &line, IOBuffer &buff) {
   return {0, 0};
 }
 
-
+FH::Error FH::relationsFIle(std::stringstream &line, IOBuffer &buff) {
+  std::string id1, id2, relation;
+  
+  std::getline(line, id1, ',');                                         //Acquisizione del primo ID
+  std::getline(line, id2, ',');                                         //Acquisizione del secondo ID
+  std::getline(line, relation);                                         //Acquisizione della relazione
+  
+  IOBuffer::Relation new_rel = {{id1, id2}, relation};                  //Prevenzione delle sovrascritture
+  if(buff.overwritingRelation(new_rel))
+    return {0x34000000, 0};
+  buff << new_rel;
+  return {0,0};
+}
 
 
 

@@ -52,6 +52,7 @@ public:
   
   /**File data exchange*/
   //Viene assunto che tutte le righe siano correttamente formattate. Qui vengono eseguiti controlli quali ripetizioni.
+  Error fetchLineData(Error (*fetcher_func)(std::stringstream &, IOBuffer &), const std::string &line, IOBuffer &buff);
   Error fetchData(Error (*fetcher_func)(std::stringstream &, IOBuffer &), IOBuffer &buff);
   Error putData(std::string(*printer_func)(IOBuffer &), IOBuffer &buff);
   
@@ -68,7 +69,7 @@ Error postsFile(std::stringstream &line);
 
 //Acquisizione dei file
 Error IDsfile(std::stringstream &line, IOBuffer &buff);
-
+Error relationsFIle(std::stringstream &line, IOBuffer &buff);
 //Stampa su file
 
 };//Namespace FH
