@@ -324,7 +324,7 @@ bool Manager::addLike_Dislike(const bool &like_1_dislike_0, const Post &post_lik
   for (auto it_map=_map_posts.begin(); it_map!=_map_posts.end(); it_map++)
   {
     //Per ogni vettore di post..
-    for (auto it_post=it_map->second.begin(); it_post!=it_map->second.begin(); it_post++)
+    for (auto it_post=it_map->second.begin(); it_post!=it_map->second.end(); it_post++)
     {
       //Lo scorro alla ricerca del post di interesse
       if (*it_post==post_liked)
