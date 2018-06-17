@@ -42,6 +42,7 @@ public:
   bool groupsEmpty() const;
   bool companiesEmpty() const;
   bool postsEmpty() const;
+  bool realationsEmpty() const;
   
   /**General*/
   void clear();

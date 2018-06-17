@@ -421,7 +421,7 @@ FH::Error FH::IDsfile(std::stringstream &line, IOBuffer &buff) {
   return {0, 0};
 }
 
-FH::Error FH::relationsFIle(std::stringstream &line, IOBuffer &buff) {
+FH::Error FH::relationsFile(std::stringstream &line, IOBuffer &buff) {
   std::string id1, id2, relation;
   
   std::getline(line, id1, ',');                                         //Acquisizione del primo ID

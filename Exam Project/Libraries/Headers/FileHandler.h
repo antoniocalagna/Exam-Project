@@ -69,7 +69,7 @@ Error postsFile(std::stringstream &line);
 
 //Acquisizione dei file
 Error IDsfile(std::stringstream &line, IOBuffer &buff);
-Error relationsFIle(std::stringstream &line, IOBuffer &buff);
+Error relationsFile(std::stringstream &line, IOBuffer &buff);
 //Stampa su file
 
 };//Namespace FH
