@@ -7,12 +7,12 @@
 //Constructors & Destructor
 Post::Post() {
   _news = "blank";
-  _time = Clock();
+  _date = Date();
 }
 
-Post::Post(const string &news, const Clock &time, const set<string> &likes, const set<string> &dislikes) {
+Post::Post(const string &news, const Date &date, const set<string> &likes, const set<string> &dislikes) {
   _news = news;
-  _time = time;
+  _date = date;
   _likes = likes;
   _dislikes = dislikes;
 }
@@ -22,8 +22,8 @@ void Post::setNews(const string &news) {
   _news = news;
 }
 
-void Post::setTime(const Clock &time) {
-  _time = time;
+void Post::setDate(const Date &date) {
+  _date = date;
 }
 
 void Post::setLikes(const set<string> &likes) {
@@ -39,8 +39,8 @@ string Post::getNews() const {
   return _news;
 }
 
-Clock Post::getTime() const {
-  return _time;
+Date Post::getDate() const {
+  return _date;
 }
 
 set<string> Post::getLikes() const {
@@ -53,7 +53,7 @@ set<string> Post::getDislikes() const {
 
 //Operators
 bool Post::operator==(const Post &to_be_compared) {
-  return ((_news == to_be_compared._news) && (_time == to_be_compared._time));
+  return ((_news == to_be_compared._news) && (_date == to_be_compared._date));
 }
 
 bool Post::operator!=(const Post &to_be_compared) {
@@ -69,11 +69,11 @@ bool Post::operator<(const Post &is_greater) {
 }
 
 ostream &operator<<(ostream &stream, const Post &p) {
-  stream << p._news << ", " << p._time << "like: {";
+  stream << p._news << ", " << p._date << "like: {";
   if (p._likes.size() != 0) {
     auto it = p._likes.begin();
-    int count=0;
-    while(count != p._likes.size()-1) {
+    int count = 0;
+    while (count != p._likes.size() - 1) {
       stream << *it << ", ";
       it++;
       count++;
@@ -85,8 +85,8 @@ ostream &operator<<(ostream &stream, const Post &p) {
 
   if (p._dislikes.size() != 0) {
     auto it = p._dislikes.begin();
-    int count=0;
-    while(count != p._dislikes.size()-1) {
+    int count = 0;
+    while (count != p._dislikes.size() - 1) {
       stream << *it << ", ";
       it++;
       count++;
@@ -112,23 +112,19 @@ bool Post::DislikeExists(const string &ID) const {
 
 }
 
-set<string>::iterator Post::FindLike(const string &id) const
-{
-  if (!LikeExists(id))
-  {
+set<string>::iterator Post::FindLike(const string &id) const {
+  if (!LikeExists(id)) {
     return _likes.end();
   }
-  
+
   return _likes.find(id);
 }
 
-set<string>::iterator Post::FindDislike(const string &id) const
-{
-  if (!DislikeExists(id))
-  {
+set<string>::iterator Post::FindDislike(const string &id) const {
+  if (!DislikeExists(id)) {
     return _dislikes.end();
   }
-  
+
   return _dislikes.find(id);
 }
 
@@ -143,46 +139,52 @@ int Post::NumDislikes() {
 float Post::RatioReaction() {
   if ((NumDislikes() + NumLikes()) == 0) {
     return 0;
-  }
-  else {
+  } else {
     return ((float) NumLikes() / (NumLikes() + NumDislikes()));
   }
 }
 
-void Post::AddLike(const string &id) {
-  if (LikeExists(id) == true)
-  {
-    return; //Esiste già un like associato a quell'ID
+bool Post::AddLike(const string &id) {
+  if(DislikeExists(id) == false) {
+    pair<set<string>::iterator, bool> ret;
+    ret = _likes.insert(id);
+    if (/*LikeExists(id) == true || */ret.second == true) { //condizione ridondante, insert già controlla l'unicità dell'elemento inserito
+      return true;
+    }
   }
-  if (DislikeExists(id)==true)
-  {
-    return; //Esiste già un dislike associato a quell'ID
-  }
-  
-  _likes.insert(id);
+    return false;
+
 }
 
-void Post::AddDislike(const string &id) {
-  if (LikeExists(id) == true)
-  {
-    return; //Esiste già un like associato a quell'ID
+bool Post::AddDislike(const string &id) {
+  if(LikeExists(id) == false) {
+    pair<set<string>::iterator, bool> ret;
+    ret = _dislikes.insert(id);
+    if (/*DislikeExists(id) == true || */ret.second == true) { //condizione ridondante
+      return true;
+    }
   }
-  if (DislikeExists(id)==true)
-  {
-    return; //Esiste già un dislike associato a quell'ID
-  }
-  
-  _dislikes.insert(id);
+  return false;
+
+  return true;
 }
 
-void Post::RemoveLike(const string &id) {
+bool Post::RemoveLike(const string &id) {
+  int s = _likes.size();
   if (LikeExists(id) != false) {
     _likes.erase(id);
+    if (s == _likes.size()+1){
+      return true; }
   }
+  return false;
 }
 
-void Post::RemoveDislike(const string &id) {
+bool Post::RemoveDislike(const string &id) {
+  int s = _dislikes.size();
   if (DislikeExists(id) != false) {
     _dislikes.erase(id);
+    if (s == _dislikes.size()+1){
+      return true; }
   }
+  return false;
 }

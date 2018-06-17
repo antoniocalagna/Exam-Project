@@ -5,10 +5,9 @@
 #ifndef PROG_POST_H
 #define PROG_POST_H
 
-#include <vector>
 #include <iterator>
 #include <set>
-#include "Clock.h"
+#include "Date.h"
 
 using namespace std;
 
@@ -17,18 +16,18 @@ class Post {
 public:
   //Constructors & Destructor
   Post();
-  Post(const string &news, const Clock &time, const set<string> &likes, const set<string> &dislikes);
+  Post(const string &news, const Date &date, const set<string> &likes, const set<string> &dislikes);
   ~Post()=default;
   
   //Setters
   void setNews(const string &news);
-  void setTime(const Clock &time);
+  void setDate(const Date &date);
   void setLikes(const set<string> &likes);
   void setDislikes(const set<string> &dislikes);
   
   //Getters
   string getNews() const;
-  Clock getTime() const;
+  Date getDate() const;
   set<string> getLikes() const;
   set<string> getDislikes() const;
   
@@ -40,10 +39,10 @@ public:
   friend ostream &operator<<(ostream &stream, const Post &p);
   
   //Others
-  void AddLike(const string &id);
-  void AddDislike(const string &id);
-  void RemoveLike(const string &id);
-  void RemoveDislike(const string &id);
+  bool AddLike(const string &id);
+  bool AddDislike(const string &id);
+  bool RemoveLike(const string &id);
+  bool RemoveDislike(const string &id);
   bool LikeExists(const string &ID) const;
   bool DislikeExists(const string &ID) const;
   set<string>::iterator FindLike(const string &id) const;
@@ -55,7 +54,7 @@ public:
   
 private:
   string _news;
-  Clock _time;
+  Date _date;
   set<string> _likes, _dislikes;
 };
 
