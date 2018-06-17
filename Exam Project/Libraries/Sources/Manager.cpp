@@ -395,7 +395,9 @@ void Manager::_setKeys(const vector<Group> &groups)
 bool Manager::_checkAge(const std::string &ID_old, const std::string &ID_young) const
 {
   //Funzione chiamata a controlli già effettuati
-  return _map_users.at(ID_old).getBirth()<_map_users.at(ID_young).getBirth();
+  Date old_birth = _map_users.at(ID_old).getBirth();
+  Date young_birth = _map_users.at(ID_young).getBirth();
+  return old_birth < young_birth;
 }
 
 //STATISTICS

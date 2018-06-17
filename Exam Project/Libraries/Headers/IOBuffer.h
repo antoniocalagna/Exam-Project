@@ -13,7 +13,8 @@
 #include "Post.h"
 
 class IOBuffer {
-private:
+public:
+  /**Aliases*/
   using Users = std::deque<User>;
   using Groups = std::deque<Group>;
   using Companies= std::deque<Company>;
@@ -21,7 +22,8 @@ private:
   using Posts = std::deque<m_Post>;
   using Relation = std::pair<std::pair<std::string, std::string>, std::string>;
   using Relations = std::deque<Relation>;
-  
+
+private:
   Users _users;
   Groups _groups;
   Companies _companies;
@@ -35,10 +37,12 @@ public:
   
   /**Getters*/
   bool replicatedID(const std::string &ID) const;
+  bool overwritingRelation(const Relation &rel);
   bool usersEmpty() const;
   bool groupsEmpty() const;
   bool companiesEmpty() const;
   bool postsEmpty() const;
+  bool realationsEmpty() const;
   
   /**General*/
   void clear();

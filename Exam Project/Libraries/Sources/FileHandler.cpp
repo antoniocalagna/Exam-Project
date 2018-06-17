@@ -103,26 +103,31 @@ FH::Error FH::FileHandler::checkFile(Error (*checker_func)(std::stringstream &))
   return {0, current_line};
 }
 
+FH::Error FH::FileHandler::fetchLineData(Error (*fetcher_func)(stringstream &, IOBuffer &), const std::string &line, IOBuffer &buff) {
+  if (line.empty()) {
+    return {0, 0};     //Ignora le righe vuote
+  }
+  
+  if (line.size() >= 2) {
+    if (line.substr(0, 2) == "//") {
+      return {0, 0};    //Riga commento
+    }
+  }
+  std::stringstream line_s(line);
+  return fetcher_func(line_s, buff);
+}
+
 FH::Error FH::FileHandler::fetchData(Error (*fetcher_func)(stringstream &, IOBuffer &), IOBuffer &buff) {
   _file.close();
-  _file.open(filename(), std::ios::in | std::ios::out | std::ios::trunc);   //Riapri il file in modalità IN/OUT
+  _file.open(filename(), std::ios::in);                             //Riapri il file in modalità IN
   std::string line_to_parse;
   
   unsigned int current_line = 0;
-  while(_file.good()) {                                           //Cicla attraverso tutto il file
+  while (_file.good()) {                                            //Cicla attraverso tutto il file
     std::getline(_file, line_to_parse);
-    if (line_to_parse.empty()) {
-      return {0, 0};                                              //Ignora le righe vuote
-    }
-  
-    if (line_to_parse.size() >= 2) {
-      if (line_to_parse.substr(0, 2) == "//") {
-        return {0, 0};                                            //Riga commento
-      }
-    }
-    std::stringstream line_s(line_to_parse);      //Trasforma la riga in uno stringstream
-    Error err = fetcher_func(line_s, buff);                       //Controlla eventuali errori e acquisici i dati in buff
-    if(err.code != 0) return {err.code, current_line + 1};
+    Error err = fetchLineData(fetcher_func, line_to_parse, buff);
+    if(err.code != 0)
+      return {err.code, current_line +1};
     
     current_line++;
   }
@@ -294,15 +299,15 @@ FH::Error FH::IDsfile(std::stringstream &line) {
 FH::Error FH::relationsFile(std::stringstream &line) {
   std::string id1, id2, relation;
   
-  std::getline(line, id1, ',');
+  std::getline(line, id1, ',');                                         //Controllo del primo ID
   if (!line.good()) return {0x11000000, 0};
   if (!Account::IDValid(id1)) return {0x21000000, 0};
   
-  std::getline(line, id2, ',');
+  std::getline(line, id2, ',');                                         //Controllo del secondo ID
   if (!line.good()) return {0x11000000, 0};
   if (!Account::IDValid(id2)) return {0x21000000, 0};
   
-  std::getline(line, relation);
+  std::getline(line, relation);                                         //Controllo della relazione
   if (!relation::belong(relation)) return {0x24000000, 0};
   return {0, 0};
 }
@@ -317,7 +322,7 @@ FH::Error FH::postsFile(std::stringstream &line) {
   if (!Account::IDValid(id)) { return {0x21000000, 0}; }              //ID non valido
   
   std::getline(line, message, ',');
-  while(!isFormatChar(line.str(), message.size() + id.size() + 1)) {
+  while (!isFormatChar(line.str(), message.size() + id.size() + 1)) {
     std::string temp;
     std::getline(line, temp, ',');
     message += "," + temp;
@@ -325,8 +330,8 @@ FH::Error FH::postsFile(std::stringstream &line) {
   if (!line.good()) { return {0x13000009, 0}; }                       //Errore di formattazione del messaggio
   
   std::getline(line, date, ',');
-  if(!line.good()) {return {0x1300000B, 0}; }
-  if(!Date::CheckDate(date)) { return {0x2300000B, 0}; }
+  if (!line.good()) { return {0x1300000B, 0}; }
+  if (!Date::CheckDate(date)) { return {0x2300000B, 0}; }
   
   std::string reactions;
   std::getline(line, reactions);                                      //Acquisici il resto della riga
@@ -347,3 +352,112 @@ FH::Error FH::postsFile(std::stringstream &line) {
   }
   return {0, 0};
 }
+
+/**###################
+ * ## Acquisitzione ##
+ * ###################
+ */
+FH::Error FH::IDsfile(std::stringstream &line, IOBuffer &buff) {
+  std::string id;
+  char type;
+  
+  std::getline(line, id, ',');                                  //Acquisici l'ID
+  line.get(type);                                               //Acquisisci il tipo
+  line.ignore(1);                                               //Salta la virgola
+  
+  if (buff.replicatedID(id))                                     //Controlla i duplicati
+    return {0x31000000, 0};
+  
+  //Acquisici il resto delle informazioni (che dipendono dal tipo di account)
+  std::string info;
+  std::getline(line, info);                                     //Acquisisci il resto delle informazioni
+  info = info.substr(1, info.size() - 2);                       //Liberati delle parentesi graffe
+  if (type == Account::user_type) {
+    //L'account è un utente
+    std::string name, surname, address, gender;
+    Date birth, subscription;
+    
+    name = readField("name", info);                             //Acquisici il nome
+    surname = readField("surname", info);                       //Acquisisci il cognome
+    address = readField("addr", info);                          //Acquisisci l'indirizzo
+    gender = readField("gender", info);                         //Acquisisci il genere
+    birth.scanDateByStr(readField("birth", info));              //Acquisisci la data di nascita
+    subscription.scanDateByStr(readField("sub", info));         //Acquisisci la data di iscrizione
+    
+    User new_user(name, surname, id, address, subscription, birth, gender[0]);
+    
+    buff << new_user;
+  }
+  else if (type == Account::group_type) {
+    //L'account è un gruppo
+    std::string name, location, activity;
+    Date inception, subscription;
+    
+    name = readField("name", info);                                     //Acquisizione nome
+    location = readField("location", info);                             //Acquisizione posizione legale
+    activity = readField("activity", info);
+    inception.scanDateByStr(readField("inception", info));              //Acquisizione data di creazione del gruppo
+    subscription.scanDateByStr(readField("sub", info));                 //Acquisizione data di iscrizione
+    
+    Group new_group(name, id, location, activity, subscription, inception);
+    buff << new_group;
+    
+  }
+  else if (type == Account::company_type) {
+    //L'account è una compagnia
+    std::string name, f_location, op_location, prod;
+    Date inception, subscription;
+    
+    name = readField("name", info);                                     //Acquisizione nome
+    prod = readField("prod", info);                                     //Acquisizione prodotto
+    f_location = readField("finantial_loc", info);                      //Acquisizione della finantial location
+    op_location = readField("operative_loc", info);                     //Acquisizione della operative location
+    inception.scanDateByStr(readField("inception", info));              //Acquisizione data di creazione della compagnia
+    subscription.scanDateByStr(readField("sub", info));                 //Acquisizione data di iscrizione
+    
+    Company new_company(name, id, f_location, op_location, prod, subscription, inception);
+    buff << new_company;
+  }
+  return {0, 0};
+}
+
+FH::Error FH::relationsFile(std::stringstream &line, IOBuffer &buff) {
+  std::string id1, id2, relation;
+  
+  std::getline(line, id1, ',');                                         //Acquisizione del primo ID
+  std::getline(line, id2, ',');                                         //Acquisizione del secondo ID
+  std::getline(line, relation);                                         //Acquisizione della relazione
+  
+  IOBuffer::Relation new_rel = {{id1, id2}, relation};                  //Prevenzione delle sovrascritture
+  if(buff.overwritingRelation(new_rel))
+    return {0x34000000, 0};
+  buff << new_rel;
+  return {0,0};
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
