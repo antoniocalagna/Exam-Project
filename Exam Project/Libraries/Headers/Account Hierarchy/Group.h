@@ -18,7 +18,7 @@ public:
   
   //Constructors and Destructor
   Group();
-  Group(const string &name, const string &ID, const string &legal_loc, const string &type_activity, const int &num, const Date &subscription, const Date &inception);
+  Group(const string &name, const string &ID, const string &legal_loc, const string &type_activity, const Date &subscription, const Date &inception);
   Group(const Group &to_copy);
   ~Group()=default;
   

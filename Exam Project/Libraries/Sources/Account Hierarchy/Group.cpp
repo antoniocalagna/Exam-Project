@@ -16,7 +16,7 @@ Group::Group()
   _inception=Date();
 }
 
-Group::Group(const string &name, const string &ID, const string &legal_loc, const string &type_activity, const int &num, const Date &subscription, const Date &inception)
+Group::Group(const string &name, const string &ID, const string &legal_loc, const string &type_activity, const Date &subscription, const Date &inception)
 {
   _name=name;
   _ID=ID;
