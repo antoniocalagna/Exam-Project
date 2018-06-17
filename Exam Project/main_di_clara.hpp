@@ -1,19 +1,35 @@
 #include "Post.h"
 #include "User.h"
 #include "Account.h"
+#include "FileHandler.h"
 
 using namespace std;
 
-int main_di_clara() {
-  
-  
+int main_di_clara(int argc, char *argv[]) {
   //metterei una introduzione al funzionamento per l'utente, del tipo : hi, this is a console menu, write your commands, or
   //write help for the list of commands (magari in inglese vero)
+  FH::FileHandler accounts_fh,          //FileHandler per il controllo e l'acquisizione dei dati da file
+          relations_fh,
+          posts_fh;
+  IOBuffer buffer;                      //Buffer necessario per l'acquisizione dei dati
+  
+  //Controllo dei parametri passati da linea di comando
+  if (argc != 0 && argc != 4) {
+    cerr << "Parameters error. Plese insert input file names as follows: <accounts_file> <relations_file> <posts_file>.\n"
+         << "You can also execute the program without specifying the files to open, and choose them later." << endl;
+    return -1;
+  }
+  
+  if(argc == 3) {
+    //Apri e controlla i file richiesti.
+    accounts_fh.open(argv[1]);
+    relations_fh.open(argv[2]);
+    accounts_fh.open(argv[3]);
+  }
   
   string input;
   string cmd;
-  int exit = 0;
-  
+  bool exit = false;
   do {
     cout << "\n>";
     
@@ -26,33 +42,33 @@ int main_di_clara() {
       //LISTA DEI POSSIBILI COMANDI
       cout << "Users:" << endl;
       cout
-      << "\nset name <user_id>\nset surname <user_id>\nset gender <user_id>\nset birth <user_id>\nset address <user_id>\nset id <user_id>\nset subscription <user_id>\n"
-      << endl
-      << "get name <user_id>\nget surname <user_id>\nget gender <user_id>\nget birth <user_id>\nget address <user_id>\nget id <user_id>\nget subscription <user_id>\n"
-      << endl;
+              << "\nset name <user_id>\nset surname <user_id>\nset gender <user_id>\nset birth <user_id>\nset address <user_id>\nset id <user_id>\nset subscription <user_id>\n"
+              << endl
+              << "get name <user_id>\nget surname <user_id>\nget gender <user_id>\nget birth <user_id>\nget address <user_id>\nget id <user_id>\nget subscription <user_id>\n"
+              << endl;
       cout << "new account user\n";
       cout << "delete <id>\n"
-      << endl;
+           << endl;
       
       cout << "Groups:" << endl;
       cout
-      << "\nset name <group_id>\nset n_members <group_id>\nset location <group_id>\nset type_activity <group_id>\nset inception <group_id>\nset id <group_id>\nset subscription <group_id>\n"
-      << endl
-      << "get name <group_id>\nget n_members <group_id>\nget location <group_id>\nget type_activity <group_id>\nget inception <group_id>\nget id <group_id>\nget subscription <group_id>\n"
-      << endl;
+              << "\nset name <group_id>\nset n_members <group_id>\nset location <group_id>\nset type_activity <group_id>\nset inception <group_id>\nset id <group_id>\nset subscription <group_id>\n"
+              << endl
+              << "get name <group_id>\nget n_members <group_id>\nget location <group_id>\nget type_activity <group_id>\nget inception <group_id>\nget id <group_id>\nget subscription <group_id>\n"
+              << endl;
       cout << "new account group\n";
       cout << "delete <id>\n"
-      << endl;
+           << endl;
       
       cout << "Companies:" << endl;
       cout
-      << "\nset name <company_id>\nset finantial_location <company_id>\nset operative_location <company_id>\nset products <company_id>\nset inception <company_id>\nset id <company_id>\nset subscription <company_id>\n"
-      << endl
-      << "get name <company_id>\nget finantial_location <company_id>\nget operative_location <company_id>\nget products <company_id>\nget inception <company_id>\nget id <company_id>\nget subscription <company_id>\n"
-      << endl;
+              << "\nset name <company_id>\nset finantial_location <company_id>\nset operative_location <company_id>\nset products <company_id>\nset inception <company_id>\nset id <company_id>\nset subscription <company_id>\n"
+              << endl
+              << "get name <company_id>\nget finantial_location <company_id>\nget operative_location <company_id>\nget products <company_id>\nget inception <company_id>\nget id <company_id>\nget subscription <company_id>\n"
+              << endl;
       cout << "new account company\n";
       cout << "delete <id>\n"
-      << endl;
+           << endl;
       cout << ">";
       
       getline(cin, input);
@@ -121,7 +137,8 @@ int main_di_clara() {
       command >> what >> who;
       if (who == "") {
         cout << "Error! Check the numbers of parameters you have to insert." << endl;
-      } else /*if(who appartiene al vettore di ID preso dal file)*/{
+      }
+      else /*if(who appartiene al vettore di ID preso dal file)*/{
         if (what == "name") {
           //prendo dal vettore di id quello con id==who
           // faccio Account.getname(who) lo cambio.
@@ -175,7 +192,8 @@ int main_di_clara() {
       command >> who;
       if (who == "") {
         cout << "Error! Check the numbers of parameters you have to insert." << endl;
-      } else /*if(who appartiene al vettore di ID preso dal file)*/{
+      }
+      else /*if(who appartiene al vettore di ID preso dal file)*/{
         //si usa il distruttore per eliminare o imposto tutti i paramentri vuoti?
         //o forse lo fa l'onnisciente Manager
         
@@ -188,13 +206,15 @@ int main_di_clara() {
       command >> what1 >> what2;
       if (what1 == "") {
         cout << "Error! Check the numbers of parameters you have to insert." << endl;
-      } else {
+      }
+      else {
         
         if (what1 == "account") {
           
           if (what2 == "") {
             cout << "Error! Check the numbers of parameters you have to insert." << endl;
-          } else {
+          }
+          else {
             if (what2 == "user") {
               
             }
@@ -219,9 +239,9 @@ int main_di_clara() {
     
     //INIZIARE A GUARDARE LE RELAZIONI
     if (cmd == "exit") {
-      exit = 1;
+      exit = true;
     }
     
-  } while (exit == 0);
+  } while (!exit);
   return 0;
 }
