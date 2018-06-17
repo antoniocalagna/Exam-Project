@@ -298,8 +298,25 @@ vector<string> Manager::getListConnection(const std::string &starting_ID, const 
 
 bool Manager::addPost(const Post &post_to_add, const std::string &whose_ID)
 {
-  if (_map_posts.count(whose_ID)==0)
+  if (_map_posts.count(whose_ID)==0) //Controllo che esista il proprietario del post
     return false;
+  
+  set<string> likes = post_to_add.getLikes();
+  for (auto it=likes.begin(); it!=likes.end(); it++)
+  {
+    //Controllo che ogni like corrisponda ad un ID esistente.
+    if (!_exist_as_node(*it))
+      return false;
+  }
+  
+  set<string> dislikes = post_to_add.getDislikes();
+  for (auto it=dislikes.begin(); it!=dislikes.end(); it++)
+  {
+    //Controllo che ogni dislike corrisponda ad un ID esistente.
+    if (!_exist_as_node(*it))
+      return false;
+  }
+  
   _map_posts.at(whose_ID).push_back(post_to_add);
   return true;
 }
@@ -329,6 +346,9 @@ bool Manager::addLike_Dislike(const bool &like_1_dislike_0, const Post &post_lik
       //Lo scorro alla ricerca del post di interesse
       if (*it_post==post_liked)
       {
+        if (ID==it_map->first) //Evito gli autolikes.
+          return false;
+        
         //Se lo trovo aggiungo il like/dislike
         if (like_1_dislike_0==true)
         {
@@ -354,6 +374,8 @@ bool Manager::addLike_Dislike(const bool &like_1_dislike_0, const pair<string,Po
   if (_map_posts.count(post_liked.first)==0) //Esiste il proprietario del post
     return false;
   if (_map_posts.count(ID)==0) //Esiste l'account che ha messo like
+    return false;
+  if (ID==post_liked.first) //Non sono ammessi autolikes.
     return false;
   
   //Cerco nella mappa il vettore di post associato al proprietario
