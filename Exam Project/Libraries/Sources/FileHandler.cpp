@@ -435,6 +435,44 @@ FH::Error FH::relationsFile(std::stringstream &line, IOBuffer &buff) {
   return {0,0};
 }
 
+FH::Error FH::postsFile(std::stringstream &line, IOBuffer &buff) {
+  std::string id, message;
+  std::string like, dislike;
+  std::string date_str;
+  Date date;
+  Post new_post;
+  
+  std::getline(line, id, ',');                                        //Acquisici l'ID
+  
+  std::getline(line, message, ',');
+  while (!isFormatChar(line.str(), message.size() + id.size() + 1)) {
+    std::string temp;
+    std::getline(line, temp, ',');
+    message += "," + temp;
+  }
+  message = unformatString(message);
+  new_post.setNews(message);
+  
+  std::getline(line, date_str, ',');
+  date.scanDateByStr(date_str);
+  //////////////////////////////////////// AGGIUNGI LA DATA ///////////////////////////////////////////////////
+  
+  std::string reactions;
+  std::getline(line, reactions);                                      //Acquisici il resto della riga
+  std::stringstream likes_ss(readField("likes", reactions));          //Metti i likes in uno stringstream
+  while (likes_ss.good() && likes_ss.gcount() != 0) {
+    std::getline(likes_ss, like, ',');
+    new_post.AddLike(like);
+  }
+  
+  std::stringstream dislikes_ss(readField("dislikes", reactions));   //Metti i dislikes in uno stringstream
+  while (dislikes_ss.good() && dislikes_ss.gcount() != 0) {
+    std::getline(dislikes_ss, dislike);
+    new_post.AddDislike(dislike);
+  }
+  return {0, 0};
+}
+
 
 
 
