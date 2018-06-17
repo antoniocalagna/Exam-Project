@@ -40,7 +40,7 @@ public:
   
   void CorrectValues();
   void SetCurrentTime();
-  void Acquire (string s);
+  void scanTimeByStr (string s);
   
   //Overloading operators:
   

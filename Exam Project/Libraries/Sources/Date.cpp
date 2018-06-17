@@ -152,17 +152,24 @@ void Date::scanDateByStr(const string &s) {
 }
 
 ostream &operator<<(ostream &stream, const Date &d) {
-  stream << d._day << "/" << d._month << "/" << d._year << endl;
+  if (d._day<10)
+    stream<<"0";
+  stream << d._day << "/";
+  if (d._month<10)
+    stream<<"0";
+  stream<< d._month << "/";
+  if (d._year<1000)
+  {
+    if (d._year<10)
+      stream<<"000";
+    else if (d._year<100)
+      stream<<"00";
+    else if (d._year<1000)
+      stream<<"0";
+  }
+  
+  stream<< d._year;
   return stream;
-  //Con questo overloading otteniamo lo stesso effetto di, ad esempio, stampare a schermo la stringa ricavata con la funzione GeneratePrivateStr() e salvata in _data.
-  //Potremo dire nel main direttamente cout << obj invece di obj.GetData, member function che, infatti, non definiamo neppure per la presenza di questo overloading.
-  /*
-   * The Date:: access specifier is NOT needed because this operator doesn't belong to Date class.
-   * This is because class' operators require only one parameter. The second parameter is implicitly the class' object
-   * calling the operator.
-   * In this case we declared this operator as a friend of the class Date, so that it can access private members
-   * like I do in the line below, but it doesn't belong to the class!!
-   */
 }
 
 void Date::operator=(const Date &to_be_assigned) {

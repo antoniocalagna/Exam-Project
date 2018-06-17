@@ -128,7 +128,7 @@ void Clock::SetCurrentTime()
   sstream>>_seconds;
 }
 
-void Clock::Acquire(std::string s)
+void Clock::scanTimeByStr(std::string s)
 {
   stringstream sstream (s);
   sstream>>_hours;
@@ -140,7 +140,25 @@ void Clock::Acquire(std::string s)
 
 ostream &operator<< (ostream &stream, const Clock& c)
 {
-  stream << c._hours<<":"<<c._minutes<<":"<<c._seconds << endl;
+  stream << " @ ";
+  
+  if (c._hours<10)
+    stream << "0";
+  stream << c._hours <<":";
+  if (c._minutes<10)
+    stream << "0";
+  stream<<c._minutes;
+  if (c._seconds!=0)
+  {
+    if (c._seconds<10)
+      stream<<":"<<"0";
+    else
+      stream<<":";
+    
+    stream<<c._seconds;
+  }
+  
+  stream<< endl;
   return stream;
 }
 

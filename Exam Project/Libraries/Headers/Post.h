@@ -8,6 +8,7 @@
 #include <iterator>
 #include <set>
 #include "Date.h"
+#include "Clock.h"
 
 using namespace std;
 
@@ -16,18 +17,19 @@ class Post {
 public:
   //Constructors & Destructor
   Post();
-  Post(const string &news, const Date &date, const set<string> &likes, const set<string> &dislikes);
+  Post(const string &news, const string &date_time, const set<string> &likes, const set<string> &dislikes);
   ~Post()=default;
   
   //Setters
   void setNews(const string &news);
-  void setDate(const Date &date);
+  void setDate_Time(const string &date_time);
   void setLikes(const set<string> &likes);
   void setDislikes(const set<string> &dislikes);
   
   //Getters
   string getNews() const;
   Date getDate() const;
+  Clock getTime() const;
   set<string> getLikes() const;
   set<string> getDislikes() const;
   
@@ -55,6 +57,7 @@ public:
 private:
   string _news;
   Date _date;
+  Clock _time;
   set<string> _likes, _dislikes;
 };
 
