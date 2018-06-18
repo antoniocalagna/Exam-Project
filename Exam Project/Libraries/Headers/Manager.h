@@ -92,7 +92,7 @@ public:
   pair<string, Post> RatioReactionPost(const bool &best_1_worst_0) const;
   string RatioReactionAccount(const bool &best_1_worst_0) const;
   
-  unordered_set<string> LonerPeople(const unsigned int &relations, const unsigned int &memberships, const bool &employed, const unsigned int &newsreactions);
+  vector<string> LonerPeople(const unsigned int &relations, const unsigned int &memberships, const bool &employed, const unsigned int &newsreactions);
   
 private:
   unordered_map<string, User> _map_users;

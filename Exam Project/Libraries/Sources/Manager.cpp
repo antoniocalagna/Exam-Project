@@ -802,16 +802,16 @@ string Manager::RatioReactionAccount(const bool &best_1_worst_0) const
   return best_ID;
 }
 
-unordered_set<string> Manager::LonerPeople(const unsigned int &relations, const unsigned int &memberships, const bool &not_employed, const unsigned int &newsreactions)
+vector<string> Manager::LonerPeople(const unsigned int &relations, const unsigned int &memberships, const bool &not_employed, const unsigned int &newsreactions)
 {
-  unordered_set<string> set;
+  unordered_set<string> set; //Lavoro con i set per la buona complessità delle operazioni e poi infine ritornerò un vettore.
   bool isLoner = true; //Controllo sul lupo solitario
   bool isValid = false; //Controllo validità dei parametri
   
   if((relations!=0)||(memberships!=0)||(not_employed!=false)||(newsreactions!=0))
     isValid=true;
   else
-    return set; //Se i parametri non sono validi torna un set vuoto
+    return vector<string>(); //Se i parametri non sono validi torna un vector vuoto
   
   for (auto it=_map_users.begin(); it!=_map_users.end(); it++)
   {
@@ -884,6 +884,7 @@ unordered_set<string> Manager::LonerPeople(const unsigned int &relations, const 
       }
     }
   }
-  
-  return set;
+ 
+  vector<string> list (set.begin(), set.end()); //Converto il set in un vector
+  return list;
 }
