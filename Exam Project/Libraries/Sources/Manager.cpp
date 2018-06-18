@@ -425,13 +425,7 @@ void Manager::_setNodes()
 
 bool Manager::_exist_as_node(const string &ID_to_check)
 {
-  size_t pos=_graph.find(ID_to_check);
-  if (pos!=_graph.nodesNumber())
-  {
-    return true; //ID already exists!
-  }
-  else
-    return false;
+  return _graph.find(ID_to_check) != _graph.nodesNumber();
 }
 
 void Manager::_setKeys(const vector<User> &users)
@@ -629,7 +623,7 @@ float Manager::UsersAverageAge() const
     Date tmp = it->second.getBirth();
     sum=sum+tmp.yearsFrom(now);
   }
-  return (float)sum/(_map_users.size());
+  return sum/(_map_users.size());
 }
 
 pair<string, Post> Manager::MostLikedPost() const
