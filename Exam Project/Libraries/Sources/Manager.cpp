@@ -724,10 +724,11 @@ pair<string, Post> Manager::RatioReactionPost(const bool &best_1_worst_0) const
           size_t best_post;
   
   //Per ogni ID determino quale post abbia il miglior/peggior rapporto di gradimento
-  for(auto it = _map_posts.begin(); it != _map_posts.end(); it++) {
+  for(auto it = _map_posts.begin(); it != _map_posts.end(); it++) {                    //Scorri tutti gli account
     if (best_1_worst_0) {                                                              //Ricerca del migliore
-      for (size_t i = 0; i < it->second.size(); i++)
+      for (size_t i = 0; i < it->second.size(); i++)                                   //Scorri ogni post dell'attuale account
         if (it->second[i].RatioReaction() > _map_posts.at(best_id)[best_post].RatioReaction()) {
+          //Il post in posizione i dell'account it->first ha un RatioReaction migliore dell'attuale primo in classifica
           best_id = it->first;
           best_post = i;
         }
@@ -788,7 +789,7 @@ vector<string> Manager::LonerPeople(const unsigned int &relations, const unsigne
   bool isLoner = true; //Controllo sul lupo solitario
   bool isValid = false; //Controllo validità dei parametri
   
-  if((relations!=0)||(memberships!=0)||(not_employed!=false)||(newsreactions!=0))
+  if((relations!=0)||(memberships!=0)||(not_employed)||(newsreactions!=0))
     isValid=true;
   else
     return vector<string>(); //Se i parametri non sono validi torna un vector vuoto
@@ -802,14 +803,14 @@ vector<string> Manager::LonerPeople(const unsigned int &relations, const unsigne
         isLoner=false;
     }
     
-    if ((not_employed==true)&&(isLoner==true))
+    if ((not_employed)&&(isLoner))
     {
       //Se è richiesto che il lupo solitario non sia impiegato in una azienda (employed==true) allora controllo che effettivamente non lo sia.
       if (_graph.outDegree_withEdge(it->first, relation::employee)!=0)
         isLoner=false;
     }
     
-    if ((relations!=0)&&(isLoner==true))
+    if ((relations!=0)&&(isLoner))
     {
       //Se è fornito un numero di relazioni considero come lupi solitari coloro che hanno meno relazioni del numero indicato.
       int count_relations=0;
