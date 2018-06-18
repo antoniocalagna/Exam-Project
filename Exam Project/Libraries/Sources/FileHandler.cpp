@@ -439,23 +439,21 @@ FH::Error FH::postsFile(std::stringstream &line, IOBuffer &buff) {
   std::string id, message;
   std::string like, dislike;
   std::string date_str;
-  Date date;
   Post new_post;
   
-  std::getline(line, id, ',');                                        //Acquisici l'ID
+  std::getline(line, id, ',');                                          //Acquisici l'ID
   
-  std::getline(line, message, ',');
+  std::getline(line, message, ',');                                     //Acquisisci il messaggio
   while (!isFormatChar(line.str(), message.size() + id.size() + 1)) {
     std::string temp;
     std::getline(line, temp, ',');
     message += "," + temp;
   }
-  message = unformatString(message);
+  message = unformatString(message);                                    //De-formatta il messaggio
   new_post.setNews(message);
   
-  std::getline(line, date_str, ',');
-  date.scanDateByStr(date_str);
-  //////////////////////////////////////// AGGIUNGI LA DATA ///////////////////////////////////////////////////
+  std::getline(line, date_str, ',');                                    //Acquisici la data
+  new_post.setDate_Time(date_str);
   
   std::string reactions;
   std::getline(line, reactions);                                      //Acquisici il resto della riga
@@ -470,6 +468,7 @@ FH::Error FH::postsFile(std::stringstream &line, IOBuffer &buff) {
     std::getline(dislikes_ss, dislike);
     new_post.AddDislike(dislike);
   }
+  buff << std::pair<std::string, Post>(id, new_post);
   return {0, 0};
 }
 
