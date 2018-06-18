@@ -48,9 +48,9 @@ public:
   void RemoveDislike(const string &id);
   bool LikeExists(const string &ID) const;
   bool DislikeExists(const string &ID) const;
-  int NumLikes(); //numero likes
-  int NumDislikes();
-  float RatioReaction(); //rapporto LIKE/(DISLIKE+LIKE) così da poter studiare i post più 'popolari'
+  int NumLikes() const; //numero likes
+  int NumDislikes() const;
+  float RatioReaction() const; //rapporto LIKE/(DISLIKE+LIKE) così da poter studiare i post più 'popolari'
   
   
 private:

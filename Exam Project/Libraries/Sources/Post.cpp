@@ -138,15 +138,15 @@ bool Post::DislikeExists(const string &ID) const {
   
 }
 
-int Post::NumLikes() {
+int Post::NumLikes() const {
   return (int) _likes.size();
 }
 
-int Post::NumDislikes() {
+int Post::NumDislikes() const {
   return (int) _dislikes.size();
 }
 
-float Post::RatioReaction() {
+float Post::RatioReaction() const{
   if ((NumDislikes() + NumLikes()) == 0) {
     return 0;
   } else {

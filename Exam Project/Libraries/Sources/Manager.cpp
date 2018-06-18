@@ -176,7 +176,7 @@ bool Manager::deleteAccount (const string &ID)
 
 void Manager::deleteRelationship(const std::string &root, const std::string &target)
 {
-  _graph.setEdge(root, target, _graph.no_edge);
+  _graph.setEdge(root, target, Graph<string, string>::no_edge);
 }
 
 //replaceAccount polimorfica controlla che il nuovo ID non sia già esistente, cerca la posizione dell'ID da sostituire e procede.
@@ -325,7 +325,7 @@ bool Manager::deletePost(const Post &post_to_delete, const std::string &whose_ID
 {
   if (_map_posts.count(whose_ID)==0)
     return false;
-  vector<Post>::iterator it=find(_map_posts.at(whose_ID).begin(), _map_posts.at(whose_ID).end(), post_to_delete);
+  auto it=find(_map_posts.at(whose_ID).begin(), _map_posts.at(whose_ID).end(), post_to_delete);
   _map_posts.at(whose_ID).erase(it);
   return true;
 }
@@ -350,12 +350,12 @@ bool Manager::addLike_Dislike(const bool &like_1_dislike_0, const Post &post_lik
           return false;
         
         //Se lo trovo aggiungo il like/dislike
-        if (like_1_dislike_0==true)
+        if (like_1_dislike_0)
         {
           it_post->AddLike(ID);
           return true;
         }
-        if (like_1_dislike_0==false)
+        else
         {
           it_post->AddDislike(ID);
           return true;
@@ -387,12 +387,12 @@ bool Manager::addLike_Dislike(const bool &like_1_dislike_0, const pair<string,Po
     if (*it_post==post_liked.second)
     {
       //Trovato il post di interesse aggiungo il like/dislike
-      if (like_1_dislike_0==true)
+      if (like_1_dislike_0)
       {
         it_post->AddLike(ID);
         return true;
       }
-      if (like_1_dislike_0==false)
+      else
       {
         it_post->AddDislike(ID);
         return true;
@@ -497,7 +497,7 @@ size_t Manager::NumGroups() const
 size_t Manager::NumFriends(const std::string &whose_ID) const
 {
   if (_map_users.count(whose_ID)==0)
-    return -1; //Controllo che sia un utente.
+    return 0; //Controllo che sia un utente.
   
   return _graph.outDegree_withEdge(whose_ID, relation::friendship);
 }
@@ -505,7 +505,7 @@ size_t Manager::NumFriends(const std::string &whose_ID) const
 size_t Manager::NumRelatives(const std::string &whose_ID) const
 {
   if (_map_users.count(whose_ID)==0)
-    return -1; //Controllo che sia un utente.
+    return 0; //Controllo che sia un utente.
   
   size_t count=0;
   count = _graph.outDegree_withEdge(whose_ID, relation::parent);
@@ -523,7 +523,7 @@ size_t Manager::NumEmployees(const std::string &company_employer) const
 size_t Manager::NumSubsidiaries(const std::string &company_main) const
 {
   if (_map_companies.count(company_main)==0)
-    return -1; //Controllo che sia un'azienda.
+    return 0; //Controllo che sia un'azienda.
   
   return _graph.outDegree_withEdge(company_main, relation::partnership);
 }
@@ -531,7 +531,7 @@ size_t Manager::NumSubsidiaries(const std::string &company_main) const
 size_t Manager::NumMembers(const std::string &group) const
 {
   if (_map_groups.count(group)==0)
-    return -1; //Controllo che sia un'azienda.
+    return 0; //Controllo che sia un'azienda.
   
   return _graph.outDegree_withEdge(group, relation::membership);
 }
@@ -539,9 +539,9 @@ size_t Manager::NumMembers(const std::string &group) const
 size_t Manager::NumBornAfter(const Date &start_date) const
 {
   if(!Date::CheckDate(start_date))
-    return -1; //Controllo che la data abbia senso.
+    return 0; //Controllo che la data abbia senso.
   
-  int count=0;
+  size_t count=0;
   for (auto it=_map_users.begin(); it!=_map_users.end(); it++)
   {
     if (it->second.getBirth()>start_date)
@@ -642,7 +642,7 @@ pair<string, Post> Manager::MostLikedPost() const
   for (auto it=all_ids.begin(); it!=all_ids.end(); it++)
   {
     tmp=_map_posts.at(*it);
-    if (tmp.size()!=0)
+    if (!tmp.empty())
     {
       vector<Post>::iterator it2 = tmp.begin();
       Post best = *it2;
@@ -703,9 +703,9 @@ string Manager::MostLiked_DislikedAccount(const bool &like_1_dislike_0) const
     
     for (auto it2=tmp.begin(); it2!=tmp.end(); it2++)
     {
-      if (like_1_dislike_0==true)
+      if (like_1_dislike_0)
         likes=likes+it2->NumLikes();
-      if (like_1_dislike_0==false)
+      else
         likes=likes+it2->NumDislikes();
     }
    if (likes>best_likes)
@@ -720,47 +720,27 @@ string Manager::MostLiked_DislikedAccount(const bool &like_1_dislike_0) const
 pair<string, Post> Manager::RatioReactionPost(const bool &best_1_worst_0) const
 {
   vector<string> all_ids=_graph.nodesVector();
-  vector<Post> tmp;
-  Post ext_best;
-  string best_ID;
+  std::string best_id = _map_posts.begin()->first;                                    //Assumi che il primo sia il migliore
+          size_t best_post;
   
   //Per ogni ID determino quale post abbia il miglior/peggior rapporto di gradimento
-  for (auto it=all_ids.begin(); it!=all_ids.end(); it++)
-  {
-    tmp=_map_posts.at(*it);
-    vector<Post>::iterator it2 = tmp.begin();
-    Post best = *it2;
-    for (; it2!=tmp.end(); it2++)
-    {
-      if (best_1_worst_0==true)
-      {
-        if (it2->RatioReaction()>best.RatioReaction())
-          best=*it2;
-      }
-      if (best_1_worst_0==false)
-      {
-        if ((it2->RatioReaction()<best.RatioReaction())&&(it2->RatioReaction()!=0))
-          best=*it2;
-      }
+  for(auto it = _map_posts.begin(); it != _map_posts.end(); it++) {
+    if (best_1_worst_0) {                                                              //Ricerca del migliore
+      for (size_t i = 0; i < it->second.size(); i++)
+        if (it->second[i].RatioReaction() > _map_posts.at(best_id)[best_post].RatioReaction()) {
+          best_id = it->first;
+          best_post = i;
+        }
     }
-    if (best_1_worst_0==true)
-    {
-      if(best>ext_best)
-      {
-        ext_best=best;
-        best_ID=*it;
-      }
-    }
-    if (best_1_worst_0==false)
-    {
-      if(best<ext_best)
-      {
-        ext_best=best;
-        best_ID=*it;
-      }
+    else {
+      for (size_t i = 0; i < it->second.size(); i++)
+        if (it->second[i].RatioReaction() < _map_posts.at(best_id)[best_post].RatioReaction()) {
+          best_id = it->first;
+          best_post = i;
+        }
     }
   }
-  return pair<string, Post>(best_ID, ext_best);
+  return pair<string, Post>(best_id, _map_posts.at(best_id)[best_post]);
 }
 
 string Manager::RatioReactionAccount(const bool &best_1_worst_0) const
