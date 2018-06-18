@@ -138,22 +138,6 @@ bool Post::DislikeExists(const string &ID) const {
   
 }
 
-set<string>::iterator Post::FindLike(const string &id) const {
-  if (!LikeExists(id)) {
-    return _likes.end();
-  }
-  
-  return _likes.find(id);
-}
-
-set<string>::iterator Post::FindDislike(const string &id) const {
-  if (!DislikeExists(id)) {
-    return _dislikes.end();
-  }
-  
-  return _dislikes.find(id);
-}
-
 int Post::NumLikes() {
   return (int) _likes.size();
 }
@@ -171,10 +155,10 @@ float Post::RatioReaction() {
 }
 
 bool Post::AddLike(const string &id) {
-  if (DislikeExists(id) == false) {
+  if (!DislikeExists(id)) {
     pair<set<string>::iterator, bool> ret;
     ret = _likes.insert(id);
-    if (ret.second == true) {
+    if (ret.second) {
       return true;
     }
   }
@@ -183,16 +167,14 @@ bool Post::AddLike(const string &id) {
 }
 
 bool Post::AddDislike(const string &id) {
-  if (LikeExists(id) == false) {
+  if (!LikeExists(id)) {
     pair<set<string>::iterator, bool> ret;
     ret = _dislikes.insert(id);
-    if (ret.second == true) {
+    if (ret.second) {
       return true;
     }
   }
   return false;
-  
-  return true;
 }
 
 void Post::RemoveLike(const string &id) {

@@ -48,8 +48,6 @@ public:
   void RemoveDislike(const string &id);
   bool LikeExists(const string &ID) const;
   bool DislikeExists(const string &ID) const;
-  set<string>::iterator FindLike(const string &id) const;
-  set<string>::iterator FindDislike(const string &id) const;
   int NumLikes(); //numero likes
   int NumDislikes();
   float RatioReaction(); //rapporto LIKE/(DISLIKE+LIKE) così da poter studiare i post più 'popolari'
