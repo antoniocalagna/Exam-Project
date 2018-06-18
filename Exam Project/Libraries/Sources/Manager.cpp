@@ -685,35 +685,29 @@ pair<string, Post> Manager::MostDislikedPost() const
 
 string Manager::MostLiked_DislikedAccount(const bool &like_1_dislike_0) const
 {
-  vector<string> all_ids=_graph.nodesVector();
-  vector<Post> tmp;
-  string best_ID;
-  int likes=0, best_likes=0;
+  int best_sum = 0;
+  std::string best_id = _map_posts.begin()->first;
   
-  //Per ogni utente conto quanti likes/dislikes ai suoi post ha ricevuto in totale
-  for (auto it=all_ids.begin(); it!=all_ids.end(); it++)
-  {
-    tmp=_map_posts.at(*it);
-    
-    for (auto it2=tmp.begin(); it2!=tmp.end(); it2++)
-    {
-      if (like_1_dislike_0)
-        likes=likes+it2->NumLikes();
-      else
-        likes=likes+it2->NumDislikes();
+  for(auto it = _map_posts.begin(); it != _map_posts.end(); it++) { //Scorri tutta la mappa dei post
+    int sum = 0;
+    for(int i = 0; i < it->second.size(); it++) {                   //Somma tutti i likes di tutti i post dell'account attuale
+      if(like_1_dislike_0) {
+        sum += it->second[i].NumLikes();
+      }
+      else {                                                        //Somma tutti i dislike dell'account attuale
+        sum += it->second[i].NumDislikes();
+      }
     }
-   if (likes>best_likes)
-   {
-     best_ID=*it;
-     best_likes=likes;
-   }
+    if (sum > best_sum) {                                           //Abbiamo contato più like/dislike
+      best_sum = sum;                                               //Aggiorna la nuova somma
+      best_id = it->first;                                          //L'ID dell'account migliore è in it->first
+    }
   }
-  return best_ID;
+  return best_id;
 }
 
 pair<string, Post> Manager::RatioReactionPost(const bool &best_1_worst_0) const
 {
-  vector<string> all_ids=_graph.nodesVector();
   std::string best_id = _map_posts.begin()->first;                                    //Assumi che il primo sia il migliore
           size_t best_post;
   
