@@ -44,8 +44,8 @@ public:
   //Others
   bool AddLike(const string &id);
   bool AddDislike(const string &id);
-  bool RemoveLike(const string &id);
-  bool RemoveDislike(const string &id);
+  void RemoveLike(const string &id);
+  void RemoveDislike(const string &id);
   bool LikeExists(const string &ID) const;
   bool DislikeExists(const string &ID) const;
   set<string>::iterator FindLike(const string &id) const;

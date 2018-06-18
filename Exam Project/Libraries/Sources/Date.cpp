@@ -57,7 +57,7 @@ void Date::setYear(const int &y) {
 
 string Date::getDate() {
   stringstream ss;
-  ss<<*this;
+  ss << *this;
   return ss.str();
 }
 
@@ -108,10 +108,10 @@ void Date::setCurrentDate() {
   strftime(buffer, 11, "%Y %m %d", timeinfo); //Estraggo da tale struttura le informazioni desiderate convertendole in un vettore di caratteri. Lo specificatore "%x" determina il tipo di informazione, in rete sono reperibili tutti gli specificatori.
   
   stringstream sstream(buffer); //Traspongo il buffer in uno stringstream
-
-  sstream>>_year; //Analisi formattata
-  sstream>>_month;
-  sstream>>_day;
+  
+  sstream >> _year; //Analisi formattata
+  sstream >> _month;
+  sstream >> _day;
 }
 
 int Date::yearsFrom(const Date &d) const {
@@ -149,27 +149,26 @@ void Date::scanDateByStr(const string &s) {
 }
 
 ostream &operator<<(ostream &stream, const Date &d) {
-  if (d._day<10)
-    stream<<"0";
+  if (d._day < 10)
+    stream << "0";
   stream << d._day << "/";
-  if (d._month<10)
-    stream<<"0";
-  stream<< d._month << "/";
-  if (d._year<1000)
-  {
-    if (d._year<10)
-      stream<<"000";
-    else if (d._year<100)
-      stream<<"00";
-    else if (d._year<1000)
-      stream<<"0";
+  if (d._month < 10)
+    stream << "0";
+  stream << d._month << "/";
+  if (d._year < 1000) {
+    if (d._year < 10)
+      stream << "000";
+    else if (d._year < 100)
+      stream << "00";
+    else if (d._year < 1000)
+      stream << "0";
   }
   
-  stream<< d._year;
+  stream << d._year;
   return stream;
 }
 
-void Date::operator=(const Date &to_be_assigned) {
+Date &Date::operator=(const Date &to_be_assigned) {
   this->_day = to_be_assigned._day;
   this->_month = to_be_assigned._month;
   this->_year = to_be_assigned._year;

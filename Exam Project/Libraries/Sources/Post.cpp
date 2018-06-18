@@ -96,7 +96,7 @@ ostream &operator<<(ostream &stream, const Post &p) {
   else
     stream << endl;
   stream << "likes: {";
-  if (p._likes.size() != 0) {
+  if (!p._likes.empty()) {
     auto it = p._likes.begin();
     int count = 0;
     while (count != p._likes.size() - 1) {
@@ -109,7 +109,7 @@ ostream &operator<<(ostream &stream, const Post &p) {
   
   stream << "dislikes: {";
   
-  if (p._dislikes.size() != 0) {
+  if (!p._dislikes.empty()) {
     auto it = p._dislikes.begin();
     int count = 0;
     while (count != p._dislikes.size() - 1) {
@@ -195,24 +195,10 @@ bool Post::AddDislike(const string &id) {
   return true;
 }
 
-bool Post::RemoveLike(const string &id) {
-  int s = (int) _likes.size();
-  if (LikeExists(id) != false) {
-    _likes.erase(id);
-    if (s == _likes.size() + 1) {
-      return true;
-    }
-  }
-  return false;
+void Post::RemoveLike(const string &id) {
+  _likes.erase(id);
 }
 
-bool Post::RemoveDislike(const string &id) {
-  int s = (int) _dislikes.size();
-  if (DislikeExists(id) != false) {
-    _dislikes.erase(id);
-    if (s == _dislikes.size() + 1) {
-      return true;
-    }
-  }
-  return false;
+void Post::RemoveDislike(const string &id) {
+  _dislikes.erase(id);
 }

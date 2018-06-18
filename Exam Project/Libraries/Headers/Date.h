@@ -58,7 +58,7 @@ public:
   
   friend ostream& operator<< (ostream& stream, const Date& d);
   Date operator+ (const Date &to_be_added); //Somma due date
-  void operator=(const Date &to_be_assigned);
+  Date & operator=(const Date &to_be_assigned);
   //Assegnare una data ad un'altra.
   Date &operator++(); //Incremento di tipo prefix: (assegnazione post incremento) (ritorna una reference)
   Date operator++(int);

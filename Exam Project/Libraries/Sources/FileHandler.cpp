@@ -47,10 +47,10 @@ bool FH::FileHandler::open(std::string filename, bool relative_path) {
   //Accesso al file tramite path relativo
   if (relative_path) {
     if (FH::FileHandler::win_system) {
-      filename = FileHandler::windows_relative_path + filename;
+      filename = windows_relative_path + filename;
     }
     else {
-      filename = FileHandler::mac_relative_path + filename;
+      filename = mac_relative_path + filename;
     }
   }
   _file.open(filename);
