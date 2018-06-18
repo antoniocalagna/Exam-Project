@@ -172,6 +172,8 @@ Date &Date::operator=(const Date &to_be_assigned) {
   this->_day = to_be_assigned._day;
   this->_month = to_be_assigned._month;
   this->_year = to_be_assigned._year;
+  
+  return *this;
 }
 
 Date Date::operator+(const Date &to_be_added) {

@@ -709,7 +709,7 @@ string Manager::MostLiked_DislikedAccount(const bool &like_1_dislike_0) const
 pair<string, Post> Manager::RatioReactionPost(const bool &best_1_worst_0) const
 {
   std::string best_id = _map_posts.begin()->first;                                    //Assumi che il primo sia il migliore
-          size_t best_post;
+          size_t best_post=0;
   
   //Per ogni ID determino quale post abbia il miglior/peggior rapporto di gradimento
   for(auto it = _map_posts.begin(); it != _map_posts.end(); it++) {                    //Scorri tutti gli account
