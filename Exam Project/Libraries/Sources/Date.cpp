@@ -57,11 +57,8 @@ void Date::setYear(const int &y) {
 
 string Date::getDate() {
   stringstream ss;
-  //Definisco uno stream di tipo stringa
-  ss << _day << "/" << _month << "/" << _year;
-  //Formatto la stringa
+  ss<<*this;
   return ss.str();
-  //Converto lo stream in una stringa e la ritorno.
 }
 
 bool Date::CheckDate(const Date &date_to_check) {
