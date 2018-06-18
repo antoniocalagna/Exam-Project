@@ -60,8 +60,8 @@ public:
   Date operator+ (const Date &to_be_added); //Somma due date
   void operator=(const Date &to_be_assigned);
   //Assegnare una data ad un'altra.
-  const Date& operator++(); //Incremento di tipo prefix: (assegnazione post incremento) (ritorna una reference)
-  const Date operator++(int);
+  Date &operator++(); //Incremento di tipo prefix: (assegnazione post incremento) (ritorna una reference)
+  Date operator++(int);
   bool operator==(const Date &to_be_compared); //Confronto di uguaglianza
   bool operator!=(const Date &to_be_compared);
   bool operator>(const Date &is_smaller);

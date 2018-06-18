@@ -187,13 +187,13 @@ Date Date::operator+(const Date &to_be_added) {
 }
 
 
-const Date &Date::operator++() {
+Date &Date::operator++() {
   _day++;
   this->correctValues();
   return *this; //Ritorno un nuovo oggetto copia del precedente
 }
 
-const Date Date::operator++(int) {
+Date Date::operator++(int) {
   Date d(*this);
   ++(*this);
   return d;

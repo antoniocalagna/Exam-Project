@@ -103,7 +103,8 @@ FH::Error FH::FileHandler::checkFile(Error (*checker_func)(std::stringstream &))
   return {0, current_line};
 }
 
-FH::Error FH::FileHandler::fetchLineData(Error (*fetcher_func)(stringstream &, IOBuffer &), const std::string &line, IOBuffer &buff) {
+FH::Error FH::FileHandler::fetchLineData(Error (*fetcher_func)(stringstream &, IOBuffer &), const std::string &line,
+                                         IOBuffer &buff) {
   if (line.empty()) {
     return {0, 0};     //Ignora le righe vuote
   }
@@ -126,8 +127,8 @@ FH::Error FH::FileHandler::fetchData(Error (*fetcher_func)(stringstream &, IOBuf
   while (_file.good()) {                                            //Cicla attraverso tutto il file
     std::getline(_file, line_to_parse);
     Error err = fetchLineData(fetcher_func, line_to_parse, buff);
-    if(err.code != 0)
-      return {err.code, current_line +1};
+    if (err.code != 0)
+      return {err.code, current_line + 1};
     
     current_line++;
   }
@@ -193,6 +194,70 @@ std::string FH::readField(const std::string &field, const std::string &data) {
   if (data_end == std::string::npos)
     return "";
   return data.substr(data_beg, data_end - data_beg);
+}
+
+std::string FH::formatOutput(const User &user) {
+  return user.getID() + "," + Account::user_type +
+         ",{" + "name:{" + user.getName() +
+         "},surname:{" + user.getSurname() +
+         "},gender:{" + user.getGender() +
+         "},addr:{" + user.getAddress() +
+         "},sub:{" + user.getSubscription().getDate() +
+         "},birth:{" + user.getBirth().getDate() + "}}";
+}
+
+std::string FH::formatOutput(const Group &group) {
+  return group.getID() + "," + Account::group_type +
+         ",{" + "name:{" + group.getName() +
+         "},location:{" + group.getLegalLocation() +
+         "},activity:{" + group.getTypeOfActivity() +
+         "},inception:{" + group.getInception().getDate() +
+         "},sub:{" + group.getSubscription().getDate() + "}}";
+}
+
+std::string FH::formatOutput(const Company &company) {
+  return company.getID() + "," + Account::company_type +
+         ",{" + "name:{" + company.getName() +
+         "},finantial_loc:{" + company.getFinancialLocation() +
+         "},operative_loc:{" + company.getOperativeLocation() +
+         "},inception:{" + company.getInception().getDate() +
+         "},prod:{" + company.getTypeOfProduct() +
+         "},sub:{" + company.getSubscription().getDate() + "}}";
+}
+
+std::string FH::formatOutput(const IOBuffer::Relation &relation) {
+  return relation.first.first + "," + relation.first.second + "," + relation.second;
+}
+
+std::string FH::formatOutput(const IOBuffer::m_Post &post) {
+  std::string out;
+  out = post.first + "," + formatString(post.second.getNews());     //Formatta il messaggio
+  
+  out += ",likes:{";                                                 //Elabora la lista dei likes
+  std::set<std::string> temp = post.second.getLikes();
+  for (auto it = temp.begin(); it != temp.end(); it++) {
+    out += *it;
+    auto temp_it = it;
+    temp_it++;
+    if (temp_it != temp.end()) {
+      out += ",";
+    }
+  }
+  temp.clear();
+  
+  out += "},dislikes:{";                                            //Elabora la lista dei dislikes
+  temp = post.second.getDislikes();
+  for (auto it = temp.begin(); it != temp.end(); it++) {
+    out += *it;
+    auto temp_it = it;
+    temp_it++;
+    if (temp_it != temp.end()) {
+      out += ",";
+    }
+  }
+  
+  out += "}";
+  return out;
 }
 
 /**##############
@@ -279,7 +344,7 @@ FH::Error FH::IDsfile(std::stringstream &line) {
     if (prod.empty()) return {0x1300000A, 0};
     if (!Account::nameValid(prod)) return {0x2300000A, 0};
     
-    f_location = readField("finantial_loc", info);                      //Controllo della finantial location
+    f_location = readField("financial_loc", info);                      //Controllo della finantial location
     if (f_location.empty()) return {0x13000004, 0};
     if (!Account::nameValid(f_location)) return {0x23000004, 0};
     
@@ -410,7 +475,7 @@ FH::Error FH::IDsfile(std::stringstream &line, IOBuffer &buff) {
     
     name = readField("name", info);                                     //Acquisizione nome
     prod = readField("prod", info);                                     //Acquisizione prodotto
-    f_location = readField("finantial_loc", info);                      //Acquisizione della finantial location
+    f_location = readField("financial_loc", info);                      //Acquisizione della finantial location
     op_location = readField("operative_loc", info);                     //Acquisizione della operative location
     inception.scanDateByStr(readField("inception", info));              //Acquisizione data di creazione della compagnia
     subscription.scanDateByStr(readField("sub", info));                 //Acquisizione data di iscrizione
@@ -429,10 +494,10 @@ FH::Error FH::relationsFile(std::stringstream &line, IOBuffer &buff) {
   std::getline(line, relation);                                         //Acquisizione della relazione
   
   IOBuffer::Relation new_rel = {{id1, id2}, relation};                  //Prevenzione delle sovrascritture
-  if(buff.overwritingRelation(new_rel))
+  if (buff.overwritingRelation(new_rel))
     return {0x34000000, 0};
   buff << new_rel;
-  return {0,0};
+  return {0, 0};
 }
 
 FH::Error FH::postsFile(std::stringstream &line, IOBuffer &buff) {

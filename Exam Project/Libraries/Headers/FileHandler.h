@@ -62,6 +62,13 @@ std::string formatString(std::string str);           //Aggiunge i parser_char pe
 std::string unformatString(std::string str);
 std::string readField(const std::string &field, const std::string &data);
 
+std::string formatOutput(const User &user);
+std::string formatOutput(const Group &group);
+std::string formatOutput(const Company &company);
+std::string formatOutput(const IOBuffer::Relation &relation);
+std::string formatOutput(const IOBuffer::m_Post &post);
+
+
 //Controllo dei file
 Error IDsfile(std::stringstream &line);
 Error relationsFile(std::stringstream &line);
@@ -72,6 +79,8 @@ Error IDsfile(std::stringstream &line, IOBuffer &buff);
 Error relationsFile(std::stringstream &line, IOBuffer &buff);
 Error postsFile(std::stringstream &line, IOBuffer &buff);
 //Stampa su file
+
+
 
 };//Namespace FH
 #endif //SOCIAL_NETWORK_FILEHANDLER_H
