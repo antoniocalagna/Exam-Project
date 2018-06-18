@@ -7,6 +7,7 @@
 
 #include <iterator>
 #include <set>
+#include <vector>
 #include "Date.h"
 #include "Clock.h"
 
@@ -30,8 +31,8 @@ public:
   string getNews() const;
   Date getDate() const;
   Clock getTime() const;
-  set<string> getLikes() const;
-  set<string> getDislikes() const;
+  vector<string> getLikes() const;
+  vector<string> getDislikes() const;
   
   //Overloading operators
   bool operator==(const Post &to_be_compared);

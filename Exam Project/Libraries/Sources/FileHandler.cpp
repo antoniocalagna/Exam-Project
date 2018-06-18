@@ -234,14 +234,11 @@ std::string FH::formatOutput(const IOBuffer::m_Post &post) {
   out = post.first + "," + formatString(post.second.getNews());     //Formatta il messaggio
   
   out += ",likes:{";                                                 //Elabora la lista dei likes
-  std::set<std::string> temp = post.second.getLikes();
-  for (auto it = temp.begin(); it != temp.end(); it++) {
-    out += *it;
-    auto temp_it = it;
-    temp_it++;
-    if (temp_it != temp.end()) {
+  std::vector<std::string> temp = post.second.getLikes();
+  for (int i = 0; i < temp.size(); i++) {
+    out += temp[i];
+    if(i != temp.size() - 1)
       out += ",";
-    }
   }
   temp.clear();
   

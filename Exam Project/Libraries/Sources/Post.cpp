@@ -56,12 +56,20 @@ Clock Post::getTime() const {
   return _time;
 }
 
-set<string> Post::getLikes() const {
-  return _likes;
+vector<string> Post::getLikes() const {
+  vector<string> out(_likes.size());
+  int i = 0;
+  for(auto it = _likes.begin(); it != _likes.end(); it++, i++)
+    out[i] = *it;
+  return out;
 }
 
-set<string> Post::getDislikes() const {
-  return _dislikes;
+vector<string> Post::getDislikes() const {
+  vector<string> out(_dislikes.size());
+  int i = 0;
+  for(auto it = _dislikes.begin(); it != _dislikes.end(); it++, i++)
+    out[i] = *it;
+  return out;
 }
 
 //Operators

@@ -301,19 +301,19 @@ bool Manager::addPost(const Post &post_to_add, const std::string &whose_ID)
   if (_map_posts.count(whose_ID)==0) //Controllo che esista il proprietario del post
     return false;
   
-  set<string> likes = post_to_add.getLikes();
-  for (auto it=likes.begin(); it!=likes.end(); it++)
+  vector<string> likes = post_to_add.getLikes();
+  for (int i = 0; i < likes.size(); i++)
   {
     //Controllo che ogni like corrisponda ad un ID esistente.
-    if (!_exist_as_node(*it))
+    if (!_exist_as_node(likes[i]))
       return false;
   }
   
-  set<string> dislikes = post_to_add.getDislikes();
-  for (auto it=dislikes.begin(); it!=dislikes.end(); it++)
+  vector<string> dislikes = post_to_add.getDislikes();
+  for (int i = 0; i < dislikes.size(); i++)
   {
     //Controllo che ogni dislike corrisponda ad un ID esistente.
-    if (!_exist_as_node(*it))
+    if (!_exist_as_node(dislikes[i]))
       return false;
   }
   
