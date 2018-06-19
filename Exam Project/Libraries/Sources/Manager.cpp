@@ -251,18 +251,20 @@ vector<Account> Manager::getAllAccounts() const
   return all; //vettore binary-sorted
 }
 
-bool Manager::addRelationship(const string &ID_start, const string &ID_target, const string &relationship)
+int Manager::addRelationship(const string &ID_start, const string &ID_target, const string &relationship)
 {
+  if(!_exist_as_node(ID_start)) //Controllo che gli ID esistano.
+    return -1;
+  if(!_exist_as_node(ID_target))
+    return -2;
   if(!relation::belong(relationship))
-    return false; //Controllo che la relazione esista.
-  if((!_exist_as_node(ID_start))||(!_exist_as_node(ID_target)))
-    return false; //Controllo che gli ID esistano.
+    return -3; //Controllo che la relazione esista.
   
   //Controllo che l'età dei due utenti non entri in contraddizione con una parentela.
   if((relationship==relation::parent)&&(!_checkAge(ID_start, ID_target)))
-    return false;
+    return -4;
   if((relationship==relation::born)&&(!_checkAge(ID_target, ID_start)))
-    return false;
+    return -4;
   
   //Le relazioni mutue richiedono un arco bi-direzionato
   if ((relationship==relation::friendship)/*||(relationship==relation::knowings)*/||(relationship==relation::partner)||(relationship==relation::membership)||(relationship==relation::partnership))
@@ -281,7 +283,7 @@ bool Manager::addRelationship(const string &ID_start, const string &ID_target, c
   
   _graph.setEdge(ID_start, ID_target, relationship);
 
-  return true;
+  return 1;
 }
 
 bool Manager::deleteRelationship(const std::string &ID_start, const std::string &ID_target)
