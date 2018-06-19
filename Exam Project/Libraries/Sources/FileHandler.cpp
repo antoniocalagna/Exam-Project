@@ -568,62 +568,40 @@ FH::Error FH::postsFile(std::stringstream &line, IOBuffer &buff) {
  * ##############
  */
 std::string FH::IDsfile(IOBuffer &buff) {
-  std::stringstream out;
+  std::stringstream out;                      //Prepara uno stringstream per poi trasformarlo in stringa
   while (!buff.usersEmpty()) {
     User usr;
-    buff >> usr;
-    out << usr.getID() << "," << usr.getType() << ",{"
-        << "name:{" << usr.getName() << "},"
-        << "surname:{" << usr.getSurname() << "},"
-        << "gender:{" << usr.getGender() << "},"
-        << "addr:{" << usr.getAddress() << "},"
-        << "sub:{" << usr.getSubscription() << "},"
-        << "birth:{" << usr.getBirth() << "}}" << std::endl;
+    buff >> usr;                              //Acquisisci l'utente dal buffer
+    out << formatOutput(usr) << std::endl;    //Aggiungilo all'output
   }
   while (!buff.groupsEmpty()) {
-    Group g;
-    buff >> g;
-    out << g.getID() << "," << g.getType() << ",{"
-        << "name:{" << g.getName() << "},"
-        << "location:{" << g.getLegalLocation() << "},"
-        << "activity:{" << g.getTypeOfActivity() << "},"
-        << "inception:{" << g.getInception() << "},"
-        << "sub:{" << g.getSubscription() << "}}" << std::endl;
+    Group group;
+    buff >> group;                            //Acquisisci il gruppo
+    out << formatOutput(group) << std::endl;
   }
   while (!buff.companiesEmpty()) {
-    Company c;
-    buff >> c;
-    out << c.getID() << "," << c.getType() << ",{"
-        << "name:{" << c.getName() << "},"
-        << "financial_loc:{" << c.getFinancialLocation() << "},"
-        << "operative_loc:{" << c.getOperativeLocation() << "},"
-        << "prod:{" << c.getTypeOfProduct() << "},"
-        << "inception:{" << c.getInception() << "],"
-        << "sub:" << c.getSubscription() << "}}" << std::endl;
+    Company company;
+    buff >> company;                          //Acquisisci la compagnia
+    out << formatOutput(company) << std::endl;
+  }
+  return out.str();                           //Converti lo stringstream in string e ritorna
+}
+
+std::string FH::relationsFile(IOBuffer &buff) {
+  std::stringstream out;
+  while(!buff.relationsEmpty()) {
+    IOBuffer::Relation rel;
+    buff >> rel;
+    out << formatOutput(rel);
   }
   return out.str();
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+std::string FH::postsFile(IOBuffer &buff) {
+  std::stringstream out;
+  while(!buff.postsEmpty()) {
+    IOBuffer::m_Post post;
+    out << formatOutput(post);
+  }
+  return out.str();
+}

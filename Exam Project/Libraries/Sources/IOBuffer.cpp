@@ -29,7 +29,7 @@ bool IOBuffer::companiesEmpty() const { return _companies.empty(); }
 
 bool IOBuffer::postsEmpty() const { return _posts.empty(); }
 
-bool IOBuffer::realationsEmpty() const { return _relations.empty(); }
+bool IOBuffer::relationsEmpty() const { return _relations.empty(); }
 
 void IOBuffer::clear() {
   while (!_users.empty())
