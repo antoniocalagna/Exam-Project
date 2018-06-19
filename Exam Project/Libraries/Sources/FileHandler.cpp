@@ -120,7 +120,7 @@ FH::Error FH::FileHandler::fetchLineData(Error (*fetcher_func)(stringstream &, I
 
 FH::Error FH::FileHandler::fetchData(Error (*fetcher_func)(stringstream &, IOBuffer &), IOBuffer &buff) {
   _file.close();
-  _file.open(filename(), std::ios::in);                             //Riapri il file in modalità IN
+  _file.open(_filename, std::ios::in);                             //Riapri il file in modalità IN
   std::string line_to_parse;
   
   unsigned int current_line = 0;
@@ -133,6 +133,35 @@ FH::Error FH::FileHandler::fetchData(Error (*fetcher_func)(stringstream &, IOBuf
     current_line++;
   }
   return {0, 0};
+}
+
+FH::Error FH::FileHandler::putData(std::string (*printer_func)(IOBuffer &), IOBuffer &to_add, IOBuffer &to_delete) {
+  std::string data_to_skip = printer_func(to_delete);   //Prepara una stringa contenente le righe del file da non copiare
+  std::stringstream data_to_copy;
+  _file.close();
+  _file.open(_filename, std::ios::in);                  //Apri il file in modalità lettura
+  
+  //Fai una copia dell'intero file in memoria
+  while (_file.good()) {
+    std::string line;
+    std::getline(_file, line);
+    if (data_to_skip.find(line) == std::string::npos) {  //Copia solo le righe che non siano da saltare
+      data_to_copy << line << std::endl;
+    }
+  }
+  data_to_skip.clear();                                 //Libera la memoria
+  
+  _file.close();
+  _file.open(_filename, std::ios::out | std::ios::trunc); //Riapri il file cancellando tutti i contenuti vecchi
+  std::string data_to_add = printer_func(to_add);
+  _file << data_to_copy.str() << data_to_add;
+  _file.flush();
+  return {0, 0};
+}
+
+FH::Error FH::FileHandler::putData(std::string (*printer_func)(IOBuffer &), IOBuffer &to_add) {
+  IOBuffer empty_buffer;
+  return putData(printer_func, to_add, empty_buffer);
 }
 ///////////////////////////////////////////////  NAMESPACE FH FUNCTIONS  ///////////////////////////////////////////////
 
@@ -237,7 +266,7 @@ std::string FH::formatOutput(const IOBuffer::m_Post &post) {
   std::vector<std::string> temp = post.second.getLikes();
   for (int i = 0; i < temp.size(); i++) {
     out += temp[i];
-    if(i != temp.size() - 1)
+    if (i != temp.size() - 1)
       out += ",";
   }
   temp.clear();
@@ -534,8 +563,46 @@ FH::Error FH::postsFile(std::stringstream &line, IOBuffer &buff) {
   return {0, 0};
 }
 
-
-
+/**##############
+ * ## Printers ##
+ * ##############
+ */
+std::string FH::IDsfile(IOBuffer &buff) {
+  std::stringstream out;
+  while (!buff.usersEmpty()) {
+    User usr;
+    buff >> usr;
+    out << usr.getID() << "," << usr.getType() << ",{"
+        << "name:{" << usr.getName() << "},"
+        << "surname:{" << usr.getSurname() << "},"
+        << "gender:{" << usr.getGender() << "},"
+        << "addr:{" << usr.getAddress() << "},"
+        << "sub:{" << usr.getSubscription() << "},"
+        << "birth:{" << usr.getBirth() << "}}" << std::endl;
+  }
+  while (!buff.groupsEmpty()) {
+    Group g;
+    buff >> g;
+    out << g.getID() << "," << g.getType() << ",{"
+        << "name:{" << g.getName() << "},"
+        << "location:{" << g.getLegalLocation() << "},"
+        << "activity:{" << g.getTypeOfActivity() << "},"
+        << "inception:{" << g.getInception() << "},"
+        << "sub:{" << g.getSubscription() << "}}" << std::endl;
+  }
+  while (!buff.companiesEmpty()) {
+    Company c;
+    buff >> c;
+    out << c.getID() << "," << c.getType() << ",{"
+        << "name:{" << c.getName() << "},"
+        << "financial_loc:{" << c.getFinancialLocation() << "},"
+        << "operative_loc:{" << c.getOperativeLocation() << "},"
+        << "prod:{" << c.getTypeOfProduct() << "},"
+        << "inception:{" << c.getInception() << "],"
+        << "sub:" << c.getSubscription() << "}}" << std::endl;
+  }
+  return out.str();
+}
 
 
 
