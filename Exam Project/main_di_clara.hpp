@@ -273,40 +273,32 @@ int main_di_clara(/*int argc, char *argv[]*/) {
           Post post_tmp;
           
           cout<<"News:\n>";
-          getline(cin, /*input*/news);
+          getline(cin, news);
           post_tmp.setNews(news);
           
-          /*command.clear();
-          command.str(input);
-          command >> news;*/ //SE FAI COSI' TI ACCHIAPPA SOLO LA PRIMA PAROLA!
-          
           do {
-            cout<<"Date and time:\n>";
-            getline(cin, /*input*/ d_t);
+            cout<<"Date and time:\n>"; //a me sta cosa non funziona, sto impazzendo, non esce dal ciclo
+            getline(cin, d_t);
             isValid=post_tmp.setDate_Time(d_t);
-              
-            /*command.clear();
-            command.str(input);
-            command >> d_t;*/
             
           }
           while (!isValid);
 
-          cout<<"Likes:\n";
-          while(input!="EOL") {
+          cout<<"Likes (insert '-' at the end of the list):\n";
+          while(input!="-") {
             cout<<">";
             getline(cin, input);
-            if (input!="EOL")
+            if (input!="-")
               likes.insert(input);
           }
           post_tmp.setLikes(likes);
 
-          cout<<"Dislikes:\n";
+          cout<<"Dislikes (insert '-' at the end of the list):\n";
           input.clear();
-          while(input!="EOL") {
+          while(input!="-") {
             cout<<">";
             getline(cin, input);
-            if (input!="EOL")
+            if (input!="-")
               dislikes.insert(input);
           }
           post_tmp.setDislikes(dislikes);
@@ -331,7 +323,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
           }
           
           cout<<"Who wrote the post?:\n>";
-          getline(cin, /*input*/whose_ID);
+          getline(cin, whose_ID);
           if (!manager.addPost(post_tmp, whose_ID))
             cout<<"Something went wrong.."<<endl;
         }
