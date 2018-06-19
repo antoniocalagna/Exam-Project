@@ -270,7 +270,7 @@ bool Manager::addRelationship(const string &ID_start, const string &ID_target, c
     return false;
   
   //Le relazioni mutue richiedono un arco bi-direzionato
-  if ((relationship==relation::friendship)||(relationship==relation::knowings)||(relationship==relation::partner)||(relationship==relation::membership)||(relationship==relation::partnership))
+  if ((relationship==relation::friendship)/*||(relationship==relation::knowings)*/||(relationship==relation::partner)||(relationship==relation::membership)||(relationship==relation::partnership))
     _graph.bsetEdge(ID_start,ID_target,relationship);
   
   //Per ogni relazione non mutua fisso anche la complementare inversa.
@@ -286,6 +286,15 @@ bool Manager::addRelationship(const string &ID_start, const string &ID_target, c
   
   _graph.setEdge(ID_start, ID_target, relationship);
 
+  return true;
+}
+
+bool Manager::removeRelationship(const std::string &ID_start, const std::string &ID_target)
+{
+  if((!_exist_as_node(ID_start))||(!_exist_as_node(ID_target)))
+    return false; //Controllo che gli ID esistano.
+  
+  _graph.bsetEdge(ID_start, ID_target, Graph<string, string>::no_edge);
   return true;
 }
 

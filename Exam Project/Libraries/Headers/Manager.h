@@ -57,6 +57,7 @@ public:
   vector<Account> getAllAccounts() const;
   
   bool addRelationship (const string &ID_start, const string &ID_target, const string &relationship);
+  bool removeRelationship (const string &ID_start, const string &ID_target);
   
   vector<string> getListConnection (const string &starting_ID, const string &relationship);
   
