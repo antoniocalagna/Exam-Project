@@ -48,7 +48,6 @@ public:
   bool addAccount(const Group &account_to_add);
   
   bool deleteAccount (const string &ID);
-  void deleteRelationship (const string &root, const string &target);
   
   bool replaceAccount (const string &ID_to_replace, const User &new_account);
   bool replaceAccount (const string &ID_to_replace, const Company &new_account);
@@ -57,7 +56,7 @@ public:
   vector<Account> getAllAccounts() const;
   
   bool addRelationship (const string &ID_start, const string &ID_target, const string &relationship);
-  bool removeRelationship (const string &ID_start, const string &ID_target);
+  bool deleteRelationship (const string &ID_start, const string &ID_target);
   
   vector<string> getListConnection (const string &starting_ID, const string &relationship);
   

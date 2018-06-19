@@ -174,11 +174,6 @@ bool Manager::deleteAccount (const string &ID)
   return true;
 }
 
-void Manager::deleteRelationship(const std::string &root, const std::string &target)
-{
-  _graph.setEdge(root, target, Graph<string, string>::no_edge);
-}
-
 //replaceAccount polimorfica controlla che il nuovo ID non sia già esistente, cerca la posizione dell'ID da sostituire e procede.
 
 bool Manager::replaceAccount(const std::string &ID_to_replace, const User &new_account)
@@ -289,7 +284,7 @@ bool Manager::addRelationship(const string &ID_start, const string &ID_target, c
   return true;
 }
 
-bool Manager::removeRelationship(const std::string &ID_start, const std::string &ID_target)
+bool Manager::deleteRelationship(const std::string &ID_start, const std::string &ID_target)
 {
   if((!_exist_as_node(ID_start))||(!_exist_as_node(ID_target)))
     return false; //Controllo che gli ID esistano.
