@@ -23,16 +23,24 @@ void Post::setNews(const string &news) {
   _news = news;
 }
 
-void Post::setDate_Time(const string &date_time) {
+bool Post::setDate_Time(const string &date_time) {
   string date = date_time.substr(0, 10);
   if (date_time.size() < 11)
     _time = Clock();
   else {
     string time = date_time.substr(11, 8);
-    _time.scanTimeByStr(time);
+    if (Clock::CheckTime(time))
+      _time.scanTimeByStr(time);
+    else
+      return false;
   }
-  _date.scanDateByStr(date);
-  
+  if (Date::CheckDate(date))
+  {
+    _date.scanDateByStr(date);
+    return true;
+  }
+  else
+    return false;
 }
 
 void Post::setLikes(const set<string> &likes) {

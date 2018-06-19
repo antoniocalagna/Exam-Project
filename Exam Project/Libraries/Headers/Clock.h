@@ -25,6 +25,7 @@ public:
   
   Clock (const int &hours, const int &minutes, const int &seconds);
   Clock (const int &hours, const int &minutes);
+  Clock (const string &time);
   
   Clock (const Clock &to_copy);
   
@@ -41,6 +42,8 @@ public:
   void CorrectValues();
   void SetCurrentTime();
   void scanTimeByStr (string s);
+  
+  static bool CheckTime (const string &time_to_check);
   
   //Overloading operators:
   

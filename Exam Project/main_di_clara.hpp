@@ -227,80 +227,114 @@ int main_di_clara(/*int argc, char *argv[]*/) {
           }
         }
         if (what1 == "relationship") {
-          cout<<"Please insert: <id_1> <type_of_relation> <id_2>\n"
-                "types of relationship:\n"
-                "friendship\n"
-                "knowings\n"
-                "parent\n"
-                "born\n"
-                "partner\n"
-                "membership\n"
-                "partnership\n"
-                "employee\n"
-                "employer\n"<<endl;
+          int error = 0;
+          while (error!=1)
+          {
+            cout<<"Please insert: <id_1> <type_of_relation> <id_2>\n"
+                  "types of relationship:\n"
+                  "friendship\n"
+                  "knowings\n"
+                  "parent\n"
+                  "born\n"
+                  "partner\n"
+                  "membership\n"
+                  "partnership\n"
+                  "employee\n"
+                  "employer\n"<<endl;
 
-          string who1, who2, type_rel;
-          getline(cin, input);
+            string who1, who2, type_rel;
+            getline(cin, input);
 
-          command.clear();
-          command.str(input);
-          command >> who1 >> type_rel >> who2;
+            command.clear();
+            command.str(input);
+            command >> who1 >> type_rel >> who2;
 
-          if(who1 == "" || who2 == "" || type_rel == ""){
-            cout<<"Error! Check the numbers of parameters you have to insert." << endl;
-          }
-          if(!manager.addRelationship(who1, who2, type_rel)){
-            cout<<"Error! Check your parameters."<<endl; //controllo sia della validità dell'id che della relazione
+            if(who1 == "" || who2 == "" || type_rel == ""){
+              cout<<"Error! Check the numbers of parameters you have to insert." << endl;
+            }
+              error = manager.addRelationship(who1, who2, type_rel);
+              //Analizzo il codice errore restituito da addRelationship.
+            if(error == -1){
+              cout<<"Error! The first ID does not exist!"<<endl;
+            }
+            if (error == -2){
+              cout<<"Error! The second ID does not exist!"<<endl;
+            }
+            if (error == -3){
+              cout << "Error! This relationship does not exist!"<<endl;
+            }
           }
         }
 
-        /*if (what1 == "post") {
-          string news, d_t;
-          vector <string> likes, dislikes;
-
+        if (what1 == "post") {
+          string news, d_t, whose_ID;
+          set <string> likes, dislikes;
+          bool isValid = false;
+          Post post_tmp;
+          
           cout<<"News:\n>";
-          getline(cin, input);
-          command.clear();
+          getline(cin, /*input*/news);
+          post_tmp.setNews(news);
+          
+          /*command.clear();
           command.str(input);
-          command >> news;
-
-          cout<<"Date and time:\n>";
-          getline(cin, input);
-          command.clear();
-          command.str(input);
-          command >> d_t;
-
-          cout<<"Likes:\n>";
-          getline(cin, input);
-          command.clear();
-          command.str(input);
-          auto it_1=likes.begin();
-          string t_l;
-          while(!command.eof()) {
-            command >> t_l;
-            *it_1 = t_l;
-            it_1++;
+          command >> news;*/ //SE FAI COSI' TI ACCHIAPPA SOLO LA PRIMA PAROLA!
+          
+          do {
+            cout<<"Date and time:\n>";
+            getline(cin, /*input*/ d_t);
+            isValid=post_tmp.setDate_Time(d_t);
+              
+            /*command.clear();
+            command.str(input);
+            command >> d_t;*/
+            
           }
+          while (!isValid);
 
-          cout<<"Dislikes:\n>";
-          getline(cin, input);
-          command.clear();
-          command.str(input);
-          auto it_2=likes.begin();
-          string t_d;
-          do{
-            command >> t_d;
-            *it_2 = t_d;
-            it_2++;
+          cout<<"Likes:\n";
+          while(input!="EOL") {
+            cout<<">";
+            getline(cin, input);
+            if (input!="EOL")
+              likes.insert(input);
           }
-          while(command.eof());
+          post_tmp.setLikes(likes);
+
+          cout<<"Dislikes:\n";
+          input.clear();
+          while(input!="EOL") {
+            cout<<">";
+            getline(cin, input);
+            if (input!="EOL")
+              dislikes.insert(input);
+          }
+          post_tmp.setDislikes(dislikes);
 
           cout << news << " " << d_t << endl;
-          for(it_1=likes.begin(); it_1!=likes.end(); it_1++ ){
-            cout<<*it_1<<endl;
+          
+          if (!likes.empty())
+          {
+            cout<<"\nLikes:"<< endl;
+            
+            for(auto it=likes.begin(); it!=likes.end(); it++ ){
+              cout<<*it<<endl;
+            }
           }
-
-        }*/
+          
+          if (!dislikes.empty())
+          {
+            cout << "\nDislikes:" << endl;
+            for(auto it=dislikes.begin(); it!=dislikes.end(); it++ ) {
+              cout<<*it<<endl;
+            }
+          }
+          
+          cout<<"Who wrote the post?:\n>";
+          getline(cin, /*input*/whose_ID);
+          if (!manager.addPost(post_tmp, whose_ID))
+            cout<<"Something went wrong.."<<endl;
+        }
 
       }
 

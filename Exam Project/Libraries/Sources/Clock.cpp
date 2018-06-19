@@ -38,6 +38,11 @@ Clock::Clock(const Clock &to_copy)
   _seconds=to_copy._seconds;
 }
 
+Clock::Clock(const string &time)
+{
+  scanTimeByStr(time);
+}
+
 void Clock::setHours(const int &hours)
 {
   _hours=hours;
@@ -136,6 +141,12 @@ void Clock::scanTimeByStr(std::string s)
   sstream>>_minutes;
   sstream.ignore(1);
   sstream>>_seconds;
+}
+
+bool Clock::CheckTime (const string &time_to_check)
+{
+  Clock tmp (time_to_check);
+  return tmp._isValid();
 }
 
 ostream &operator<< (ostream &stream, const Clock& c)

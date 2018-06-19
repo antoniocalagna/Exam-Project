@@ -23,7 +23,7 @@ public:
   
   //Setters
   void setNews(const string &news);
-  void setDate_Time(const string &date_time);
+  bool setDate_Time(const string &date_time);
   void setLikes(const set<string> &likes);
   void setDislikes(const set<string> &dislikes);
   
