@@ -12,6 +12,8 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <set>
+#include <list>
+#include <queue>
 #include "User.h"
 #include "Company.h"
 #include "Group.h"
@@ -95,6 +97,8 @@ public:
   string RatioReactionAccount(const bool &best_1_worst_0) const;
   
   vector<string> LonerPeople(const unsigned int &relations, const unsigned int &memberships, const bool &employed, const unsigned int &newsreactions);
+  
+  vector<string> GenealogicalTree(const string &whose_ID);
   
 private:
   unordered_map<string, User> _map_users;

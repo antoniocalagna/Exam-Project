@@ -228,7 +228,9 @@ template<typename node_T, typename edge_T>
 void Graph<node_T, edge_T>::addNode(const node_T &new_node) {
   if (_nodes.find(new_node) != _nodes.end())                  //Il nodo è già presente nel grafo
     return;
-  _nodes[new_node] = Edges();                                //Inizializza con il costruttore di default le connessioni del nuovo nodo
+
+  Edges construct_new;
+  _nodes[new_node]=construct_new; //Inizializza con il costruttore di default le connessioni del nuovo nodo
 }
 
 template<typename node_T, typename edge_T>
