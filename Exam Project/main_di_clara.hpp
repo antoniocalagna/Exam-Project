@@ -89,7 +89,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     if (cmd == "set") {
       string what, who; //non so se questi nomi sono messi per scherzo, a me sembrano carini
       command >> who >> what;
-      if (what == "") {
+      if (what.empty()) {
         cout << "Error! Check the numbers of parameters you have to insert." << endl;
       } else {
         if (who == "user") {
@@ -165,7 +165,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     if (cmd == "get") {
       string who, what;
       command >> who >> what;
-      if (what == "") {
+      if (what.empty()) {
         cout << "Error! Check the numbers of parameters you have to insert." << endl;
       }
       if (who == "user") {
@@ -212,13 +212,13 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     if (cmd == "delete") {
       string what;
       command >> what;
-      if (what == "") {
+      if (what.empty()) {
         cout << "Error! Check the numbers of parameters you have to insert." << endl;
       }
       if (what == "account") {
         string who;
         command >> who;
-        if (who == "") {
+        if (who.empty()) {
           cout << "Error! Check the numbers of parameters you have to insert." << endl;
         } else {
           manager.deleteAccount(who);
@@ -229,7 +229,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
         string id_start, id_target;
         cout << "Please insert: <id_1> <id_2>:\n";
         cin >> id_start >> id_target;
-        if (id_start == "" || id_target == "") {
+        if (id_start.empty() || id_target.empty()) {
           cout << "Error! Please check the number of parameters." << endl;
         }
         if (!manager.deleteRelationship(id_start, id_target)) {
@@ -244,7 +244,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
         int find = 0;
         cout << "Please insert the id who wrote the post:\n";
         cin >> who;
-        if (who == "") {
+        if (who.empty()) {
           cout << "Error! You don't insert any id." << endl;
         }
         post = manager.getPosts(who);
@@ -273,13 +273,13 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     if (cmd == "add") {
       string what1, what2;
       command >> what1 >> what2;
-      if (what1 == "") {
+      if (what1.empty()) {
         cout << "Error! Check the numbers of parameters you have to insert." << endl;
       } else {
 
         if (what1 == "account") {
 
-          if (what2 == "") {
+          if (what2.empty()) {
             cout << "Error! Check the numbers of parameters you have to insert." << endl;
           } else {
             if (what2 == "user") {
@@ -412,7 +412,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
             command.str(input);
             command >> who1 >> type_rel >> who2;
 
-            if (who1 == "" || who2 == "" || type_rel == "") {
+            if (who1.empty() || who2.empty() || type_rel.empty()) {
               cout << "Error! Check the numbers of parameters you have to insert." << endl;
             }
             error = manager.addRelationship(who1, who2, type_rel);
