@@ -88,10 +88,16 @@ User &User::operator=(const User &to_be_assigned)
 }
 
 bool gender::isValid(char g) {
-  int n_genders = sizeof(genders)/sizeof(genders[0]);
   for(int i = 0; i < n_genders; i++) {
     if (g == genders[i])
       return true;
   }
   return false;
 } 
+
+bool gender::isValid(const std::string &str) {
+  if(str.size() != 1) {
+    return false;
+  }
+  return isValid(str[0]);
+}
