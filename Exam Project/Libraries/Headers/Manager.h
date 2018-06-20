@@ -10,6 +10,8 @@
 #define Manager_h
 
 #include <unordered_map>
+#include <unordered_set>
+#include <set>
 #include "User.h"
 #include "Company.h"
 #include "Group.h"
