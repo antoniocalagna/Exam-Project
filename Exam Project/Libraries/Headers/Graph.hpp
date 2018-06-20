@@ -17,10 +17,10 @@ public:
   /**Aliases */
   using Edges = std::map<const node_T * const, edge_T>;
   using Nodes = std::map<const node_T, Edges>;
-  /* Supponendo di fissare un nodo. Tutti gli archi uscenti da esso possono essere rappresentati tramite una mappa che
-   * colleghi il valore del nodo di arrivo al valore dell'arco che li connette. Questo compito è svolto dal tipo Edges,
-   * che però sfrutta un pointer al nodo d'arrivo piuttosto che il valore del nodo stesso per questioni di memoria.
-   * Il tipo Nodes, invece, collega ogni nodo alla mappa dei propri archi.
+  /* Supponiamo di fissare un nodo. Tutti gli archi uscenti da esso possono essere rappresentati tramite una mappa che
+   * colleghi il valore del nodo di arrivo al valore dell'arco che lo connette al nodo fissato. Questo compito è svolto
+   * dal tipo Edges, che però sfrutta un pointer al nodo d'arrivo piuttosto che il valore del nodo stesso per
+   * risparmiare memoria. Il tipo Nodes, invece, collega ogni nodo alla mappa dei propri archi.
    */
   
   /**Static members */
