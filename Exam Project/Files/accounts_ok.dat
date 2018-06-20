@@ -13,3 +13,19 @@ silvich,U,{name:{Silvia},surname:{Alvich},gender:{F},addr:{Via Principe di Pater
 salvich,U,{name:{Salvatore},surname:{Alvich},gender:{F},addr:{Via Principe di Paterno' 32},sub:{4/2/2012},birth:{23/03/2005}}
 ros_rus,U,{name:{Rosanna},surname:{Russo},gender:{F},addr:{Via Principe di Paterno' 32},sub:{20/7/2004},birth:{6/6/1971}}
 milvich,U,{name:{Michele},surname:{Alvich},gender:{M},addr:{Via Principe di Paterno' 32},sub:{20/9/2003},birth:{3/2/1969}}
+
+leo,U,{name:{Leo},surname:{Calagna},gender:{M},addr:{Via Streva 21},sub:{27/11/1998},birth:{10/05/1969}}
+gelena,U,{name:{Gianna},surname:{Di Cicca},gender:{M},addr:{Via Streva 21},sub:{07/05/2016},birth:{29/05/1969}}
+MYSSKETA,U,{name:{Monica},surname:{Ketamina},gender:{F},addr:{Porta Venezia},sub:{30/08/1997},birth:{27/04/1983}}
+nonna_nina,U,{name:{Antonina},surname:{Addamo},gender:{F},addr:{Via Roma 9},sub:{11/02/2015},birth:{20/06/1939}}
+nonna_teta,U,{name:{Teresa},surname:{Passannanti},gender:{F},addr:{Via Fermi 10},sub:{07/05/2016},birth:{29/05/1929}}
+nonno_nene,U,{name:{Antonio},surname:{Calagna},gender:{M},addr:{Via Roma 9},sub:{04/03/2002},birth:{21/11/1920}}
+nonno_italo,U,{name:{Italo},surname:{Di Cicca},gender:{M},addr:{Paradiso},sub:{05/04/2003},birth:{22/12/1921}}
+giuliagallo24,U,{name:{Giulia},surname:{Gallo},gender:{F},addr:{Largo Cristoforo Colombo},sub:{05/04/2014},birth:{24/12/1996}}
+elecami,U,{name:{Elena},surname:{Caminita},gender:{F},addr:{Monreale},sub:{05/04/2014},birth:{23/12/1996}}
+prezzi27,U,{name:{Giovanni},surname:{Li Calsi},gender:{M},addr:{Villabate},sub:{11/02/2004},birth:{14/03/1997}}
+lore_barb,U,{name:{Lorenzo},surname:{Barbaro},gender:{O},addr:{Via Liberta'},sub:{12/03/2005},birth:{15/04/1997}}
+mario_db,U,{name:{Mario},surname:{Di Blasi},gender:{N},addr:{Cardillo},sub:{12/03/2005},birth:{11/02/1997}}
+
+pelide,U,{name:{Achille},surname:{Figlio_di_Peleo},gender:{A},addr:{Magna Grecia},sub:{01/01/1900},birth:{01/01/2000}}
+ettorre,U,{name:{Ettore},surname:{Principe_di_Troia},gender:{M},addr:{Troia},sub:{01/01/1900},birth:{01/01/2000}}
