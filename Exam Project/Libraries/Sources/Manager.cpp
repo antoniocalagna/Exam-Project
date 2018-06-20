@@ -864,53 +864,44 @@ vector<string> Manager::LonerPeople(const unsigned int &relations, const unsigne
   return list;
 }
 
-vector<string> Manager::GenealogicalTree(const string &whose_ID)
-{
-  list<vector<string>> matrix; //Lista di generazioni, ad ogni "livello" c'é un vettore di ID
-  vector<string> tree; //Vettore tampone all'inizio e in seguito sarà il vettore dove stilare l'albero
-  string starting_node; //Variabile tampone da passare al grafo nelle iterazioni
-  queue<string> queue_ids; //Coda degli ID da esplorare nelle iterazioni
+vector<string> Manager::GenealogicalTree(const string &whose_ID) {
+  list<vector<string>> matrix;      //Lista di generazioni, ad ogni "livello" c'é un vettore di ID
+  vector<string> tree;              //Vettore tampone all'inizio e in seguito sarà il vettore dove stilare l'albero
+  string starting_node;             //Variabile tampone da passare al grafo nelle iterazioni
+  queue<string> queue_ids;          //Coda degli ID da esplorare nelle iterazioni
   
   
   queue_ids.push(whose_ID); //Inserisco nella coda l'ID di partenza
-  while (!queue_ids.empty())
-  {
-    starting_node=queue_ids.front();
+  while (!queue_ids.empty()) {
+    starting_node = queue_ids.front();
     queue_ids.pop();
-    tree=_graph.branches(starting_node, relation::born); //Ricavo gli ID della generazione precedente
-    if (tree.size()!=0)
-    {
+    tree = _graph.branches(starting_node, relation::born); //Ricavo gli ID della generazione precedente
+    if (tree.size() != 0) {
       matrix.push_front(tree); //Se tale generazione non è vuota aggiungo il vettore alla lista nel piano più alto
-      for (auto it=tree.begin(); it!=tree.end(); it++)
-      {
+      for (auto it = tree.begin(); it != tree.end(); it++) {
         queue_ids.push(*it); //Inserisco nella coda gli ID da esplorare
-                             //BUG: I NONNI DEI DUE GENITORI NON SARANNO SULLA STESSA GENERAZIONE! COME FARE?!?
+        //BUG: I NONNI DEI DUE GENITORI NON SARANNO SULLA STESSA GENERAZIONE! COME FARE?!?
       }
     }
   }
   
-  vector<string> our_level (1,whose_ID); //Inserisco nella lista generazionale il nostro piano insieme ai partner
-  if (_graph.outDegree_withEdge(whose_ID, relation::partner)!=0)
-  {
+  vector<string> our_level(1, whose_ID); //Inserisco nella lista generazionale il nostro piano insieme ai partner
+  if (_graph.outDegree_withEdge(whose_ID, relation::partner) != 0) {
     vector<string> partners = _graph.branches(whose_ID, relation::partner);
-    for (auto it=partners.begin(); it!=partners.end(); it++)
-    {
+    for (auto it = partners.begin(); it != partners.end(); it++) {
       our_level.push_back(*it);
     }
   }
   matrix.push_back(our_level);
   
   queue_ids.push(whose_ID); //Procedo adesso analizzando i discendenti
-  while (!queue_ids.empty())
-  {
-    starting_node=queue_ids.front();
+  while (!queue_ids.empty()) {
+    starting_node = queue_ids.front();
     queue_ids.pop();
-    tree=_graph.branches(starting_node, relation::parent);
-    if (tree.size()!=0)
-    {
+    tree = _graph.branches(starting_node, relation::parent);
+    if (tree.size() != 0) {
       matrix.push_back(tree);
-      for (auto it=tree.begin(); it!=tree.end(); it++)
-      {
+      for (auto it = tree.begin(); it != tree.end(); it++) {
         queue_ids.push(*it);
       }
     }
@@ -919,30 +910,27 @@ vector<string> Manager::GenealogicalTree(const string &whose_ID)
   //Redazione dell'albero
   
   int i = 0; //Contatore delle generazioni
-  for (auto it=matrix.begin(); it!=matrix.end(); it++)
-  {
+  for (auto it = matrix.begin(); it != matrix.end(); it++) {
     stringstream ss;
     
-    ss<<"Generation "<<i<<" : ";
-    auto it_str=it->begin();
+    ss << "Generation " << i << " : ";
+    auto it_str = it->begin();
     
-    ss<<_map_users.at(*it_str).getName()<<" "<<_map_users.at(*it_str).getSurname()<<" ";
+    ss << _map_users.at(*it_str).getName() << " " << _map_users.at(*it_str).getSurname() << " ";
     
     size_t size_gen = it->size(); //Conto quanti ID appartengono a quella generazione, se maggiori di 1 allora i successivi al primo saranno partners
-    if (size_gen!=1)
-    {
+    if (size_gen != 1) {
       it_str++;
-      if (size_gen>2)
-        ss<<"whose partners are: ";
+      if (size_gen > 2)
+        ss << "whose partners are: ";
       else
-        ss<<"whose partner is: ";
-      for (; it_str!=it->end(); it_str++)
-      {
-        ss<<_map_users.at(*it_str).getName()<<" "<<_map_users.at(*it_str).getSurname()<<" ";
+        ss << "whose partner is: ";
+      for (; it_str != it->end(); it_str++) {
+        ss << _map_users.at(*it_str).getName() << " " << _map_users.at(*it_str).getSurname() << " ";
       }
     }
     
-    ss<<endl;
+    ss << endl;
     tree.push_back(ss.str());
     i++;
   }
