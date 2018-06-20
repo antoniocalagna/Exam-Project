@@ -176,6 +176,11 @@ Date &Date::operator=(const Date &to_be_assigned) {
   return *this;
 }
 
+Date &Date::operator=(const std::string &to_be_assigned) {
+  scanDateByStr(to_be_assigned);
+  return *this;
+}
+
 Date Date::operator+(const Date &to_be_added) {
   Date output;
   output._day = this->_day + to_be_added._day;

@@ -62,6 +62,7 @@ bool isFormatChar(const std::string &s, size_t pos);
 std::string formatString(std::string str);           //Aggiunge i parser_char per proteggere i caratteri di formato
 std::string unformatString(std::string str);
 std::string readField(const std::string &field, const std::string &data);
+Error checkField(const std::string &field, bool (*validity_checker)(const std::string&), unsigned int error_if_invalid);
 
 std::string formatOutput(const User &user);
 std::string formatOutput(const Group &group);
