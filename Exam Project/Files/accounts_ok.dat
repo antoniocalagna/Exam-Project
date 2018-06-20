@@ -1,0 +1,15 @@
+//Users
+domi_123,U,{name:{Domenico},surname:{Di Grusa},gender:{M},addr:{Viale Regione Siciliana 5300},sub:{20/07/2012},birth:{20/10/1997}}
+CsanG,U,{name:{Claudio},surname:{Sangari},gender:{M},addr:{Via Libera Russia 10},sub:{07/01/2013},birth:{16/02/1997}}
+toti,U,{name:{Antonio},surname:{Calagna}, gender:{N},addr:{Via Caraglio 5},sub:{22/10/2016},birth:{27/10/1998}}
+triX,U,{name:{Beatrice},surname:{Moscoloni}, gender:{F},addr:{Via Cavour 5},sub:{20/01/2012},birth:{27/07/1998}}
+
+caesar,U,{name:{Cesare},surname:{Faiella},gender:{M},addr:{Via Amari 63},sub:{10/3/2010},birth:{19/02/1965}}
+sofa000,U,{name:{Sofia},surname:{Faiella},gender:{F},addr:{Via Amari 63},sub:{21/2/2012},birth:{09/05/1998}}
+nan_cer,U,{name:{Nensi},surname:{Amato},gender:{F},addr:{Via Amari 63},sub:{11/2/2011},birth:{19/02/1970}}
+
+alvicheese,U,{name:{Alessia},surname:{Alvich},gender:{F},addr:{Via Principe di Paterno' 32},sub:{4/2/2012},birth:{23/03/1998}}
+silvich,U,{name:{Silvia},surname:{Alvich},gender:{F},addr:{Via Principe di Paterno' 32},sub:{4/1/2013},birth:{20/05/2001}}
+salvich,U,{name:{Salvatore},surname:{Alvich},gender:{F},addr:{Via Principe di Paterno' 32},sub:{4/2/2012},birth:{23/03/2005}}
+ros_rus,U,{name:{Rosanna},surname:{Russo},gender:{F},addr:{Via Principe di Paterno' 32},sub:{20/7/2004},birth:{6/6/1971}}
+milvich,U,{name:{Michele},surname:{Alvich},gender:{M},addr:{Via Principe di Paterno' 32},sub:{20/9/2003},birth:{3/2/1969}}
