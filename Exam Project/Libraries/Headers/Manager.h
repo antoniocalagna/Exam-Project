@@ -13,6 +13,7 @@
 #include <unordered_set>
 #include <set>
 #include <list>
+#include <deque>
 #include <queue>
 #include "User.h"
 #include "Company.h"
@@ -99,7 +100,8 @@ public:
   vector<string> LonerPeople(const unsigned int &relations, const unsigned int &memberships, const bool &employed, const unsigned int &newsreactions);
   
   vector<string> GenealogicalTree(const string &whose_ID);
-  
+  vector<string> GenealogicalTree2(const string &whose_ID);
+
 private:
   unordered_map<string, User> _map_users;
   unordered_map<string, Company> _map_companies;
