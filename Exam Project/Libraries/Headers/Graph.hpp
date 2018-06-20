@@ -245,7 +245,7 @@ void Graph<node_T, edge_T>::editNode(const node_T &old_node, const node_T &new_n
   
   //Copia gli archi in entrata
   for (auto it = _nodes.begin(); it != _nodes.end(); it++) {
-    if ((it->second).count(old_ptr) == 1)             //Controlla se l'elemento puntato ha una connessione com iò nodo
+    if ((it->second).count(old_ptr) == 1)             //Controlla se l'elemento puntato ha una connessione con il nodo
       (it->second)[new_ptr] = (it->second).at(old_ptr); //In questo caso copiane l'arco (usa [] per sicurezza)
   }
   popNode(old_node);                                  //Elimina il vecchio nodo
