@@ -227,11 +227,13 @@ std::string FH::readField(const std::string &field, const std::string &data) {
 
 FH::Error FH::checkField(const std::string &field,
                          bool (*validity_checker)(const string &),
+                         unsigned int field_code,
                          unsigned int error_if_invalid) {
+  field_code <<= 4 * (8 - 2);                                 //Il FieldCode è la seconda cifra di un numero esadecimale
   if (field.empty())
-    return {unsigned(0x10000000) | error_if_invalid, 0};
+    return {unsigned(0x10000000) | field_code | error_if_invalid, 0};
   if (!validity_checker(field))
-    return {unsigned(0x20000000) | error_if_invalid, 0};
+    return {unsigned(0x20000000) | field_code | error_if_invalid, 0};
   return {0, 0};
 }
 
@@ -284,7 +286,8 @@ std::string FH::formatOutput(const IOBuffer::m_Post &post) {
   std::vector<std::string> temp = post.second.getLikes();
   for (int i = 0; i < temp.size(); i++) {
     out << temp[i];
-    if (i != temp.size() - 1)                                         //Metti la virgola soltanto se non sei all'ultimo like
+    if (i !=
+        temp.size() - 1)                                         //Metti la virgola soltanto se non sei all'ultimo like
       out << ",";
   }
   temp.clear();
@@ -293,7 +296,7 @@ std::string FH::formatOutput(const IOBuffer::m_Post &post) {
   temp = post.second.getDislikes();
   for (int i = 0; i < temp.size(); i++) {
     out << temp[i];
-    if(i != temp.size() - 1)
+    if (i != temp.size() - 1)
       out << ",";
   }
   
@@ -308,16 +311,14 @@ std::string FH::formatOutput(const IOBuffer::m_Post &post) {
 FH::Error FH::IDsfile(std::stringstream &line) {
   std::string id, type_s;
   //Acquisisci e controlla l'ID
-  std::getline(line, id, ',');
-  if (!line.good()) return {0x11000000, 0};                //Errore nella lettura dell'ID
-  if (!Account::IDValid(id)) return {0x21000000, 0};        //L'ID non rispetta le regole
+  std::getline(line, id, ',');                                  //Acquisisci l'ID
+  checkField(id, Account::IDValid, 0x1, 0x1);                   //Controllalo
+  
   //Acquisisci e controlla il tipo di account
-  std::getline(line, type_s, ',');
-  if (!line.good()) return {0x12000000, 0};                //Errore nella lettura del tipo di account
-  if (type_s.size() != 1 || !Account::typeValid(type_s[0])) {      //Errore nel tipo di account
-    return {0x22000000, 0};
-  }
+  std::getline(line, type_s, ',');                              //Acquisisci il tipo
+  checkField(type_s, Account::typeValid, 0x2, 0x1);
   char type = type_s[0];
+  type_s.clear();                                               //Libera la stringa
   
   //Acquisici e controlla il resto delle informazioni (che dipendono dal tipo di account)
   std::string info;
@@ -326,78 +327,54 @@ FH::Error FH::IDsfile(std::stringstream &line) {
   if (type == Account::user_type) {
     //L'account è un utente
     std::string name, surname, address, gender;
-    Date birth, subscription;
+    std::string birth, subscription;
     
     name = readField("name", info);                             //Controllo nome
-    if (name.empty()) return {0x13000001, 0};
-    if (!Account::nameValid(name)) return {0x23000001, 0};
-    
+    checkField(name, Account::nameValid, 0x3, 0x1);
     surname = readField("surname", info);                       //Controllo cognome
-    if (surname.empty()) return {0x13000002, 0};
-    if (!Account::nameValid(surname)) return {0x23000001, 0};
-    
-    address = readField("addr", info);                          //Controllo indirizzo
-    if (address.empty()) { return {0x13000004, 0}; }
-    if (!Account::nameValid(address)) return {0x23000004, 0};
-    
+    checkField(surname, Account::nameValid, 0x3, 0x2);
     gender = readField("gender", info);                         //Controllo genere
-    if (gender.size() != 1 || !gender::isValid(gender[0])) return {0x13000003, 0};
-    
-    birth.scanDateByStr(readField("birth", info));              //Controllo data di nascita
-    if (!Date::CheckDate(birth)) return {0x23000006, 0};
-    
-    subscription.scanDateByStr(readField("sub", info));         //Controllo data di iscrizione
-    if (!Date::CheckDate(subscription)) return {0x23000005, 0};
+    checkField(gender, Account::nameValid, 0x3, 0x3);
+    address = readField("addr", info);                          //Controllo indirizzo
+    checkField(address, Account::nameValid, 0x3, 0x4);
+    subscription = readField("sub", info);                      //Controllo data di iscrizione
+    checkField(subscription, Date::CheckDate, 0x3, 0x5);
+    birth = readField("birth", info);                           //Controllo data di nascita
+    checkField(birth, Date::CheckDate, 0x3, 0x6);
   }
   else if (type == Account::group_type) {
     //L'account è un gruppo
     std::string name, location, activity;
-    Date inception, subscription;
+    std::string inception, subscription;
     
-    name = readField("name", info);                                     //Controllo nome
-    if (name.empty()) return {0x13000001, 0};
-    if (!Account::nameValid(name)) return {0x23000001, 0};
-    
-    location = readField("location", info);                             //Controllo posizione legale
-    if (location.empty()) return {0x13000004, 0};
-    if (!Account::nameValid(location)) return {0x23000004, 0};
-    
-    activity = readField("activity", info);
-    if (activity.empty()) return {0x13000007, 0};
-    if (!Account::nameValid(activity)) return {0x23000007, 0};
-    
-    inception.scanDateByStr(readField("inception", info));              //Controllo data di creazione del gruppo
-    if (!Date::CheckDate(inception)) return {0x23000008, 0};
-    
-    subscription.scanDateByStr(readField("sub", info));                 //Controllo data di iscrizione
-    if (!Date::CheckDate(subscription)) return {0x23000005, 0};
+    name = readField("name", info);                             //Controllo nome
+    checkField(name, Account::nameValid, 0x3, 0x1);
+    location = readField("location", info);                     //Controllo posizione legale
+    checkField(location, Account::nameValid, 0x3, 0x4);
+    activity = readField("activity", info);                     //Controllo attività
+    checkField(activity, Account::nameValid, 0x3, 0x7);
+    inception = readField("inception", info);                   //Controllo data di creazione del gruppo
+    checkField(inception, Account::nameValid, 0x3, 0x8);
+    subscription = readField("sub", info);                     //Controllo data di iscrizione
+    checkField(subscription, Account::nameValid, 0x3, 0x5);
   }
   else if (type == Account::company_type) {
     //L'account è una compagnia
     std::string name, f_location, op_location, prod;
-    Date inception, subscription;
-    
+    std::string inception, subscription;
+  
     name = readField("name", info);                                     //Controllo nome
-    if (name.empty()) return {0x13000001, 0};
-    if (!Account::nameValid(name)) return {0x23000001, 0};
-    
+    checkField(name, Account::nameValid, 0x3, 0x1);
     prod = readField("prod", info);                                     //Controllo prodotto
-    if (prod.empty()) return {0x1300000A, 0};
-    if (!Account::nameValid(prod)) return {0x2300000A, 0};
-    
+    checkField(prod, Account::nameValid, 0x3, 0xA);
     f_location = readField("financial_loc", info);                      //Controllo della finantial location
-    if (f_location.empty()) return {0x13000004, 0};
-    if (!Account::nameValid(f_location)) return {0x23000004, 0};
-    
+    checkField(f_location, Account::nameValid, 0x3, 0x4);
     op_location = readField("operative_loc", info);                     //Controllo della operative location
-    if (op_location.empty()) return {0x13000004, 0};
-    if (!Account::nameValid(op_location)) return {0x23000004, 0};
-    
-    inception.scanDateByStr(readField("inception", info));              //Controllo data di creazione della compagnia
-    if (!Date::CheckDate(inception)) return {0x23000008, 0};
-    
-    subscription.scanDateByStr(readField("sub", info));                 //Controllo data di iscrizione
-    if (!Date::CheckDate(subscription)) return {0x23000005, 0};
+    checkField(f_location, Account::nameValid, 0x3, 0x4);
+    inception = readField("inception", info);              //Controllo data di creazione della compagnia
+    checkField(inception, Date::CheckDate, 0x3, 0x8);
+    subscription = readField("sub", info);                 //Controllo data di iscrizione
+    checkField(subscription, Date::CheckDate, 0x3, 0x5);
   }
   return {0, 0};
 }
@@ -424,8 +401,7 @@ FH::Error FH::postsFile(std::stringstream &line) {
   std::string date;
   
   std::getline(line, id, ',');                                        //Acquisici l'ID
-  if (!line.good()) { return {0x11000000, 0}; }                       //ID mal formattato
-  if (!Account::IDValid(id)) { return {0x21000000, 0}; }              //ID non valido
+  checkField(id, Account::IDValid, 0x1, 0x1);
   
   std::getline(line, message, ',');
   while (!isFormatChar(line.str(), message.size() + id.size() + 1)) {
@@ -436,25 +412,20 @@ FH::Error FH::postsFile(std::stringstream &line) {
   if (!line.good()) { return {0x13000009, 0}; }                       //Errore di formattazione del messaggio
   
   std::getline(line, date, ',');
-  if (!line.good()) { return {0x1300000B, 0}; }
-  if (!Date::CheckDate(date)) { return {0x2300000B, 0}; }
+  checkField(date, Date::CheckDate, 0x3, 0xB);
   
   std::string reactions;
   std::getline(line, reactions);                                      //Acquisici il resto della riga
   std::stringstream likes_ss(readField("likes", reactions));          //Metti i likes in uno stringstream
   while (likes_ss.good() && likes_ss.gcount() != 0) {
     std::getline(likes_ss, like, ',');
-    if (!Account::IDValid(like)) {
-      return {0x21000000, 0};
-    }
+    checkField(like, Account::IDValid, 0x1, 0x1);
   }
   
   std::stringstream dislikes_ss(readField("dislikes", reactions));   //Metti i dislikes in uno stringstream
   while (dislikes_ss.good() && dislikes_ss.gcount() != 0) {
     std::getline(dislikes_ss, dislike);
-    if (!Account::IDValid(dislike)) {
-      return {0x21000000, 0};
-    }
+    checkField(dislike, Account::IDValid, 0x1, 0x1);
   }
   return {0, 0};
 }
@@ -491,7 +462,6 @@ FH::Error FH::IDsfile(std::stringstream &line, IOBuffer &buff) {
     subscription.scanDateByStr(readField("sub", info));         //Acquisisci la data di iscrizione
     
     User new_user(name, surname, id, address, subscription, birth, gender[0]);
-    
     buff << new_user;
   }
   else if (type == Account::group_type) {
@@ -536,7 +506,7 @@ FH::Error FH::relationsFile(std::stringstream &line, IOBuffer &buff) {
   
   IOBuffer::Relation new_rel = {{id1, id2}, relation};                  //Prevenzione delle sovrascritture
   if (buff.overwritingRelation(new_rel))
-    return {0x34000000, 0};
+    return {0x34000001, 0};
   buff << new_rel;
   return {0, 0};
 }

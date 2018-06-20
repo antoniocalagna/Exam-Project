@@ -91,6 +91,13 @@ bool Account::typeValid(char type) {
   return true;
 }
 
+bool Account::typeValid(const std::string &type) {
+  if(type.size() != 1) {
+    return false;
+  }
+  return typeValid(type[0]);
+}
+
 bool Account::nameValid(const std::string &name) {
   if (name.empty())
     return false;
