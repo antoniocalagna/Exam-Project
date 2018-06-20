@@ -228,9 +228,9 @@ template<typename node_T, typename edge_T>
 void Graph<node_T, edge_T>::addNode(const node_T &new_node) {
   if (_nodes.find(new_node) != _nodes.end())                  //Il nodo è già presente nel grafo
     return;
-
+  
   Edges construct_new;
-  _nodes[new_node]=construct_new; //Inizializza con il costruttore di default le connessioni del nuovo nodo
+  _nodes[new_node] = construct_new; //Inizializza con il costruttore di default le connessioni del nuovo nodo
 }
 
 template<typename node_T, typename edge_T>
@@ -251,7 +251,7 @@ void Graph<node_T, edge_T>::editNode(const node_T &old_node, const node_T &new_n
       edge_T e = edge(it->first, old_node);             //Copia il valore dell'arco tra il nodo puntato da it e il nodo da modificare
       setEdge(it->first, old_node, no_edge);            //Elimina l'arco verso il nodo da modificare
       setEdge(it->first, new_node, e);                  //Crea un arco con lo stesso valore verso il nuovo nodo
-      }
+    }
   }
   popNode(old_node);                                  //Elimina il vecchio nodo
 }
