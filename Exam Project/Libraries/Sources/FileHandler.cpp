@@ -225,65 +225,80 @@ std::string FH::readField(const std::string &field, const std::string &data) {
   return data.substr(data_beg, data_end - data_beg);
 }
 
+FH::Error FH::checkField(const std::string &field,
+                         bool (*validity_checker)(const string &),
+                         unsigned int error_if_invalid) {
+  if (field.empty())
+    return {unsigned(0x10000000) | error_if_invalid, 0};
+  if (!validity_checker(field))
+    return {unsigned(0x20000000) | error_if_invalid, 0};
+  return {0, 0};
+}
+
 std::string FH::formatOutput(const User &user) {
-  return user.getID() + "," + Account::user_type +
-         ",{" + "name:{" + user.getName() +
-         "},surname:{" + user.getSurname() +
-         "},gender:{" + user.getGender() +
-         "},addr:{" + user.getAddress() +
-         "},sub:{" + user.getSubscription().getDate() +
-         "},birth:{" + user.getBirth().getDate() + "}}";
+  std::stringstream out;
+  out << user.getID() << "," << Account::user_type << ",{"
+      << "name:{" << user.getName()
+      << "},surname:{" << user.getSurname()
+      << "},gender:{" << user.getGender()
+      << "},addr:{" << user.getAddress()
+      << "},sub:{" << user.getSubscription()
+      << "},birth:{" << user.getBirth() << "}}";
+  return out.str();
 }
 
 std::string FH::formatOutput(const Group &group) {
-  return group.getID() + "," + Account::group_type +
-         ",{" + "name:{" + group.getName() +
-         "},location:{" + group.getLegalLocation() +
-         "},activity:{" + group.getTypeOfActivity() +
-         "},inception:{" + group.getInception().getDate() +
-         "},sub:{" + group.getSubscription().getDate() + "}}";
+  std::stringstream out;
+  out << group.getID() << "," << Account::group_type
+      << ",{" << "name:{" << group.getName()
+      << "},location:{" << group.getLegalLocation()
+      << "},activity:{" << group.getTypeOfActivity()
+      << "},inception:{" << group.getInception().getDate()
+      << "},sub:{" << group.getSubscription().getDate() << "}}";
+  return out.str();
 }
 
 std::string FH::formatOutput(const Company &company) {
-  return company.getID() + "," + Account::company_type +
-         ",{" + "name:{" + company.getName() +
-         "},finantial_loc:{" + company.getFinancialLocation() +
-         "},operative_loc:{" + company.getOperativeLocation() +
-         "},inception:{" + company.getInception().getDate() +
-         "},prod:{" + company.getTypeOfProduct() +
-         "},sub:{" + company.getSubscription().getDate() + "}}";
+  std::stringstream out;
+  out << company.getID() << "," << Account::company_type
+      << ",{" << "name:{" << company.getName()
+      << "},finantial_loc:{" << company.getFinancialLocation()
+      << "},operative_loc:{" << company.getOperativeLocation()
+      << "},inception:{" << company.getInception()
+      << "},prod:{" << company.getTypeOfProduct()
+      << "},sub:{" << company.getSubscription() << "}}";
+  return out.str();
 }
 
 std::string FH::formatOutput(const IOBuffer::Relation &relation) {
-  return relation.first.first + "," + relation.first.second + "," + relation.second;
+  std::stringstream out;
+  out << relation.first.first << "," << relation.first.second << "," + relation.second;
+  return out.str();
 }
 
 std::string FH::formatOutput(const IOBuffer::m_Post &post) {
-  std::string out;
-  out = post.first + "," + formatString(post.second.getNews());     //Formatta il messaggio
+  std::stringstream out;
+  out << post.first << "," << formatString(post.second.getNews());    //Formatta il messaggio
   
-  out += ",likes:{";                                                 //Elabora la lista dei likes
+  out << ",likes:{";                                                  //Elabora la lista dei likes
   std::vector<std::string> temp = post.second.getLikes();
   for (int i = 0; i < temp.size(); i++) {
-    out += temp[i];
-    if (i != temp.size() - 1)
-      out += ",";
+    out << temp[i];
+    if (i != temp.size() - 1)                                         //Metti la virgola soltanto se non sei all'ultimo like
+      out << ",";
   }
   temp.clear();
   
-  out += "},dislikes:{";                                            //Elabora la lista dei dislikes
+  out << "},dislikes:{";                                              //Elabora la lista dei dislikes
   temp = post.second.getDislikes();
-  for (auto it = temp.begin(); it != temp.end(); it++) {
-    out += *it;
-    auto temp_it = it;
-    temp_it++;
-    if (temp_it != temp.end()) {
-      out += ",";
-    }
+  for (int i = 0; i < temp.size(); i++) {
+    out << temp[i];
+    if(i != temp.size() - 1)
+      out << ",";
   }
   
-  out += "}";
-  return out;
+  out << "}";
+  return out.str();
 }
 
 /**##############
@@ -589,7 +604,7 @@ std::string FH::IDsfile(IOBuffer &buff) {
 
 std::string FH::relationsFile(IOBuffer &buff) {
   std::stringstream out;
-  while(!buff.relationsEmpty()) {
+  while (!buff.relationsEmpty()) {
     IOBuffer::Relation rel;
     buff >> rel;
     out << formatOutput(rel);
@@ -599,7 +614,7 @@ std::string FH::relationsFile(IOBuffer &buff) {
 
 std::string FH::postsFile(IOBuffer &buff) {
   std::stringstream out;
-  while(!buff.postsEmpty()) {
+  while (!buff.postsEmpty()) {
     IOBuffer::m_Post post;
     out << formatOutput(post);
   }
