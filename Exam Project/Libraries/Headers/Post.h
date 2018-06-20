@@ -19,6 +19,7 @@ public:
   //Constructors & Destructor
   Post();
   Post(const string &news, const string &date_time, const set<string> &likes, const set<string> &dislikes);
+  Post(const string &news, const string &date_time);
   ~Post()=default;
   
   //Setters
