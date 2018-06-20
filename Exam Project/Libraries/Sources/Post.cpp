@@ -17,6 +17,10 @@ Post::Post(const string &news, const string &date_time, const set<string> &likes
   _dislikes = dislikes;
   setDate_Time(date_time);
 }
+Post::Post(const string &news, const string &date_time){
+  _news = news;
+  setDate_Time(date_time);
+}
 
 //Setters
 void Post::setNews(const string &news) {

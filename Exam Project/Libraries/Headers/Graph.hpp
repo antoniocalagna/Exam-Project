@@ -31,7 +31,7 @@ private:
   Nodes _nodes;
   
   /**Functions*/
-  const node_T * _getPtr(const node_T &node) const;
+  const node_T *_getPtr(const node_T &node) const;
 
 public:
   /**Constructors & Destructor */
@@ -80,7 +80,7 @@ const edge_T Graph<node_T, edge_T>::no_edge = edge_T();
  * #####################
  */
 template<typename node_T, typename edge_T>
-const node_T * Graph<node_T, edge_T>::_getPtr(const node_T &node) const {
+const node_T *Graph<node_T, edge_T>::_getPtr(const node_T &node) const {
   auto it = _nodes.find(node);
   if (it == _nodes.end())
     return nullptr;
@@ -111,7 +111,7 @@ size_t Graph<node_T, edge_T>::nodesNumber() const {
 template<typename node_T, typename edge_T>
 edge_T Graph<node_T, edge_T>::edge(const node_T &starting_node, const node_T &target_node) const {
   //Ritorna una copia dell'arco (DIRETTO) tra starting_node e target_node.
-  const node_T * target_ptr = _getPtr(target_node);
+  const node_T *target_ptr = _getPtr(target_node);
   if (_nodes.find(starting_node) == _nodes.end() ||
       target_ptr == nullptr)                                 //Controlla che entrambi i nodi siano presenti
     return no_edge;
@@ -140,7 +140,7 @@ size_t Graph<node_T, edge_T>::degree() const {
 template<typename node_T, typename edge_T>
 size_t Graph<node_T, edge_T>::inDegree(const node_T &node) const {
   //Ritorna il grado di ingresso del nodo richiesto
-  const node_T * node_ptr = _getPtr(node);
+  const node_T *node_ptr = _getPtr(node);
   //Ricerca il nodo
   if (node_ptr == nullptr)
     return 0;
@@ -170,7 +170,8 @@ size_t Graph<node_T, edge_T>::outDegree_withEdge(const node_T &node, const edge_
   //Scorri tutti gli archi uscenti dal nodo e conta solo quelli con il valore richesto
   size_t count = 0;
   for (auto it = _nodes.at(node).begin(); it != _nodes.at(node).end(); it++) {
-    if (it->second == edge)                                     //L'elemento mappato si trova nel .second di uno std::pair
+    if (it->second ==
+        edge)                                     //L'elemento mappato si trova nel .second di uno std::pair
       count++;
   }
   
@@ -235,8 +236,7 @@ void Graph<node_T, edge_T>::editNode(const node_T &old_node, const node_T &new_n
   /* Uno std::unordered_set ha gli elementi costanti. Per modificare un nodo del grafo bisogna creare un nuovo nodo,
    * copiare gli archi di quello vecchio ed infine eliminare il nodo vecchio.
    */
-  const node_T * new_ptr = _getPtr(new_node);
-  const node_T * old_ptr = _getPtr(old_node);
+  const node_T *old_ptr = _getPtr(old_node);
   if (old_ptr == nullptr)                                //Il nodo di cui è stata richiesta la modifica non esiste
     return;
   
@@ -245,7 +245,7 @@ void Graph<node_T, edge_T>::editNode(const node_T &old_node, const node_T &new_n
   
   //Copia gli archi in entrata
   for (auto it = _nodes.begin(); it != _nodes.end(); it++) {
-    if((it->second).count(old_ptr) == 1) {
+    if ((it->second).count(old_ptr) == 1) {
       edge_T e = edge(it->first, old_node);             //Copia il valore dell'arco tra il nodo puntato da it e il nodo da modificare
       setEdge(it->first, old_node, no_edge);            //Elimina l'arco verso il nodo da modificare
       setEdge(it->first, new_node, e);                  //Crea un arco con lo stesso valore verso il nuovo nodo
@@ -257,13 +257,13 @@ void Graph<node_T, edge_T>::editNode(const node_T &old_node, const node_T &new_n
 template<typename node_T, typename edge_T>
 void Graph<node_T, edge_T>::popNode(const node_T &to_erase) {
   //Elimina un nodo
-  const node_T * erase_ptr = _getPtr(to_erase);
+  const node_T *erase_ptr = _getPtr(to_erase);
   if (erase_ptr == nullptr)                          //Cerca se il nodo è effettivamente presente
     return;                                          //Risparmiati tutte le operazioni
   
   //Cerca ed elimina tutti gli archi entranti in questo nodo
   for (auto it = _nodes.begin(); it != _nodes.end(); it++) {
-      (it->second).erase(erase_ptr);
+    (it->second).erase(erase_ptr);
   }
   _nodes.erase(to_erase);                    //Eliminalo dal set dei nodi
   return;
@@ -273,7 +273,7 @@ void Graph<node_T, edge_T>::popNode(const node_T &to_erase) {
 template<typename node_T, typename edge_T>
 void Graph<node_T, edge_T>::setEdge(const node_T &starting_node, const node_T &target_node, const edge_T &new_value) {
   //Imposta il valore dell'arco (DIRETTO) tra starting_node e target_node con il valore richiesto.
-  const node_T * target_ptr = _getPtr(target_node);
+  const node_T *target_ptr = _getPtr(target_node);
   if (_nodes.find(starting_node) == _nodes.end() ||
       target_ptr == nullptr)             //Controlla che i nodi siano presenti
     return;
