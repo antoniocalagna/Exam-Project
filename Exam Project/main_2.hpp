@@ -26,11 +26,11 @@ int main_2(int argc, char *argv[]) {
     std::string user_input;
     do {
       std::getline(std::cin, user_input);
-    } while(user_input.empty());
+    } while (user_input.empty());
     
     std::string command;
     user_command >> command;
-    if(command == "help") {
+    if (command == "help") {
       //Stampa una lista dei comandi possibili ed una breve spiegazione
       
     }
@@ -38,39 +38,63 @@ int main_2(int argc, char *argv[]) {
       //GET: Interfaccia per ottenere informazioni e dati
       std::string what_to_get;
       user_command >> what_to_get;
-      if(what_to_get == "info") {
+      //Get info
+      if (what_to_get == "info") {
         std::cout << "Insert ID:" << std::endl;
         std::string requested_id = promptInput();
-        char account_type = network.getAccountType(requested_id);
-        if(account_type == 0) {
+        char account_type = network.getAccountType(requested_id);   //Controlla il tipo di account di cui sono richieste le informazioni
+        if (account_type == 0) {
           std::cout << "Requested ID not found" << std::endl;
         }
+          //Get info - user
         else if (account_type == Account::user_type) {
           User user = network.getUser(requested_id);
           std::cout << "Name:" << user.getName() << "\n"
-                  << "Surname:" << user.getSurname() << "\n"
-                  << "Name:" << user.getName() << "\n"
-                  << "Name:" << user.getName() << "\n"
-                  << "Name:" << user.getName() << "\n"
+                    << "Surname: " << user.getSurname() << "\n"
+                    << "Gender: " << user.getGender() << "\n"
+                    << "Address: " << user.getAddress() << "\n"
+                    << "Birth Date :" << user.getBirth() << "\n"
+                    << "Subscription Date: " << user.getSubscription() << std::endl;
+          
+        }
+          //Get info - group
+        else if (account_type == Account::group_type) {
+          Group group = network.getGroup(requested_id);
+          std::cout << "Name: " << group.getName() << "\n"
+                    << "Legal location: " << group.getLegalLocation() << "\n"
+                    << "Activity: " << group.getTypeOfActivity() << "\n"
+                    << "Inception: " << group.getInception() << "\n"
+                    << "Birth Date: " << group.getSubscription() << std::endl;
+        }
+          //Get info - company
+        else if (account_type == Account::company_type) {
+          Company company = network.getCompany(requested_id);
+          std::cout << "Name: " << company.getName() << "\n"
+                    << "Financial location: " << company.getFinancialLocation() << "\n"
+                    << "Operative location: " << company.getOperativeLocation() << "\n"
+                    << "Product: " << company.getTypeOfProduct() << "\n"
+                    << "Inception: " << company.getInception() << "\n"
+                    << "Birth Date: " << company.getSubscription() << std::endl;
         }
       }
       else if (what_to_get == "relation") {
-      
+        std::cout << "Insert the two IDs: " << std::endl;
       }
-      else if (what_to_get == "post") {
+      else if (what_to_get == "posts") {
       
       }
       else {
         std::cout << "Cannot get \"" << what_to_get << "\"" << std::endl;
-        std::cout << "Possible parameters:"
+        std::cout << "Possible parameters:";
       }
     }
     
     else {
-      std::cout << "Command \""<< command << "\" unknown." << std::endl;
+      std::cout << "Command \"" << command << "\" unknown." << std::endl;
+      std::cout << "Type \"help\" for a list of useful commands." << std::endl;
     }
     user_command.clear();
-  } while(!exit);
+  } while (!exit);
 }
 
 std::string promptInput() {
