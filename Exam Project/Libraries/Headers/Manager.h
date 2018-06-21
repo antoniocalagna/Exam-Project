@@ -47,6 +47,7 @@ public:
   Group getGroup (const string &ID) const;
   vector<Post> getPosts (const string &ID) const;
   string getRelationship (const string &starting_ID, const string &target_ID) const;
+  vector<string> getUsersIDs() const;
   
   //Management Functions
   bool addAccount(const User &account_to_add);
@@ -98,10 +99,12 @@ public:
   pair<string, Post> RatioReactionPost(const bool &best_1_worst_0) const;
   string RatioReactionAccount(const bool &best_1_worst_0) const;
   
-  vector<string> LonerPeople(const unsigned int &relations, const unsigned int &memberships, const bool &employed, const unsigned int &newsreactions);
+  vector<string> LonerPeople(const unsigned int &relations, const unsigned int &memberships, const bool &employed, const unsigned int &newsreactions) const;
   
-  vector<string> GenealogicalTree(const string &whose_ID);
-  vector<string> GenealogicalTree2(const string &whose_ID);
+  vector<vector<string>> GenealogicalTree(const string &whose_ID) const;
+  vector<string> FormatTree (const vector<vector<string>> &tree_to_format) const;
+  string PrintTree (const string &whose_ID) const;
+  string PrintAllTrees() const;
 
 private:
   unordered_map<string, User> _map_users;

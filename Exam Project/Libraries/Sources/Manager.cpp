@@ -112,6 +112,18 @@ string Manager::getRelationship(const std::string &starting_ID, const std::strin
   return _graph.edge(starting_ID, target_ID);
 }
 
+vector<string> Manager::getUsersIDs() const
+{
+  vector<string> IDs;
+  
+  for (auto it=_map_users.begin(); it!=_map_users.end(); it++)
+  {
+    IDs.push_back(it->second.getID());
+  }
+  
+  return IDs;
+}
+
 //addAccount polimorfica controlla che l'ID non sia già esistente e poi lo aggiunge ordinatamente nel vettore opportuno
 
 bool Manager::addAccount(const User &account_to_add)
@@ -791,7 +803,7 @@ string Manager::RatioReactionAccount(const bool &best_1_worst_0) const
   return best_ID;
 }
 
-vector<string> Manager::LonerPeople(const unsigned int &relations, const unsigned int &memberships, const bool &not_employed, const unsigned int &newsreactions)
+vector<string> Manager::LonerPeople(const unsigned int &relations, const unsigned int &memberships, const bool &not_employed, const unsigned int &newsreactions) const
 {
   unordered_set<string> set; //Lavoro con i set per la buona complessità delle operazioni e poi infine ritornerò un vettore.
   bool isLoner = true; //Controllo sul lupo solitario
@@ -878,83 +890,9 @@ vector<string> Manager::LonerPeople(const unsigned int &relations, const unsigne
   return list;
 }
 
-vector<string> Manager::GenealogicalTree(const string &whose_ID) {
-  list<vector<string>> matrix;      //Lista di generazioni, ad ogni "livello" c'é un vettore di ID
-  vector<string> tree;              //Vettore tampone all'inizio e in seguito sarà il vettore dove stilare l'albero
-  string starting_node;             //Variabile tampone da passare al grafo nelle iterazioni
-  queue<string> queue_ids;          //Coda degli ID da esplorare nelle iterazioni
-  
-  
-  queue_ids.push(whose_ID); //Inserisco nella coda l'ID di partenza
-  while (!queue_ids.empty()) {
-    starting_node = queue_ids.front();
-    queue_ids.pop();
-    tree = _graph.branches(starting_node, relation::born); //Ricavo gli ID della generazione precedente
-    if (tree.size() != 0) {
-      matrix.push_front(tree); //Se tale generazione non è vuota aggiungo il vettore alla lista nel piano più alto
-      for (auto it = tree.begin(); it != tree.end(); it++) {
-        queue_ids.push(*it); //Inserisco nella coda gli ID da esplorare
-        //BUG: I NONNI DEI DUE GENITORI NON SARANNO SULLA STESSA GENERAZIONE! COME FARE?!?
-      }
-    }
-  }
-  
-  vector<string> our_level(1, whose_ID); //Inserisco nella lista generazionale il nostro piano insieme ai partner
-  if (_graph.outDegree_withEdge(whose_ID, relation::partner) != 0) {
-    vector<string> partners = _graph.branches(whose_ID, relation::partner);
-    for (auto it = partners.begin(); it != partners.end(); it++) {
-      our_level.push_back(*it);
-    }
-  }
-  matrix.push_back(our_level);
-  
-  queue_ids.push(whose_ID); //Procedo adesso analizzando i discendenti
-  while (!queue_ids.empty()) {
-    starting_node = queue_ids.front();
-    queue_ids.pop();
-    tree = _graph.branches(starting_node, relation::parent);
-    if (tree.size() != 0) {
-      matrix.push_back(tree);
-      for (auto it = tree.begin(); it != tree.end(); it++) {
-        queue_ids.push(*it);
-      }
-    }
-  }
-  
-  //Redazione dell'albero
-  
-  int i = 0; //Contatore delle generazioni
-  for (auto it = matrix.begin(); it != matrix.end(); it++) {
-    stringstream ss;
-    
-    ss << "Generation " << i << " : ";
-    auto it_str = it->begin();
-    
-    ss << _map_users.at(*it_str).getName() << " " << _map_users.at(*it_str).getSurname() << " ";
-    
-    size_t size_gen = it->size(); //Conto quanti ID appartengono a quella generazione, se maggiori di 1 allora i successivi al primo saranno partners
-    if (size_gen != 1) {
-      it_str++;
-      if (size_gen > 2)
-        ss << "whose partners are: ";
-      else
-        ss << "whose partner is: ";
-      for (; it_str != it->end(); it_str++) {
-        ss << _map_users.at(*it_str).getName() << " " << _map_users.at(*it_str).getSurname() << " ";
-      }
-    }
-    
-    ss << endl;
-    tree.push_back(ss.str());
-    i++;
-  }
-  
-  return tree;
-}
-
 
 //DA COMPLETARE
-vector<string> Manager::GenealogicalTree2(const string &whose_ID ) {
+vector<vector<string>> Manager::GenealogicalTree(const string &whose_ID) const {
   std::set<std::string> analyzed_nodes;
   std::pair<std::deque<std::string>, std::deque<int>> nodes_to_analyze;     //Pair di ID-Generazione
   std::map<int, std::vector<std::string>> generations;
@@ -997,5 +935,112 @@ vector<string> Manager::GenealogicalTree2(const string &whose_ID ) {
       }
     }
   }
-  return std::vector<std::string>();
+  
+  vector<vector<string>> tree;
+  for (auto it_gen=generations.begin(); it_gen!=generations.end(); it_gen++)
+  {
+    tree.push_back(it_gen->second);
+  }
+  return tree;
+}
+
+vector<string> Manager::FormatTree (const vector<vector<string>> &tree_to_format) const
+{
+  vector<string> tree;
+  
+  int gen_num = 1; //Conto il numero di generazioni ai fini della formattazione
+  for (auto it_tree=tree_to_format.begin(); it_tree!=tree_to_format.end(); it_tree++) //Scorro l'albero
+  {
+    stringstream ss;
+    ss << "Gen. " << gen_num << ": ";
+    
+    for (auto it_gen=it_tree->begin(); it_gen!=it_tree->end(); it_gen++) //Per ogni generazione compilo lo stream
+    {
+      ss << *it_gen << " ";
+      
+      vector<string> info_about = _graph.branches(*it_gen, relation::partner); //Ricavo le eventuali informazioni sui partner
+      if (info_about.size()!=0)
+      {
+        ss<<"(+";
+        for (auto it_partners=info_about.begin(); it_partners!=info_about.end(); it_partners++)
+        {
+          ss<<" "<<*it_partners;
+        }
+        ss<<") ";
+      }
+      
+      info_about = _graph.branches(*it_gen, relation::born); //Ricavo le eventuali informazioni sui predecessori
+      if (info_about.size()!=0)
+      {
+        ss<<"(from:";
+        for (auto it_parent=info_about.begin(); it_parent!=info_about.end(); it_parent++)
+        {
+          ss<<" "<<*it_parent;
+        }
+        ss<<") ";
+      }
+      
+      auto it_check = it_gen;
+      it_check++;
+      if (it_check!=it_tree->end())
+        ss<<" // ";
+    }
+    
+    gen_num++;
+    tree.push_back(ss.str()); //Inserisco la generazione formattata nell'albero
+    ss.clear(); //Pulisco lo stream così da ricominciare correttamente
+  }
+  
+  return tree;
+}
+
+string Manager::PrintTree(const std::string &whose_ID) const
+{
+  vector<string> tree_to_print = FormatTree(GenealogicalTree(whose_ID)); //Invoco a cascata le funzioni di creazione dell'albero e la formattazione dello stesso
+  stringstream ss;
+  
+  for (auto it=tree_to_print.begin(); it!=tree_to_print.end(); it++) //Stampo ogni livello generazionale
+  {
+    ss<<*it<<endl;
+  }
+  
+  return ss.str();
+}
+
+string Manager::PrintAllTrees() const
+{
+  //Adotto il set come una "coda", gli utenti stampati in un albero vengono rimossi da tale coda.
+  //Il set mi consente di eliminare agilmente la key con .erase!
+  
+  vector<string> all_IDs = getUsersIDs();
+  set<string> IDs;
+  stringstream ss;
+  
+  for (auto it=all_IDs.begin(); it!=all_IDs.end(); it++)
+  {
+    IDs.insert(*it); //Costruisco il set in questa maniera perché il costruttore a iteratori del set torna, stranamente, BAD_ACCESS strani..
+  }
+  
+  int count = 1;
+  while (!IDs.empty())
+  {
+    ss<<"##### Tree no. "<<count<<" #####"<<endl; //Formatto
+    ss<<PrintTree(*IDs.begin()); //Carico un albero
+    
+    vector<vector<string>> tree = GenealogicalTree(*IDs.begin()); //Ricavo l'albero così da estrapolare gli ID già trattati e rimuoverli dalla coda
+    
+    for (auto it_tree=tree.begin(); it_tree!=tree.end(); it_tree++)
+    {
+      for (auto it_IDs=it_tree->begin(); it_IDs!=it_tree->end(); it_IDs++)
+      {
+        if (IDs.count(*it_IDs)!=0)
+          IDs.erase(*it_IDs);
+      }
+    }
+    
+    count++;
+    ss<<endl;
+  }
+  
+  return ss.str();
 }
