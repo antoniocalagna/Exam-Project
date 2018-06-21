@@ -47,6 +47,7 @@ public:
   Group getGroup (const string &ID) const;
   vector<Post> getPosts (const string &ID) const;
   string getRelationship (const string &starting_ID, const string &target_ID) const;
+  char getAccountType(const std::string &ID);
   
   //Management Functions
   bool addAccount(const User &account_to_add);
