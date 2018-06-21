@@ -490,7 +490,6 @@ int main_di_clara(/*int argc, char *argv[]*/) {
 
                       do {
                         cout << "Date and time:\n>"; //a me sta cosa non funziona, sto impazzendo, non esce dal ciclo
-                        cin.ignore();
                         getline(cin, d_t);
                         isValid = post_tmp.setDate_Time(d_t);
 

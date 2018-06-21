@@ -93,8 +93,8 @@ bool Clock::_isValid() const
     return false;
   if (_minutes>59)
     return false;
-  if (_seconds>59)
-    return false;
+  /*if (_seconds>59)
+    return false;*/
   
   return true;
 }
