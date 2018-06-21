@@ -79,6 +79,13 @@ int main_2(int argc, char *argv[]) {
       }
       else if (what_to_get == "relation") {
         std::cout << "Insert the two IDs: " << std::endl;
+        std::cout << ">";
+        std::string id1, id2;
+        std::cin >> id1 >> id2;
+        std::string relation = network.getRelationship(id1, id2);
+        if(relation.empty()) {
+          std::cout << "No relation found between " << id1 << " and  " << id2;
+        }
       }
       else if (what_to_get == "posts") {
       
