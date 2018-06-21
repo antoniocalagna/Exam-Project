@@ -18,18 +18,20 @@ set(                                                #Qui si fa una sorta di asse
         SOURCE_FILES                                #è come se scrivessi tutta questa roba
         ${HDR}/Graph.hpp
         ${HDR}/TemplateFunctions.hpp
+
         ${HDR}/Clock.h          ${SRC}/Clock.cpp
         ${HDR}/Date.h           ${SRC}/Date.cpp
         ${HDR}/FileHandler.h    ${SRC}/FileHandler.cpp
         ${HDR}/Manager.h        ${SRC}/Manager.cpp
         ${HDR}/Post.h           ${SRC}/Post.cpp
         ${HDR}/IOBuffer.h       ${SRC}/IOBuffer.cpp
-
         ${HDR}/Account\ Hierarchy/Account.h     ${SRC}/Account\ Hierarchy/Account.cpp
         ${HDR}/Account\ Hierarchy/Company.h     ${SRC}/Account\ Hierarchy/Company.cpp
         ${HDR}/Account\ Hierarchy/Group.h       ${SRC}/Account\ Hierarchy/Group.cpp
         ${HDR}/Account\ Hierarchy/User.h        ${SRC}/Account\ Hierarchy/User.cpp
-        main_di_clara.hpp)
+        main_di_clara.hpp
+        main_2.hpp
+        )
 
 
 add_executable(Social_Network main.cpp ${SOURCE_FILES})     #I .cpp vengono linkati "in automatico" qui

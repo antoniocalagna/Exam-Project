@@ -102,9 +102,14 @@ Group Manager::getGroup(const std::string &ID) const
     return Group();
 }
 
-pair<string,vector<Post>> Manager::getPosts(const std::string &ID) const
+vector<Post> Manager::getPosts(const std::string &ID) const
 {
-  return pair<string,vector<Post>>(ID, _map_posts.at(ID));
+  return _map_posts.at(ID);
+}
+
+string Manager::getRelationship(const std::string &starting_ID, const std::string &target_ID) const
+{
+  return _graph.edge(starting_ID, target_ID);
 }
 
 //addAccount polimorfica controlla che l'ID non sia già esistente e poi lo aggiunge ordinatamente nel vettore opportuno

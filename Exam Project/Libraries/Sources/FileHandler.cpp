@@ -308,7 +308,7 @@ std::string FH::formatOutput(const IOBuffer::m_Post &post) {
  * ## Checkers ##
  * ##############
  */
-FH::Error FH::IDsfile(std::stringstream &line) {
+FH::Error FH::accountsfile(std::stringstream &line) {
   std::string id, type_s;
   //Acquisisci e controlla l'ID
   std::getline(line, id, ',');                                  //Acquisisci l'ID
@@ -434,7 +434,7 @@ FH::Error FH::postsFile(std::stringstream &line) {
  * ## Acquisitzione ##
  * ###################
  */
-FH::Error FH::IDsfile(std::stringstream &line, IOBuffer &buff) {
+FH::Error FH::accountsFile(std::stringstream &line, IOBuffer &buff) {
   std::string id;
   char type;
   
@@ -552,7 +552,7 @@ FH::Error FH::postsFile(std::stringstream &line, IOBuffer &buff) {
  * ## Printers ##
  * ##############
  */
-std::string FH::IDsfile(IOBuffer &buff) {
+std::string FH::accountsfile(IOBuffer &buff) {
   std::stringstream out;                      //Prepara uno stringstream per poi trasformarlo in stringa
   while (!buff.usersEmpty()) {
     User usr;

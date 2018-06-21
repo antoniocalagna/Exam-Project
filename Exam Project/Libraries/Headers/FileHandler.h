@@ -72,17 +72,17 @@ std::string formatOutput(const IOBuffer::m_Post &post);
 
 
 //Controllo dei file
-Error IDsfile(std::stringstream &line);
+Error accountsfile(std::stringstream &line);
 Error relationsFile(std::stringstream &line);
 Error postsFile(std::stringstream &line);
 
 //Acquisizione dei file
-Error IDsfile(std::stringstream &line, IOBuffer &buff);
+Error accountsFile(std::stringstream &line, IOBuffer &buff);
 Error relationsFile(std::stringstream &line, IOBuffer &buff);
 Error postsFile(std::stringstream &line, IOBuffer &buff);
 
 //Stampa su file
-std::string IDsfile(IOBuffer &buff);
+std::string accountsfile(IOBuffer &buff);
 std::string relationsFile(IOBuffer &buff);
 std::string postsFile(IOBuffer &buff);
 

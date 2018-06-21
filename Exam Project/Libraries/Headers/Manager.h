@@ -45,7 +45,8 @@ public:
   User getUser (const string &ID) const;
   Company getCompany (const string &ID) const;
   Group getGroup (const string &ID) const;
-  pair<string,vector<Post>> getPosts (const string &ID) const;
+  vector<Post> getPosts (const string &ID) const;
+  string getRelationship (const string &starting_ID, const string &target_ID) const;
   
   //Management Functions
   bool addAccount(const User &account_to_add);
