@@ -474,7 +474,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
         }
       } else if (what == "post") {
         string who, tmp_news, d_t;
-        pair<string, vector<Post>> post;
+        vector<Post> post;
         int find = 0;
         cout << "Please insert the id who wrote the post:\n";
         cin >> who;
@@ -491,7 +491,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
 
         Post cmp_post(tmp_news, d_t);
 
-        for (auto it = post.second.begin(); it != post.second.end(); it++) {
+        for (auto it = post.begin(); it != post.end(); it++) {
           if (*it == cmp_post) {
             manager.deletePost(*it, who);
             find = 1;
