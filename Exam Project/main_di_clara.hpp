@@ -27,7 +27,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     relations_fh.open(argv[2]);
     accounts_fh.open(argv[3]);
   }*/
-  
+
   Manager manager;
   string input;
   string cmd;
@@ -35,7 +35,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
   do {
     cout << "\n>";
     getline(cin, input);
-    
+
     stringstream command(input);
     command >> cmd;
     if (cmd == "help") {
@@ -48,7 +48,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
               << endl;
       cout << "add account user\n"
            << endl;
-      
+
       cout << "Groups:" << endl;
       cout
               << "\nset name <group_id>\nset n_members <group_id>\nset location <group_id>\nset type_activity <group_id>\nset inception <group_id>\nset id <group_id>\nset subscription <group_id>\n"
@@ -57,7 +57,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
               << endl;
       cout << "add account group\n"
            << endl;
-      
+
       cout << "Companies:" << endl;
       cout
               << "\nset name <company_id>\nset finantial_location <company_id>\nset operative_location <company_id>\nset products <company_id>\nset inception <company_id>\nset id <company_id>\nset subscription <company_id>\n"
@@ -66,10 +66,10 @@ int main_di_clara(/*int argc, char *argv[]*/) {
               << endl;
       cout << "add account company\n"
            << endl;
-      
+
       cout << "delete account <id>\n"
            << endl;
-      
+
       cout << "add relationship\n"
               "delete relationship\n"
            << endl;
@@ -77,90 +77,339 @@ int main_di_clara(/*int argc, char *argv[]*/) {
               "delete post\n"
            << endl;
       cout << ">";
-      
+
       getline(cin, input);
-      
+
       command.clear();
       command.str(input);
       command >> cmd;
-    }
-    else if (cmd == "set") {
+    } else if (cmd == "set") {
       string what, who; //non so se questi nomi sono messi per scherzo, a me sembrano carini
       command >> who >> what;
       if (what.empty()) {
         cout << "Error! Check the numbers of parameters you have to insert." << endl;
-      }
-      else {
+      } else {
         if (who == "user") {
-          
+          string id_to_set;
+          User user_to_set; //user a cui vuoi cambiare il nome
+          cout << "Please insert the id of the User you want to set:\n>" << endl;
+          cin >> id_to_set; //id "vecchio" account
+          user_to_set = manager.getUser(id_to_set); //se id non esiste user_to_set è un default constructor
+          if (user_to_set == User()) {
+            cout << "Error! The id is not valid." << endl;
+          } else {
+            if (what == "name") {
+              string new_name;
+              cout << "Please insert the new" << what << "." << endl;
+              //cin.ignore(); da provare se ci vada o no
+              getline(cin, new_name);
+              user_to_set.setName(new_name);
+              if (!manager.replaceAccount(id_to_set, user_to_set)) { //da provare
+                cout << "Error!" << endl;
+              } else {
+                cout << "Done!" << endl;
+              }
+            } else if (what == "surname") {
+              string new_surname;
+              cout << "Please insert the new" << what << "." << endl;
+              //cin.ignore();
+              getline(cin, new_surname);
+              user_to_set.setSurname(new_surname);
+              if (!manager.replaceAccount(id_to_set, user_to_set)) {
+                cout << "Error! The id already exist." << endl;
+              } else {
+                cout << "Done!" << endl;
+              }
+
+            } else if (what == "gender") {
+              char new_gender;
+              cout << "Please insert the new" << what << "." << endl;
+              //cin.ignore();
+              cin >> new_gender;
+              user_to_set.setGender(new_gender);
+              if (!manager.replaceAccount(id_to_set, user_to_set)) {
+                cout << "Error! The id already exist." << endl;
+              } else {
+                cout << "Done!" << endl;
+              }
+
+            } else if (what == "birth") {
+              string new_birth;
+              Date birth;
+              cout << "Please insert the new" << what << "." << endl;
+              //cin.ignore();
+              getline(cin, new_birth);
+              if (birth.CheckDate(new_birth)) {
+                birth.scanDateByStr(new_birth);
+                user_to_set.setBirth(birth);
+                if (!manager.replaceAccount(id_to_set, user_to_set)) {
+                  cout << "Error! The id already exist." << endl;
+                } else {
+                  cout << "Done!" << endl;
+                }
+              } else {
+                cout << "Error! Date is not valid." << endl;
+              }
+
+            } else if (what == "address") {
+              string new_addr;
+              cout << "Please insert the new" << what << "." << endl;
+              //cin.ignore();
+              getline(cin, new_addr);
+              user_to_set.setAddress(new_addr);
+              if (!manager.replaceAccount(id_to_set, user_to_set)) {
+                cout << "Error! The id already exist." << endl;
+              } else {
+                cout << "Done!" << endl;
+              }
+
+            } else if (what == "id") {
+              string new_id;
+              cout << "Please insert the new" << what << "." << endl;
+              //cin.ignore();
+              getline(cin, new_id);
+              user_to_set.setID(new_id);
+              if (manager.deleteAccount(
+                      new_id)) { //questo l'ho fatto "a mano" perchè non penso che con la funzione si possa fare
+                if (!manager.addAccount(user_to_set)) {
+                  cout << "Error! The id already exist." << endl;
+                } else {
+                  cout << "Done!" << endl;
+                }
+              } else {
+                cout << "Error! The id does not exist." << endl;
+              }
+
+            } else if (what == "subscription") {
+              string new_sub;
+              Date sub;
+              cout << "Please insert the new" << what << "." << endl;
+              //cin.ignore();
+              getline(cin, new_sub);
+              if (sub.CheckDate(new_sub)) {
+                sub.scanDateByStr(new_sub);
+                user_to_set.setSubscription(new_sub);
+                if (!manager.replaceAccount(id_to_set, user_to_set)) {
+                  cout << "Error! The id already exist." << endl;
+                } else {
+                  cout << "Done!" << endl;
+                }
+
+              } else {
+                cout << "Error! The date is not valid." << endl;
+              }
+            }
+          }
+        } else if (who == "group") {
+          string id_to_set;
+          Group group_to_set;
+          cout << "Please insert the id of the Group you want to set:\n>" << endl;
+          cin >> id_to_set; //id "vecchio" account
+          group_to_set = manager.getGroup(id_to_set);
+          if (group_to_set == Group()) {
+            cout << "Error! The id is not valid." << endl;
+          }
           if (what == "name") {
-          
+            string new_name;
+            cout << "Please insert the new" << what << "." << endl;
+            //cin.ignore(); da provare se ci vada o no
+            getline(cin, new_name);
+            group_to_set.setName(new_name);
+            if (!manager.replaceAccount(id_to_set, group_to_set)) { //da provare
+              cout << "Error!" << endl;
+            } else {
+              cout << "Done!" << endl;
+            }
+
+          } else if (what == "id") {
+            string new_id;
+            cout << "Please insert the new" << what << "." << endl;
+            //cin.ignore();
+            getline(cin, new_id);
+            group_to_set.setID(new_id);
+            if (manager.deleteAccount(
+                    new_id)) { //questo l'ho fatto "a mano" perchè non penso che con la funzione si possa fare
+              if (!manager.addAccount(group_to_set)) {
+                cout << "Error! The id already exist." << endl;
+              } else {
+                cout << "Done!" << endl;
+              }
+            } else {
+              cout << "Error! The id does not exist." << endl;
+            }
+
+          } else if (what == "subscription") {
+            string new_sub;
+            Date sub;
+            cout << "Please insert the new" << what << "." << endl;
+            //cin.ignore();
+            getline(cin, new_sub);
+            if (sub.CheckDate(new_sub)) {
+              sub.scanDateByStr(new_sub);
+              group_to_set.setSubscription(new_sub);
+              if (!manager.replaceAccount(id_to_set, group_to_set)) {
+                cout << "Error! The id already exist." << endl;
+              } else {
+                cout << "Done!" << endl;
+              }
+            } else {
+              cout << "Error! The date is not valid." << endl;
+            }
+
+          } else if (what == "location") {
+            string new_loc;
+            cout << "Please insert the new" << what << "." << endl;
+            //cin.ignore(); da provare se ci vada o no
+            getline(cin, new_loc);
+            group_to_set.setLegalLocation(new_loc);
+            if (!manager.replaceAccount(id_to_set, group_to_set)) { //da provare
+              cout << "Error!" << endl;
+            } else {
+              cout << "Done!" << endl;
+            }
+
+          } else if (what == "type_activity") {
+            string new_act;
+            cout << "Please insert the new" << what << "." << endl;
+            //cin.ignore(); da provare se ci vada o no
+            getline(cin, new_act);
+            group_to_set.setTypeOfActivity(new_act);
+            if (!manager.replaceAccount(id_to_set, group_to_set)) { //da provare
+              cout << "Error!" << endl;
+            } else {
+              cout << "Done!" << endl;
+            }
+
+          } else if (what == "inception") {
+            string new_inc;
+            Date inc;
+            cout << "Please insert the new" << what << "." << endl;
+            //cin.ignore(); da provare se ci vada o no
+            getline(cin, new_inc);
+            if (inc.CheckDate(new_inc)) {
+              inc.scanDateByStr(new_inc);
+              group_to_set.setInception(inc);
+              if (!manager.replaceAccount(id_to_set, group_to_set)) { //da provare
+                cout << "Error!" << endl;
+              } else {
+                cout << "Done!" << endl;
+              }
+            } else {
+              cout << "Error! The date is not valid." << endl;
+            }
+
           }
-          else if (what == "surname") {
-          
+        } else if (who == "company") {
+          string id_to_set;
+          Company company_to_set;
+          cout << "Please insert the id of the Company you want to set:\n>" << endl;
+          cin >> id_to_set; //id "vecchio" account
+          company_to_set = manager.getCompany(id_to_set);
+          if (company_to_set == Company()) {
+            cout << "Error! The id is not valid." << endl;
           }
-          else if (what == "gender") {
-          
-          }
-          else if (what == "birth") {
-          
-          }
-          else if (what == "address") {
-          
-          }
-          else if (what == "id") {
-          
-          }
-          else if (what == "subscription") {
-          
-          }
-        }
-        else if (who == "group") {
+
           if (what == "name") {
-          
-          }
-          else if (what == "id") {
-          
-          }
-          else if (what == "subscription") {
-          
-          }
-          else if (what == "location") {
-          
-          }
-          else if (what == "type_activity") {
-          
-          }
-          else if (what == "inception") {
-          
-          }
-        }
-        else if (who == "company") {
-          if (what == "name") {
-          
-          }
-          else if (what == "id") {
-          
-          }
-          else if (what == "subscription") {
-          
-          }
-          else if (what == "inception") {
-          
-          }
-          else if (what == "finantial_location") {
-          
-          }
-          else if (what == "operative_location") {
-          
-          }
-          else if (what == "products") {
-          
+            string new_name;
+            cout << "Please insert the new" << what << "." << endl;
+            //cin.ignore(); da provare se ci vada o no
+            getline(cin, new_name);
+            company_to_set.setName(new_name);
+            if (!manager.replaceAccount(id_to_set, company_to_set)) { //da provare
+              cout << "Error!" << endl;
+            } else {
+              cout << "Done!" << endl;
+            }
+
+          } else if (what == "id") {
+            string new_id;
+            cout << "Please insert the new" << what << "." << endl;
+            //cin.ignore();
+            getline(cin, new_id);
+            company_to_set.setID(new_id);
+            if (manager.deleteAccount(new_id)) {
+              if (!manager.addAccount(company_to_set)) {
+                cout << "Error! The id already exist." << endl;
+              } else {
+                cout << "Done!" << endl;
+              }
+
+            } else if (what == "subscription") {
+              string new_sub;
+              Date sub;
+              cout << "Please insert the new" << what << "." << endl;
+              //cin.ignore();
+              getline(cin, new_sub);
+              if (sub.CheckDate(new_sub)) {
+                sub.scanDateByStr(new_sub);
+                company_to_set.setSubscription(new_sub);
+                if (!manager.replaceAccount(id_to_set, company_to_set)) {
+                  cout << "Error! The id already exist." << endl;
+                } else {
+                  cout << "Done!" << endl;
+                }
+              } else {
+                cout << "Error! The date is not valid." << endl;
+              }
+            }
+
+          } else if (what == "inception") {
+            string new_inc;
+            Date inc;
+            cout << "Please insert the new" << what << "." << endl;
+            //cin.ignore(); da provare se ci vada o no
+            getline(cin, new_inc);
+            if (inc.CheckDate(new_inc)) {
+              inc.scanDateByStr(new_inc);
+              company_to_set.setInception(inc);
+              if (!manager.replaceAccount(id_to_set, company_to_set)) {
+                cout << "Error!" << endl;
+              } else {
+                cout << "Done!" << endl;
+              }
+            } else {
+              cout << "Error! The date is not valid." << endl;
+            }
+
+          } else if (what == "finantial_location") {
+            string new_loc;
+            cout << "Please insert the new" << what << "." << endl;
+            //cin.ignore(); da provare se ci vada o no
+            getline(cin, new_loc);
+            company_to_set.setFinancialLocation(new_loc);
+            if (!manager.replaceAccount(id_to_set, company_to_set)) {
+              cout << "Error!" << endl;
+            } else {
+              cout << "Done!" << endl;
+            }
+
+          } else if (what == "operative_location") {
+            string new_loc;
+            cout << "Please insert the new" << what << "." << endl;
+            //cin.ignore(); da provare se ci vada o no
+            getline(cin, new_loc);
+            company_to_set.setOperativeLocation(new_loc);
+            if (!manager.replaceAccount(id_to_set, company_to_set)) {
+            } else {
+              cout << "Done!" << endl;
+            }
+
+          } else if (what == "products") {
+            string new_prod;
+            cout << "Please insert the new" << what << "." << endl;
+            //cin.ignore(); da provare se ci vada o no
+            getline(cin, new_prod);
+            company_to_set.setTypeOfProduct(new_prod);
+            if (!manager.replaceAccount(id_to_set, company_to_set)) {
+              cout << "Error!" << endl;
+            } else {
+              cout << "Done!" << endl;
+            }
+
           }
         }
       }
-    }
-    else if (cmd == "get") {
+    } else if (cmd == "get") {
       string who, what;
       command >> who >> what;
       if (what.empty()) {
@@ -176,8 +425,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
           cout << u.getName() << "\n" << u.getSurname() << "\n" << u.getID() << "\n" << u.getAddress() << "\n"
                << u.getSubscription() << "\n" << u.getBirth() << "\n" << u.getGender() << endl;
         }
-      }
-      else if (who == "group") {
+      } else if (who == "group") {
         if (what == "info") {
           string id;
           Group g;
@@ -187,8 +435,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
           cout << g.getName() << "\n" << g.getID() << "\n" << g.getLegalLocation() << "\n" << g.getTypeOfActivity()
                << "\n" << g.getSubscription() << "\n" << g.getInception() << endl;
         }
-      }
-      else if (who == "company") {
+      } else if (who == "company") {
         if (what == "info") {
           string id;
           Company c;
@@ -200,9 +447,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
                << c.getInception() << endl;
         }
       }
-    }
-    
-    else if (cmd == "delete") {
+    } else if (cmd == "delete") {
       string what;
       command >> what;
       if (what.empty()) {
@@ -213,13 +458,11 @@ int main_di_clara(/*int argc, char *argv[]*/) {
         command >> who;
         if (who.empty()) {
           cout << "Error! Check the numbers of parameters you have to insert." << endl;
-        }
-        else {
+        } else {
           manager.deleteAccount(who);
         }
-        
-      }
-      else if (what == "relationship") {
+
+      } else if (what == "relationship") {
         string id_start, id_target;
         cout << "Please insert: <id_1> <id_2>:\n";
         cin >> id_start >> id_target;
@@ -229,17 +472,14 @@ int main_di_clara(/*int argc, char *argv[]*/) {
         if (!manager.deleteRelationship(id_start, id_target)) {
           cout << "Error! The ids you have insert don't exist." << endl;
         }
-      }
-      else if (what == "post") {
+      } else if (what == "post") {
         string who, tmp_news, d_t;
         pair<string, vector<Post>> post;
-        Date tmp_date;
-        Clock tmp_time;
         int find = 0;
         cout << "Please insert the id who wrote the post:\n";
         cin >> who;
         if (who.empty()) {
-          cout << "Error! You don't insert any id." << endl;
+          cout << "Error! You don't have insert any id." << endl;
         }
         post = manager.getPosts(who);
         cout << "Please insert the news of the post you want to delete:\n";
@@ -248,9 +488,9 @@ int main_di_clara(/*int argc, char *argv[]*/) {
         cout << "Please insert the date and the time of the post you want to delete:\n";
         cin.ignore();
         getline(cin, d_t);
-        
+
         Post cmp_post(tmp_news, d_t);
-        
+
         for (auto it = post.second.begin(); it != post.second.end(); it++) {
           if (*it == cmp_post) {
             manager.deletePost(*it, who);
@@ -260,24 +500,20 @@ int main_di_clara(/*int argc, char *argv[]*/) {
         if (find != 1) {
           cout << "Post not found!" << endl;
         }
-        
-        
+
+
       }
-    }
-    else if (cmd == "add") {
+    } else if (cmd == "add") {
       string what1, what2;
       command >> what1 >> what2;
       if (what1.empty()) {
         cout << "Error! Check the numbers of parameters you have to insert." << endl;
-      }
-      else {
-        
+      } else {
+
         if (what1 == "account") {
           if (what2.empty()) {
             cout << "Error! Check the numbers of parameters you have to insert." << endl;
-          }
-          
-          else if (what2 == "user") {
+          } else if (what2 == "user") {
             string tmp_n, tmp_s, tmp_id, tmp_a, d1, d2;
             Date tmp_sub, tmp_b;
             char tmp_g;
@@ -305,21 +541,19 @@ int main_di_clara(/*int argc, char *argv[]*/) {
                     "'B' ...\n"
                     "'O' OTHERS\n>";
             cin >> tmp_g;
-            
+
             User new_u(tmp_n, tmp_s, tmp_id, tmp_a, tmp_sub, tmp_b, tmp_g);
             if (!manager.addAccount(new_u)) {
               cout << "Error! Your id already exist!";
-            }
-            else cout << "Done!";
-            
+            } else cout << "Done!";
+
             getline(cin, input);
-            
+
             command.clear();
             command.str(input);
             command >> cmd;
-            
-          }
-          else if (what2 == "group") {
+
+          } else if (what2 == "group") {
             string tmp_n, tmp_id, tmp_loc, tmp_act, d1, d2;
             Date tmp_sub, tmp_inc;
             cout << "Name:\n>";
@@ -338,20 +572,18 @@ int main_di_clara(/*int argc, char *argv[]*/) {
             cout << "Inception:\n>";
             cin >> d2;
             tmp_inc.scanDateByStr(d2);
-            
+
             Group new_g(tmp_n, tmp_id, tmp_loc, tmp_act, tmp_sub, tmp_inc);
             if (!manager.addAccount(new_g)) {
               cout << "Error! Your id already exist!";
-            }
-            else cout << "Done!";
+            } else cout << "Done!";
             getline(cin, input);
-            
+
             command.clear();
             command.str(input);
             command >> cmd;
-            
-          }
-          else if (what2 == "company") {
+
+          } else if (what2 == "company") {
             string tmp_n, tmp_id, tmp_finloc, tmp_oploc, tmp_p, d1, d2;
             Date tmp_sub, tmp_inc;
             cout << "Name:\n>";
@@ -373,21 +605,19 @@ int main_di_clara(/*int argc, char *argv[]*/) {
             cout << "Inception:\n>";
             cin >> d2;
             tmp_inc.scanDateByStr(d2);
-            
+
             Company new_c(tmp_n, tmp_id, tmp_finloc, tmp_oploc, tmp_p, tmp_sub, tmp_inc);
             if (!manager.addAccount(new_c)) {
               cout << "Error! Your id already exist!";
-            }
-            else cout << "Done!";
+            } else cout << "Done!";
             getline(cin, input);
-            
+
             command.clear();
             command.str(input);
             command >> cmd;
-            
+
           }
-        }
-        else if (what1 == "relationship") {
+        } else if (what1 == "relationship") {
           int error = 0;
           while (error != 1) {
             cout << "Please insert: <id_1> <type_of_relation> <id_2>\n"
@@ -401,14 +631,14 @@ int main_di_clara(/*int argc, char *argv[]*/) {
                     "partnership\n"
                     "employee\n"
                     "employer\n" << endl;
-            
+
             string who1, who2, type_rel;
             getline(cin, input);
-            
+
             command.clear();
             command.str(input);
             command >> who1 >> type_rel >> who2;
-            
+
             if (who1.empty() || who2.empty() || type_rel.empty()) {
               cout << "Error! Check the numbers of parameters you have to insert." << endl;
             }
@@ -416,37 +646,32 @@ int main_di_clara(/*int argc, char *argv[]*/) {
             //Analizzo il codice errore restituito da addRelationship.
             if (error == -1) {
               cout << "Error! The first ID does not exist!" << endl;
-            }
-            else if (error == -2) {
+            } else if (error == -2) {
               cout << "Error! The second ID does not exist!" << endl;
-            }
-            else if (error == -3) {
+            } else if (error == -3) {
               cout << "Error! This relationship does not exist!" << endl;
-            }
-            else if (error == 1) {
+            } else if (error == 1) {
               cout << "Done!";
             }
           }
-        }
-        
-        else if (what1 == "post") {
+        } else if (what1 == "post") {
           string news, d_t, whose_ID;
           set<string> likes, dislikes;
           bool isValid = false;
           Post post_tmp;
-          
+
           cout << "News:\n>";
           getline(cin, news);
           post_tmp.setNews(news);
-          
+
           do {
             cout << "Date and time:\n>"; //a me sta cosa non funziona, sto impazzendo, non esce dal ciclo
             cin.ignore();
             getline(cin, d_t);
             isValid = post_tmp.setDate_Time(d_t);
-            
+
           } while (!isValid);
-          
+
           cout << "Likes (insert '-' at the end of the list):\n";
           while (input != "-") {
             cout << ">";
@@ -455,7 +680,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
               likes.insert(input);
           }
           post_tmp.setLikes(likes);
-          
+
           cout << "Dislikes (insert '-' at the end of the list):\n";
           input.clear();
           while (input != "-") {
@@ -465,42 +690,82 @@ int main_di_clara(/*int argc, char *argv[]*/) {
               dislikes.insert(input);
           }
           post_tmp.setDislikes(dislikes);
-          
+
           cout << news << " " << d_t << endl;
-          
+
           if (!likes.empty()) {
             cout << "\nLikes:" << endl;
-            
+
             for (auto it = likes.begin(); it != likes.end(); it++) {
               cout << *it << endl;
             }
           }
-          
+
           if (!dislikes.empty()) {
             cout << "\nDislikes:" << endl;
             for (auto it = dislikes.begin(); it != dislikes.end(); it++) {
               cout << *it << endl;
             }
           }
-          
           cout << "Who wrote the post?:\n>";
           getline(cin, whose_ID);
           if (!manager.addPost(post_tmp, whose_ID))
             cout << "Something went wrong.." << endl;
+
+        } else if (what1 == "like") {
+          string who, tmp_news, d_t;
+          pair<string, vector<Post>> post;
+
+          cout << "Please insert the news of the post you want to 'like':\n>"; //AIUTO come posso scriverlo in quella lingua malefica
+          cin.ignore();
+          getline(cin, tmp_news);
+          cout << "Please insert the date and the time of the post you want to delete:\n>";
+          cin.ignore();
+          getline(cin, d_t);
+          cout << "Please insert the id who want to put like:\n>";
+          cin >> who;
+
+          Post cmp_post(tmp_news, d_t);
+
+          if (manager.addLike_Dislike(1, cmp_post, who)) {
+            cout << "Done!" << endl;
+          } else {
+            cout << "Error!" << endl; //1-NO ID, 2-NO AUTOLIKES, 3-NO POST
+          }
+        } else if (what2 == "dislike") {
+          string who, tmp_news, d_t;
+          pair<string, vector<Post>> post;
+
+          cout << "Please insert the news of the post you want to 'like':\n>"; //AIUTO come posso scriverlo in quella lingua malefica
+          cin.ignore();
+          getline(cin, tmp_news);
+          cout << "Please insert the date and the time of the post you want to delete:\n>";
+          cin.ignore();
+          getline(cin, d_t);
+          cout << "Please insert the id who want to put like:\n>";
+          cin >> who;
+
+          Post cmp_post(tmp_news, d_t);
+
+          if (manager.addLike_Dislike(0, cmp_post, who)) {
+            cout << "Done!" << endl;
+          } else {
+            cout << "Error!" << endl; //1-NO ID, 2-NO AUTOLIKES, 3-NO POST
+          }
+
         }
-        
+
+
       }
-      
+
     }
-      
+
       //if (cmd)
-    
-    
+
+
     else if (cmd == "exit") {
       exit = true;
-    }
-    
-    else {
+    } else {
       std::cout << "Command " << cmd << " unknown." << std::endl;
     }
   } while (!exit);
