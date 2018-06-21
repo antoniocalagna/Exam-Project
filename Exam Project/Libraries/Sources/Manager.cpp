@@ -181,6 +181,9 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const User &new_a
   if (_exist_as_node(new_account.getID()))
     return false;
   
+  if (ID_to_replace==new_account.getID())
+    _map_users[ID_to_replace]=new_account;
+  
   size_t count=_map_users.count(ID_to_replace);
   if (count!=0)
   {
@@ -199,6 +202,9 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const Company &ne
   if (_exist_as_node(new_account.getID()))
     return false;
   
+  if (ID_to_replace==new_account.getID())
+    _map_companies[ID_to_replace]=new_account;
+  
   size_t count=_map_companies.count(ID_to_replace);
   if (count!=0)
   {
@@ -216,6 +222,9 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const Group &new_
 {
   if (_exist_as_node(new_account.getID()))
     return false;
+  
+  if (ID_to_replace==new_account.getID())
+    _map_groups[ID_to_replace]=new_account;
   
   size_t count=_map_users.count(ID_to_replace);
   if (count!=0)
