@@ -93,8 +93,8 @@ bool Clock::_isValid() const
     return false;
   if (_minutes>59)
     return false;
-  /*if (_seconds>59)
-    return false;*/
+  if (_seconds>59)
+    return false;
   
   return true;
 }
@@ -140,7 +140,11 @@ void Clock::scanTimeByStr(std::string s)
   sstream.ignore(1);
   sstream>>_minutes;
   sstream.ignore(1);
-  sstream>>_seconds;
+  if(!sstream.good()){
+    _seconds = 0;
+  }else {
+    sstream >> _seconds;
+  }
 }
 
 bool Clock::CheckTime (const string &time_to_check)
