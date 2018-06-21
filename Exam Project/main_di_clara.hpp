@@ -245,7 +245,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
         }
         post = manager.getPosts(who);
         cout << "Please insert the news of the post you want to delete:\n";
-        cin.ignore();
+        cin.ignore(); //Evita l'andata a capo
         getline(cin, tmp_news);
         cout << "Please insert the date and the time of the post you want to delete:\n";
         cin.ignore();
