@@ -9,12 +9,13 @@ using namespace std;
 int main_di_clara(/*int argc, char *argv[]*/) {
   //metterei una introduzione al funzionamento per l'utente, del tipo : hi, this is a console menu, write your commands, or
   //write help for the list of commands (magari in inglese vero)
-  /*FH::FileHandler accounts_fh,          //FileHandler per il controllo e l'acquisizione dei dati da file
+  FH::FileHandler accounts_fh,          //FileHandler per il controllo e l'acquisizione dei dati da file
           relations_fh,
           posts_fh;
   IOBuffer buffer;                      //Buffer necessario per l'acquisizione dei dati
   
   //Controllo dei parametri passati da linea di comando
+  /*
   if (argc != 0 && argc != 4) {
     cerr << "Parameters error. Plese insert input file names as follows: <accounts_file> <relations_file> <posts_file>.\n"
          << "You can also execute the program without specifying the files to open, and choose them later." << endl;
@@ -37,6 +38,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     getline(cin, input);
     
     stringstream command(input);
+    input.clear();
     command >> cmd;
     if (cmd == "help") {
       //LISTA DEI POSSIBILI COMANDI
@@ -85,89 +87,89 @@ int main_di_clara(/*int argc, char *argv[]*/) {
       command >> cmd;
     }
     else if (cmd == "set") {
-      string what, who; //non so se questi nomi sono messi per scherzo, a me sembrano carini
-      command >> who >> what;
-      if (what.empty()) {
-        cout << "Error! Check the numbers of parameters you have to insert." << endl;
+      string what_to_set, account_type; //non so se questi nomi sono messi per scherzo, a me sembrano carini
+      command >> account_type >> what_to_set;
+      if (what_to_set.empty()) {
+        cout << "Error! Invalid number of inserted parameters." << endl;
       }
       else {
-        if (who == "user") {
+        if (account_type == "user") {
           
-          if (what == "name") {
-          
-          }
-          else if (what == "surname") {
+          if (what_to_set == "name") {
           
           }
-          else if (what == "gender") {
+          else if (what_to_set == "surname") {
           
           }
-          else if (what == "birth") {
+          else if (what_to_set == "gender") {
           
           }
-          else if (what == "address") {
+          else if (what_to_set == "birth") {
           
           }
-          else if (what == "id") {
+          else if (what_to_set == "address") {
           
           }
-          else if (what == "subscription") {
+          else if (what_to_set == "id") {
           
           }
-        }
-        else if (who == "group") {
-          if (what == "name") {
-          
-          }
-          else if (what == "id") {
-          
-          }
-          else if (what == "subscription") {
-          
-          }
-          else if (what == "location") {
-          
-          }
-          else if (what == "type_activity") {
-          
-          }
-          else if (what == "inception") {
+          else if (what_to_set == "subscription") {
           
           }
         }
-        else if (who == "company") {
-          if (what == "name") {
+        else if (account_type == "group") {
+          if (what_to_set == "name") {
           
           }
-          else if (what == "id") {
+          else if (what_to_set == "id") {
           
           }
-          else if (what == "subscription") {
+          else if (what_to_set == "subscription") {
           
           }
-          else if (what == "inception") {
+          else if (what_to_set == "location") {
           
           }
-          else if (what == "finantial_location") {
+          else if (what_to_set == "type_activity") {
           
           }
-          else if (what == "operative_location") {
+          else if (what_to_set == "inception") {
           
           }
-          else if (what == "products") {
+        }
+        else if (account_type == "company") {
+          if (what_to_set == "name") {
+          
+          }
+          else if (what_to_set == "id") {
+          
+          }
+          else if (what_to_set == "subscription") {
+          
+          }
+          else if (what_to_set == "inception") {
+          
+          }
+          else if (what_to_set == "finantial_location") {
+          
+          }
+          else if (what_to_set == "operative_location") {
+          
+          }
+          else if (what_to_set == "products") {
           
           }
         }
       }
     }
     else if (cmd == "get") {
-      string who, what;
-      command >> who >> what;
-      if (what.empty()) {
-        cout << "Error! Check the numbers of parameters you have to insert." << endl;
+      string account_type, what_to_set;
+      command >> account_type >> what_to_set;
+      if (what_to_set.empty()) {
+        cout << "Error! Invalid number of inserted parameters." << endl;
       }
-      if (who == "user") {
-        if (what == "info") {
+      if (account_type == "user") {
+        if (what_to_set == "info") {
           string id;
           User u;
           cout << "Please insert the id:\n>";
@@ -177,8 +179,8 @@ int main_di_clara(/*int argc, char *argv[]*/) {
                << u.getSubscription() << "\n" << u.getBirth() << "\n" << u.getGender() << endl;
         }
       }
-      else if (who == "group") {
-        if (what == "info") {
+      else if (account_type == "group") {
+        if (what_to_set == "info") {
           string id;
           Group g;
           cout << "Please insert the id:\n>";
@@ -188,8 +190,8 @@ int main_di_clara(/*int argc, char *argv[]*/) {
                << "\n" << g.getSubscription() << "\n" << g.getInception() << endl;
         }
       }
-      else if (who == "company") {
-        if (what == "info") {
+      else if (account_type == "company") {
+        if (what_to_set == "info") {
           string id;
           Company c;
           cout << "Please insert the id:\n>";
@@ -203,23 +205,20 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     }
     
     else if (cmd == "delete") {
-      string what;
-      command >> what;
-      if (what.empty()) {
-        cout << "Error! Check the numbers of parameters you have to insert." << endl;
-      }
-      if (what == "account") {
+      string what_to_delete;
+      command >> what_to_delete;
+      if (what_to_delete == "account") {
         string who;
         command >> who;
         if (who.empty()) {
-          cout << "Error! Check the numbers of parameters you have to insert." << endl;
+          cout << "Error! Invalid number of inserted parameters." << endl;
         }
         else {
           manager.deleteAccount(who);
         }
         
       }
-      else if (what == "relationship") {
+      else if (what_to_delete == "relationship") {
         string id_start, id_target;
         cout << "Please insert: <id_1> <id_2>:\n";
         cin >> id_start >> id_target;
@@ -227,10 +226,13 @@ int main_di_clara(/*int argc, char *argv[]*/) {
           cout << "Error! Please check the number of parameters." << endl;
         }
         if (!manager.deleteRelationship(id_start, id_target)) {
-          cout << "Error! The ids you have insert don't exist." << endl;
+          cout << "Error! The IDs you have inserted don't exist." << endl;
+        }
+        else {
+          //Il manager ha cancellato le relazioni. Cancellale anche dal file:
         }
       }
-      else if (what == "post") {
+      else if (what_to_delete == "post") {
         string who, tmp_news, d_t;
         pair<string, vector<Post>> post;
         Date tmp_date;
@@ -260,21 +262,22 @@ int main_di_clara(/*int argc, char *argv[]*/) {
         if (find != 1) {
           cout << "Post not found!" << endl;
         }
-        
-        
+      }
+      else {
+        std::cout << "Error! Cannot delete \"" << what_to_delete << "\"." << std::endl;
       }
     }
     else if (cmd == "add") {
       string what1, what2;
       command >> what1 >> what2;
       if (what1.empty()) {
-        cout << "Error! Check the numbers of parameters you have to insert." << endl;
+        cout << "Error! Invalid number of inserted parameters." << endl;
       }
       else {
         
         if (what1 == "account") {
           if (what2.empty()) {
-            cout << "Error! Check the numbers of parameters you have to insert." << endl;
+            cout << "Error! Invalid number of inserted parameters." << endl;
           }
           
           else if (what2 == "user") {
@@ -308,9 +311,9 @@ int main_di_clara(/*int argc, char *argv[]*/) {
             
             User new_u(tmp_n, tmp_s, tmp_id, tmp_a, tmp_sub, tmp_b, tmp_g);
             if (!manager.addAccount(new_u)) {
-              cout << "Error! Your id already exist!";
+              cout << "Error! The inserted ID is already taken.";
             }
-            else cout << "Done!";
+            else cout << "Done!" << endl;
             
             getline(cin, input);
             
@@ -341,7 +344,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
             
             Group new_g(tmp_n, tmp_id, tmp_loc, tmp_act, tmp_sub, tmp_inc);
             if (!manager.addAccount(new_g)) {
-              cout << "Error! Your id already exist!";
+              cout << "Error! The inserted ID is already taken.";
             }
             else cout << "Done!";
             getline(cin, input);
@@ -376,7 +379,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
             
             Company new_c(tmp_n, tmp_id, tmp_finloc, tmp_oploc, tmp_p, tmp_sub, tmp_inc);
             if (!manager.addAccount(new_c)) {
-              cout << "Error! Your id already exist!";
+              cout << "Error! The inserted ID is already taken.";
             }
             else cout << "Done!";
             getline(cin, input);
@@ -410,7 +413,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
             command >> who1 >> type_rel >> who2;
             
             if (who1.empty() || who2.empty() || type_rel.empty()) {
-              cout << "Error! Check the numbers of parameters you have to insert." << endl;
+              cout << "Error! Invalid number of inserted parameters." << endl;
             }
             error = manager.addRelationship(who1, who2, type_rel);
             //Analizzo il codice errore restituito da addRelationship.
@@ -475,22 +478,18 @@ int main_di_clara(/*int argc, char *argv[]*/) {
               cout << *it << endl;
             }
           }
-          
           if (!dislikes.empty()) {
             cout << "\nDislikes:" << endl;
             for (auto it = dislikes.begin(); it != dislikes.end(); it++) {
               cout << *it << endl;
             }
           }
-          
           cout << "Who wrote the post?:\n>";
           getline(cin, whose_ID);
           if (!manager.addPost(post_tmp, whose_ID))
             cout << "Something went wrong.." << endl;
         }
-        
       }
-      
     }
       
       //if (cmd)
