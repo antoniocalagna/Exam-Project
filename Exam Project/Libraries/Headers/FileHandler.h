@@ -72,7 +72,7 @@ std::string formatOutput(const IOBuffer::m_Post &post);
 
 
 //Controllo dei file
-Error accountsfile(std::stringstream &line);
+Error accountsFile(std::stringstream &line);
 Error relationsFile(std::stringstream &line);
 Error postsFile(std::stringstream &line);
 

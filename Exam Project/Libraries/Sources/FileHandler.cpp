@@ -308,7 +308,7 @@ std::string FH::formatOutput(const IOBuffer::m_Post &post) {
  * ## Checkers ##
  * ##############
  */
-FH::Error FH::accountsfile(std::stringstream &line) {
+FH::Error FH::accountsFile(std::stringstream &line) {
   std::string id, type_s;
   //Acquisisci e controlla l'ID
   std::getline(line, id, ',');                                  //Acquisisci l'ID
