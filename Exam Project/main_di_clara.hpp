@@ -234,7 +234,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
       }
       else if (what_to_delete == "post") {
         string who, tmp_news, d_t;
-        pair<string, vector<Post>> post;
+        vector<Post> Posts;
         Date tmp_date;
         Clock tmp_time;
         int find = 0;
@@ -243,7 +243,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
         if (who.empty()) {
           cout << "Error! You don't insert any id." << endl;
         }
-        post = manager.getPosts(who);
+        Posts = manager.getPosts(who);
         cout << "Please insert the news of the post you want to delete:\n";
         cin.ignore(); //Evita l'andata a capo
         getline(cin, tmp_news);
@@ -253,7 +253,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
         
         Post cmp_post(tmp_news, d_t);
         
-        for (auto it = post.second.begin(); it != post.second.end(); it++) {
+        for (auto it = Posts.begin(); it != Posts.end(); it++) {
           if (*it == cmp_post) {
             manager.deletePost(*it, who);
             find = 1;
