@@ -277,6 +277,16 @@ vector<Account> Manager::getAllAccounts() const
   return all; //vettore binary-sorted
 }
 
+char Manager::getAccountType(const std::string &ID) {
+  if(_map_users.count(ID) == 1) //L'ID è un utente
+    return Account::user_type;
+  else if (_map_groups.count(ID) == 1)
+    return Account::group_type;
+  else if (_map_companies.count(ID) == 1)
+    return Account::company_type;
+  return 0;
+}
+
 int Manager::addRelationship(const string &ID_start, const string &ID_target, const string &relationship)
 {
   if(!_exist_as_node(ID_start)) //Controllo che gli ID esistano.
