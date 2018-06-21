@@ -277,7 +277,7 @@ vector<Account> Manager::getAllAccounts() const
   return all; //vettore binary-sorted
 }
 
-char Manager::getAccountType(const std::string &ID) {
+char Manager::getAccountType(const std::string &ID) const {
   if(_map_users.count(ID) == 1) //L'ID è un utente
     return Account::user_type;
   else if (_map_groups.count(ID) == 1)
