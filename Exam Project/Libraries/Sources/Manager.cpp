@@ -940,7 +940,7 @@ vector<string> Manager::GenealogicalTree(const string &whose_ID) {
 
 
 //DA COMPLETARE
-vector<string> Manager::GenealogicalTree2(const string &whose_ID) {
+vector<string> Manager::GenealogicalTree2(const string &whose_ID ) {
   std::set<std::string> analyzed_nodes;
   std::pair<std::deque<std::string>, std::deque<int>> nodes_to_analyze;     //Pair di ID-Generazione
   std::map<int, std::vector<std::string>> generations;
@@ -955,14 +955,13 @@ vector<string> Manager::GenealogicalTree2(const string &whose_ID) {
     nodes_to_analyze.first.pop_front();
     current_generation = nodes_to_analyze.second.front();
     nodes_to_analyze.second.pop_front();
-    
-    std::vector<std::string> partners = _graph.branches(current_node, relation::partner);
+  
     std::vector<std::string> next_generation = _graph.branches(current_node, relation::parent); //Ricerca i nodi di cui il nodo attuale è genitore
     std::vector<std::string> previous_generation = _graph.branches(current_node, relation::born);
-    
+  
     generations[current_generation].push_back(current_node);
     analyzed_nodes.insert(current_node);
-    
+  
     for (int i = 0; i < previous_generation.size(); i++) {
       if (analyzed_nodes.find(previous_generation[i]) == analyzed_nodes.end() &&
           std::find(nodes_to_analyze.first.begin(),
@@ -973,7 +972,6 @@ vector<string> Manager::GenealogicalTree2(const string &whose_ID) {
         nodes_to_analyze.second.push_back(current_generation - 1);
       }
     }
-    previous_generation.clear();
     for (int i = 0; i < next_generation.size(); i++) {
       if (analyzed_nodes.find(next_generation[i]) == analyzed_nodes.end() &&
           std::find(nodes_to_analyze.first.begin(),
@@ -984,18 +982,6 @@ vector<string> Manager::GenealogicalTree2(const string &whose_ID) {
         nodes_to_analyze.second.push_back(current_generation + 1);
       }
     }
-    next_generation.clear();
-    for (int i = 0; i < partners.size(); i++) {
-      if (analyzed_nodes.find(partners[i]) == analyzed_nodes.end() &&
-          std::find(nodes_to_analyze.first.begin(),
-                    nodes_to_analyze.first.end(),
-                    partners[i])
-          == nodes_to_analyze.first.end()) {
-        nodes_to_analyze.first.push_back(partners[i]);
-        nodes_to_analyze.second.push_back(current_generation);
-      }
-    }
-    partners.clear();
   }
   return std::vector<std::string>();
 }
