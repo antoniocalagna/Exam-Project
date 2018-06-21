@@ -137,7 +137,7 @@ int main_2(int argc, char *argv[]) {
         std::string id;
         user_command >> id;
         std::vector<Post> posts = network.getPosts(id);
-        if (posts.size() == 0) {
+        if (posts.empty()) {
           std::cout << "No posts from " << id << " found" << std::endl;
         }
         else {
@@ -148,20 +148,20 @@ int main_2(int argc, char *argv[]) {
             std::vector<std::string> likes, dislikes;
             likes = posts[i].getLikes();
             dislikes = posts[i].getDislikes();
-            if (likes.size() != 0) {
+            if (!likes.empty()) {
               std::cout << "Likes: ";
-              for (int i = 0; i < likes.size(); i++) {
+              for (int j = 0; j < likes.size(); j++) {
                 std::cout << likes[i];
-                if (i != likes.size() - 1)
+                if (j != likes.size() - 1)
                   std::cout << ",";
               }
               std::cout << std::endl;
             }
-            if (dislikes.size() != 0) {
+            if (!dislikes.empty()) {
               std::cout << "Disikes: ";
-              for (int i = 0; i < dislikes.size(); i++) {
-                std::cout << dislikes[i];
-                if (i != dislikes.size() - 1)
+              for (int j = 0; j < dislikes.size(); j++) {
+                std::cout << dislikes[j];
+                if (j != dislikes.size() - 1)
                   std::cout << ",";
               }
               std::cout << std::endl;
