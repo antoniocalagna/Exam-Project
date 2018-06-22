@@ -820,14 +820,35 @@ int main_di_clara(/*int argc, char *argv[]*/) {
               cout << "Error! " << id << "it's not a company." << endl;
             }
           } else if (what2 == "subsidiaries") {
-
+            cout << "Please insert the id of the company:\n>";
+            cin >> id;
+            num = manager.NumSubsidiaries(id);
+            if (num == 0) {
+              cout << "Error! " << id << "it's not a company." << endl;
+            }
           } else if (what2 == "members") {
-
+            cout << "Please insert the id of the group:\n>";
+            cin >> id;
+            num = manager.NumMembers(id);
+            if (num == 0) {
+              cout << "Error! " << id << "it's not a group." << endl;
+            }
           } else if (what2 == "born_after") {
+            string date;
+            Date born_d;
+            cout << "Please insert the date:\n>";
+            cin >> date;
+            born_d.scanDateByStr(date);
+            num = manager.NumBornAfter(born_d);
+            if (num == 0) {
+              cout << "Error! The date is not valid." << endl;
+            }
 
           } else {
             cout << "Error! Cannot get the number of:" << what2 << endl;
           }
+
+          cout << "The number of "<< what2 <<"is " << num <<endl;
         }
 
       }
