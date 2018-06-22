@@ -417,7 +417,7 @@ bool Manager::setReaction(const bool &like_1_dislike_0, const bool &add1_remove_
   return false; //Il post non è stato trovato
 }
 
-bool Manager::add_delLike_Dislike(const bool &like_1_dislike_0, const bool &add1_remove_0, const pair<string,Post> &post_liked, const std::string &ID)
+bool Manager::setReaction(const bool &like_1_dislike_0, const bool &add1_remove_0, const pair<string,Post> &post_liked, const std::string &ID)
 {
   //Controllo l'esistenza degli ID nella mappa dei vettori di Post.
   //Per l'univocità degli ID questo controllo si riflette anche sull'esistenza dell'ID stesso in generale.
