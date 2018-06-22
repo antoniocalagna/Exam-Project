@@ -492,10 +492,10 @@ int main_di_clara(/*int argc, char *argv[]*/) {
         string who, tmp_news, d_t;
         vector<Post> post;
         int find = 0;
-        cout << "Please insert the id whose user wrote this post:\n>";
+        cout << "Please insert the ID whose user wrote this post:\n>";
         cin >> who;
         if (who.empty()) {
-          cout << "Error! You don't have insert any id." << endl;
+          cout << "Error! You did not write any ID." << endl;
         }
         post = manager.getPosts(who);
         cout << "Please insert the news of the target post:\n>";
@@ -776,7 +776,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
           if (manager.setReaction(0, 1, cmp_post, who)) {
             cout << "Done!" << endl;
           } else {
-            cout << "Error!" << endl; //1-NO ID, 2-NO AUTOLIKES, 3-NO POST
+            cout << "Error! I could not set this reaction." << endl; //1-NO ID, 2-NO AUTOLIKES, 3-NO POST
           }
 
         }
@@ -788,7 +788,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
       string what1, what2;
       command >> what1 >> what2;
       if (what2 == "") {
-        cout << "Error! Check the numbers of parameters" << endl;
+        cout << "Error! I do not understand what statistic you'd like to retreive." << endl;
       } else {
         if (what1 == "number") {
           size_t num;
@@ -802,59 +802,59 @@ int main_di_clara(/*int argc, char *argv[]*/) {
           else if (what2 == "companies")
             num = manager.NumCompanies();
           else if (what2 == "friends") {
-            cout << "Please insert the id:\n>";
+            cout << "Please insert the target ID:\n>";
             cin >> id;
             num = manager.NumFriends(id);
             if (num == 0) {
-              cout << "Error! " << id << "it's not a user." << endl;
+              cout << "Error! " << id << "is not a User or it does not exist." << endl;
             }
           } else if (what2 == "relatives") {
             cout << "Please insert the id:\n>";
             cin >> id;
             num = manager.NumRelatives(id);
             if (num == 0) {
-              cout << "Error! " << id << "it's not a user." << endl;
+              cout << "Error! " << id << "is not a User or it does not exist." << endl;
             }
           } else if (what2 == "employees") {
             cout << "Please insert the id of the company employer:\n>";
             cin >> id;
             num = manager.NumEmployees(id);
             if (num == 0) {
-              cout << "Error! " << id << "it's not a company." << endl;
+              cout << "Error! " << id << "is not a User or it does not exist." << endl;
             }
           } else if (what2 == "subsidiaries") {
-            cout << "Please insert the id of the company:\n>";
+            cout << "Please insert the target ID:\n>";
             cin >> id;
             num = manager.NumSubsidiaries(id);
             if (num == 0) {
-              cout << "Error! " << id << "it's not a company." << endl;
+              cout << "Error! " << id << "is not a Company or it does not exist." << endl;
             }
           } else if (what2 == "members") {
-            cout << "Please insert the id of the group:\n>";
+            cout << "Please insert the target ID:\n>";
             cin >> id;
             num = manager.NumMembers(id);
             if (num == 0) {
-              cout << "Error! " << id << "it's not a group." << endl;
+              cout << "Error! " << id << "is not a Group or it does not exist." << endl;
             }
           } else if (what2 == "born_after") {
             string date;
             Date born_d;
-            cout << "Please insert the date:\n>";
+            cout << "Please insert the starting date (in format dd/mm/yyyy):\n>";
             cin >> date;
             if (born_d.CheckDate(date)) {
               born_d.scanDateByStr(date);
               num = manager.NumBornAfter(born_d);
             } else {
-              cout << "Error! The date is not valid." << endl;
+              cout << "Error! This date is not valid." << endl;
               num = 0;
             }
 
           } else {
-            cout << "Error! Cannot get the number of:" << what2 << endl;
+            cout << "Error! I could not retrieve information about users born after this date." << endl;
             num = 0;
           }
 
-          cout << "The number of " << what2 << "is " << num << endl;
+          cout << "The number of people born after your date is: " << num << endl;
         }
 
       }
