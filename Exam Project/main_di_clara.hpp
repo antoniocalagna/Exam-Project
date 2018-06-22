@@ -816,7 +816,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
             cout << "Please insert the id of the company employer:\n>";
             cin >> id;
             num = manager.NumEmployees(id);
-            if (num == -1) {
+            if (num == 0) {
               cout << "Error! " << id << "it's not a company." << endl;
             }
           } else if (what2 == "subsidiaries") {
@@ -838,17 +838,20 @@ int main_di_clara(/*int argc, char *argv[]*/) {
             Date born_d;
             cout << "Please insert the date:\n>";
             cin >> date;
-            born_d.scanDateByStr(date);
-            num = manager.NumBornAfter(born_d);
-            if (num == 0) {
+            if (born_d.CheckDate(date)) {
+              born_d.scanDateByStr(date);
+              num = manager.NumBornAfter(born_d);
+            } else {
               cout << "Error! The date is not valid." << endl;
+              num = 0;
             }
 
           } else {
             cout << "Error! Cannot get the number of:" << what2 << endl;
+            num = 0;
           }
 
-          cout << "The number of "<< what2 <<"is " << num <<endl;
+          cout << "The number of " << what2 << "is " << num << endl;
         }
 
       }
