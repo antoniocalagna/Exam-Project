@@ -76,6 +76,22 @@ int main_di_clara(/*int argc, char *argv[]*/) {
       cout << "add post\n"
               "delete post\n"
            << endl;
+      cout << "add like\n"
+              "delete like\n"
+              "add dislike\n"
+              "delete dislike\n"
+           << endl;
+      cout << "stats number accounts\n" //DA UNIRE
+              "stats number users\n"
+              "stats number groups\n"
+              "stats number companies\n"
+              "stats number friends\n"
+              "stats number relatives\n"
+              "stats number employees\n"
+              "stats number subsidiaries\n"
+              "stats number members\n"
+              "stats number born_after\n"
+           << endl;
       cout << ">";
 
       getline(cin, input);
@@ -446,6 +462,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
                << c.getInception() << endl;
         }
       }
+
     } else if (cmd == "delete") {
       string what;
       command >> what;
@@ -499,8 +516,12 @@ int main_di_clara(/*int argc, char *argv[]*/) {
         if (find != 1) {
           cout << "Post not found!" << endl;
         }
-
-
+      } else if (what == "like") {
+        //FARE
+      } else if (what == "dislike") {
+        //FARE
+      } else {
+        cout << "You can't delete " << what << "." << endl;
       }
     } else if (cmd == "add") {
       string what1, what2;
@@ -763,12 +784,83 @@ int main_di_clara(/*int argc, char *argv[]*/) {
 
       }
 
-    }
+    } else if (cmd == "stats") {
+      string what1, what2;
+      command >> what1 >> what2;
+      if (what2 == "") {
+        cout << "Error! Check the numbers of parameters" << endl;
+      } else {
+        if (what1 == "number") {
+          size_t num;
+          string id;
+          if (what2 == "accounts")
+            num = manager.NumAccounts();
+          else if (what2 == "users")
+            num = manager.NumUsers();
+          else if (what2 == "groups")
+            num = manager.NumGroups();
+          else if (what2 == "companies")
+            num = manager.NumCompanies();
+          else if (what2 == "friends") {
+            cout << "Please insert the id:\n>";
+            cin >> id;
+            num = manager.NumFriends(id);
+            if (num == 0) {
+              cout << "Error! " << id << "it's not a user." << endl;
+            }
+          } else if (what2 == "relatives") {
+            cout << "Please insert the id:\n>";
+            cin >> id;
+            num = manager.NumRelatives(id);
+            if (num == 0) {
+              cout << "Error! " << id << "it's not a user." << endl;
+            }
+          } else if (what2 == "employees") {
+            cout << "Please insert the id of the company employer:\n>";
+            cin >> id;
+            num = manager.NumEmployees(id);
+            if (num == 0) {
+              cout << "Error! " << id << "it's not a company." << endl;
+            }
+          } else if (what2 == "subsidiaries") {
+            cout << "Please insert the id of the company:\n>";
+            cin >> id;
+            num = manager.NumSubsidiaries(id);
+            if (num == 0) {
+              cout << "Error! " << id << "it's not a company." << endl;
+            }
+          } else if (what2 == "members") {
+            cout << "Please insert the id of the group:\n>";
+            cin >> id;
+            num = manager.NumMembers(id);
+            if (num == 0) {
+              cout << "Error! " << id << "it's not a group." << endl;
+            }
+          } else if (what2 == "born_after") {
+            string date;
+            Date born_d;
+            cout << "Please insert the date:\n>";
+            cin >> date;
+            if (born_d.CheckDate(date)) {
+              born_d.scanDateByStr(date);
+              num = manager.NumBornAfter(born_d);
+            } else {
+              cout << "Error! The date is not valid." << endl;
+              num = 0;
+            }
 
-      //if (cmd)
+          } else {
+            cout << "Error! Cannot get the number of:" << what2 << endl;
+            num = 0;
+          }
+
+          cout << "The number of " << what2 << "is " << num << endl;
+        }
+
+      }
 
 
-    else if (cmd == "exit") {
+    } else if (cmd == "exit") {
       exit = true;
     } else {
       std::cout << "Command " << cmd << " unknown." << std::endl;

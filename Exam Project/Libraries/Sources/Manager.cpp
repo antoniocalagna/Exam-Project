@@ -566,7 +566,7 @@ size_t Manager::NumRelatives(const std::string &whose_ID) const
 size_t Manager::NumEmployees(const std::string &company_employer) const
 {
   if (_map_companies.count(company_employer)==0)
-    return -1; //Controllo che sia un'azienda.
+    return 0; //Controllo che sia un'azienda.
   
   return _graph.outDegree_withEdge(company_employer, relation::employee);
 }
