@@ -782,7 +782,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
           cout << "Please insert the news of the target post:\n>"; //AIUTO come posso scriverlo in quella lingua malefica
           cin.ignore();
           getline(cin, tmp_news);
-          cout << "Please insert the date and the time of the post you want to delete:\n>";
+          cout << "Please insert the date and the time (in format dd/mm/yyyy hh:mm) of the target post:\n>";
           cin.ignore();
           getline(cin, d_t);
           cout << "Please insert the id whose user would react to this post:\n>";
@@ -802,7 +802,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
           cout << "Please insert the news of the target post:\n>"; //AIUTO come posso scriverlo in quella lingua malefica
           cin.ignore();
           getline(cin, tmp_news);
-          cout << "Please insert the date and the time of the post you want to delete:\n>";
+          cout << "Please insert the date and the time (in format dd/mm/yyyy hh:mm) of the target post:\n>";
           cin.ignore();
           getline(cin, d_t);
           cout << "Please insert the id whose user would react to this post:\n>";
