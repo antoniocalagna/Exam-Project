@@ -518,9 +518,46 @@ int main_di_clara(/*int argc, char *argv[]*/) {
           cout << "Post not found!" << endl;
         }
       } else if (what == "like") {
-        //FARE
+        string who, tmp_news, d_t;
+        pair<string, vector<Post>> post;
+
+        cout << "Please insert the news from which you want to delete 'like':\n>"; //AIUTO come posso scriverlo in quella lingua malefica
+        cin.ignore();
+        getline(cin, tmp_news);
+        cout << "Please insert the date and the time of the post:\n>";
+        cin.ignore();
+        getline(cin, d_t);
+        cout << "Please insert the id who want to delete like:\n>"; //inglesissimo
+        cin >> who;
+
+        Post cmp_post(tmp_news, d_t);
+
+        if (manager.setReaction(1, 0, cmp_post, who)) {
+          cout << "Done!" << endl;
+        } else {
+          cout << "Error!" << endl; //1-NO ID, 2-NO AUTOLIKES, 3-NO POST
+        }
+
       } else if (what == "dislike") {
-        //FARE
+        string who, tmp_news, d_t;
+        pair<string, vector<Post>> post;
+
+        cout << "Please insert the news from which you want to delete 'dislike':\n>"; //AIUTO come posso scriverlo in quella lingua malefica
+        cin.ignore();
+        getline(cin, tmp_news);
+        cout << "Please insert the date and the time of the post:\n>";
+        cin.ignore();
+        getline(cin, d_t);
+        cout << "Please insert the id who want to delete dislike:\n>";
+        cin >> who;
+
+        Post cmp_post(tmp_news, d_t);
+
+        if (manager.setReaction(0, 0, cmp_post, who)) {
+          cout << "Done!" << endl;
+        } else {
+          cout << "Error!" << endl; //1-NO ID, 2-NO AUTOLIKES, 3-NO POST
+        }
       } else {
         cout << "You can't delete " << what << "." << endl;
       }
@@ -741,7 +778,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
                   << "Please insert the news of the post you want to 'like':\n>"; //AIUTO come posso scriverlo in quella lingua malefica
           cin.ignore();
           getline(cin, tmp_news);
-          cout << "Please insert the date and the time of the post you want to delete:\n>";
+          cout << "Please insert the date and the time of the post:\n>";
           cin.ignore();
           getline(cin, d_t);
           cout << "Please insert the id who want to put like:\n>";
@@ -762,7 +799,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
                   << "Please insert the news of the post you want to 'like':\n>"; //AIUTO come posso scriverlo in quella lingua malefica
           cin.ignore();
           getline(cin, tmp_news);
-          cout << "Please insert the date and the time of the post you want to delete:\n>";
+          cout << "Please insert the date and the time of the post:\n>";
           cin.ignore();
           getline(cin, d_t);
           cout << "Please insert the id who want to put like:\n>";
