@@ -70,8 +70,8 @@ public:
   
   bool addPost (const Post &post_to_add, const string &whose_ID);
   bool deletePost (const Post &post_to_delete, const string &whose_ID);
-  bool addLike_Dislike (const bool &like_1_dislike_0, const Post &post_liked, const string &ID);
-  bool addLike_Dislike (const bool &like_1_dislike_0, const pair<string,Post> &post_liked, const string &ID);
+  bool setReaction (const bool &like_1_dislike_0, const bool &add1_remove_0, const Post &post_liked, const string &ID);
+  bool setReaction (const bool &like_1_dislike_0, const bool &add1_remove_0, const pair<string,Post> &post_liked, const string &ID);
   
   //Statistics Functions
   

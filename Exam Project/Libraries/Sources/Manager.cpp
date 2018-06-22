@@ -372,7 +372,7 @@ bool Manager::deletePost(const Post &post_to_delete, const std::string &whose_ID
   return true;
 }
 
-bool Manager::addLike_Dislike(const bool &like_1_dislike_0, const Post &post_liked, const std::string &ID)
+bool Manager::setReaction(const bool &like_1_dislike_0, const bool &add1_remove_0, const Post &post_liked, const std::string &ID)
 {
   //Controllo l'esistenza dell'ID nella mappa dei vettori di Post.
   
@@ -394,12 +394,20 @@ bool Manager::addLike_Dislike(const bool &like_1_dislike_0, const Post &post_lik
         //Se lo trovo aggiungo il like/dislike
         if (like_1_dislike_0)
         {
-          it_post->AddLike(ID);
+          if (add1_remove_0)
+            it_post->AddLike(ID);
+          else
+            it_post->RemoveLike(ID);
+          
           return true;
         }
         else
         {
-          it_post->AddDislike(ID);
+          if (add1_remove_0)
+            it_post->AddDislike(ID);
+          else
+            it_post->RemoveDislike(ID);
+          
           return true;
         }
       }
@@ -409,7 +417,7 @@ bool Manager::addLike_Dislike(const bool &like_1_dislike_0, const Post &post_lik
   return false; //Il post non è stato trovato
 }
 
-bool Manager::addLike_Dislike(const bool &like_1_dislike_0, const pair<string,Post> &post_liked, const std::string &ID)
+bool Manager::setReaction(const bool &like_1_dislike_0, const bool &add1_remove_0, const pair<string,Post> &post_liked, const std::string &ID)
 {
   //Controllo l'esistenza degli ID nella mappa dei vettori di Post.
   //Per l'univocità degli ID questo controllo si riflette anche sull'esistenza dell'ID stesso in generale.
@@ -429,14 +437,21 @@ bool Manager::addLike_Dislike(const bool &like_1_dislike_0, const pair<string,Po
     if (*it_post==post_liked.second)
     {
       //Trovato il post di interesse aggiungo il like/dislike
-      if (like_1_dislike_0)
+      if (like_1_dislike_0) //Controllo se si tratta di un like o un dislike
       {
-        it_post->AddLike(ID);
+        if (add1_remove_0) //Controllo se è stata richiesta l'aggiunta o la rimozione
+          it_post->AddLike(ID);
+        else
+          it_post->RemoveLike(ID);
+        
         return true;
       }
       else
       {
-        it_post->AddDislike(ID);
+        if (add1_remove_0)
+          it_post->AddLike(ID);
+        else
+          it_post->RemoveDislike(ID);
         return true;
       }
     }

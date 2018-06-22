@@ -749,7 +749,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
 
           Post cmp_post(tmp_news, d_t);
 
-          if (manager.addLike_Dislike(1, cmp_post, who)) {
+          if (manager.setReaction(1, 1, cmp_post, who)) {
             cout << "Done!" << endl;
           } else {
             cout << "Error!" << endl; //1-NO ID, 2-NO AUTOLIKES, 3-NO POST
@@ -770,7 +770,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
 
           Post cmp_post(tmp_news, d_t);
 
-          if (manager.addLike_Dislike(0, cmp_post, who)) {
+          if (manager.setReaction(0, 1, cmp_post, who)) {
             cout << "Done!" << endl;
           } else {
             cout << "Error!" << endl; //1-NO ID, 2-NO AUTOLIKES, 3-NO POST

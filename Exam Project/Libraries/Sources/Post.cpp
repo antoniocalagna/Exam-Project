@@ -175,7 +175,6 @@ bool Post::AddLike(const string &id) {
     }
   }
   return false;
-  
 }
 
 bool Post::AddDislike(const string &id) {
@@ -189,10 +188,20 @@ bool Post::AddDislike(const string &id) {
   return false;
 }
 
-void Post::RemoveLike(const string &id) {
-  _likes.erase(id);
+bool Post::RemoveLike(const string &id) {
+  if (LikeExists(id)) {
+    _likes.erase(id);
+      return true;
+    }
+  
+  return false;
 }
 
-void Post::RemoveDislike(const string &id) {
-  _dislikes.erase(id);
+bool Post::RemoveDislike(const string &id) {
+  if (LikeExists(id)) {
+    _dislikes.erase(id);
+    return true;
+  }
+  
+  return false;
 }

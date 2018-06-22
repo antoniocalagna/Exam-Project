@@ -45,14 +45,13 @@ public:
   //Others
   bool AddLike(const string &id);
   bool AddDislike(const string &id);
-  void RemoveLike(const string &id);
-  void RemoveDislike(const string &id);
+  bool RemoveLike(const string &id);
+  bool RemoveDislike(const string &id);
   bool LikeExists(const string &ID) const;
   bool DislikeExists(const string &ID) const;
   int NumLikes() const; //numero likes
   int NumDislikes() const;
   float RatioReaction() const; //rapporto LIKE/(DISLIKE+LIKE) così da poter studiare i post più 'popolari'
-  
   
 private:
   string _news;
