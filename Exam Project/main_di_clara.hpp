@@ -76,6 +76,22 @@ int main_di_clara(/*int argc, char *argv[]*/) {
       cout << "add post\n"
               "delete post\n"
            << endl;
+      cout << "add like\n"
+              "delete like\n"
+              "add dislike\n"
+              "delete dislike\n"
+           << endl;
+      cout << "stats number accounts\n" //DA UNIRE
+              "stats number users\n"
+              "stats number groups\n"
+              "stats number companies\n"
+              "stats number friends\n"
+              "stats number relatives\n"
+              "stats number employees\n"
+              "stats number subsidiaries\n"
+              "stats number members\n"
+              "stats number born_after\n"
+           << endl;
       cout << ">";
 
       getline(cin, input);
@@ -447,6 +463,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
                << c.getInception() << endl;
         }
       }
+
     } else if (cmd == "delete") {
       string what;
       command >> what;
@@ -500,8 +517,12 @@ int main_di_clara(/*int argc, char *argv[]*/) {
         if (find != 1) {
           cout << "Post not found!" << endl;
         }
-
-
+      } else if (what == "like") {
+        //FARE
+      } else if (what == "dislike") {
+        //FARE
+      } else {
+        cout << "You can't delete " << what << "." << endl;
       }
     } else if (cmd == "add") {
       string what1, what2;
@@ -716,7 +737,8 @@ int main_di_clara(/*int argc, char *argv[]*/) {
           string who, tmp_news, d_t;
           pair<string, vector<Post>> post;
 
-          cout << "Please insert the news of the post you want to 'like':\n>"; //AIUTO come posso scriverlo in quella lingua malefica
+          cout
+                  << "Please insert the news of the post you want to 'like':\n>"; //AIUTO come posso scriverlo in quella lingua malefica
           cin.ignore();
           getline(cin, tmp_news);
           cout << "Please insert the date and the time of the post you want to delete:\n>";
@@ -736,7 +758,8 @@ int main_di_clara(/*int argc, char *argv[]*/) {
           string who, tmp_news, d_t;
           pair<string, vector<Post>> post;
 
-          cout << "Please insert the news of the post you want to 'like':\n>"; //AIUTO come posso scriverlo in quella lingua malefica
+          cout
+                  << "Please insert the news of the post you want to 'like':\n>"; //AIUTO come posso scriverlo in quella lingua malefica
           cin.ignore();
           getline(cin, tmp_news);
           cout << "Please insert the date and the time of the post you want to delete:\n>";
@@ -758,12 +781,59 @@ int main_di_clara(/*int argc, char *argv[]*/) {
 
       }
 
-    }
+    } else if (cmd == "stats") {
+      string what1, what2;
+      command >> what1 >> what2;
+      if (what2 == "") {
+        cout << "Error! Check the numbers of parameters" << endl;
+      } else {
+        if (what1 == "number") {
+          size_t num;
+          string id;
+          if (what2 == "accounts")
+            num = manager.NumAccounts();
+          else if (what2 == "users")
+            num = manager.NumUsers();
+          else if (what2 == "groups")
+            num = manager.NumGroups();
+          else if (what2 == "companies")
+            num = manager.NumCompanies();
+          else if (what2 == "friends") {
+            cout << "Please insert the id:\n>";
+            cin >> id;
+            num = manager.NumFriends(id);
+            if (num == 0) {
+              cout << "Error! " << id << "it's not a user." << endl;
+            }
+          } else if (what2 == "relatives") {
+            cout << "Please insert the id:\n>";
+            cin >> id;
+            num = manager.NumRelatives(id);
+            if (num == 0) {
+              cout << "Error! " << id << "it's not a user." << endl;
+            }
+          } else if (what2 == "employees") {
+            cout << "Please insert the id of the company employer:\n>";
+            cin >> id;
+            num = manager.NumEmployees(id);
+            if (num == -1) {
+              cout << "Error! " << id << "it's not a company." << endl;
+            }
+          } else if (what2 == "subsidiaries") {
 
-      //if (cmd)
+          } else if (what2 == "members") {
+
+          } else if (what2 == "born_after") {
+
+          } else {
+            cout << "Error! Cannot get the number of:" << what2 << endl;
+          }
+        }
+
+      }
 
 
-    else if (cmd == "exit") {
+    } else if (cmd == "exit") {
       exit = true;
     } else {
       std::cout << "Command " << cmd << " unknown." << std::endl;
