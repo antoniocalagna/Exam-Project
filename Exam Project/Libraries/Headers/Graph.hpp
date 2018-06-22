@@ -11,7 +11,7 @@
 #include <functional>
 #include <string>
 
-template<typename node_T, typename edge_T>
+template<typename node_T, typename edge_T = bool>
 class Graph {
 public:
   /**Aliases */
