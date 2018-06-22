@@ -520,13 +520,13 @@ int main_di_clara(/*int argc, char *argv[]*/) {
         string who, tmp_news, d_t;
         pair<string, vector<Post>> post;
 
-        cout << "Please insert the news from which you want to delete 'like':\n>"; //AIUTO come posso scriverlo in quella lingua malefica
+        cout << "Please insert the news of the target post:\n>";
         cin.ignore();
         getline(cin, tmp_news);
-        cout << "Please insert the date and the time of the post:\n>";
+        cout << "Please insert the date and the time (in format dd/mm/yyyy hh:mm) of the target post:\n>";
         cin.ignore();
         getline(cin, d_t);
-        cout << "Please insert the id who want to delete like:\n>"; //inglesissimo
+        cout << "Please insert the ID whose User did not like this post anymore:\n>";
         cin >> who;
 
         Post cmp_post(tmp_news, d_t);
@@ -534,20 +534,20 @@ int main_di_clara(/*int argc, char *argv[]*/) {
         if (manager.setReaction(1, 0, cmp_post, who)) {
           cout << "Done!" << endl;
         } else {
-          cout << "Error!" << endl; //1-NO ID, 2-NO AUTOLIKES, 3-NO POST
+          cout << "Error! I could not remove this like" << endl; //1-NO ID, 2-NO AUTOLIKES, 3-NO POST
         }
 
       } else if (what == "dislike") {
         string who, tmp_news, d_t;
         pair<string, vector<Post>> post;
 
-        cout << "Please insert the news from which you want to delete 'dislike':\n>"; //AIUTO come posso scriverlo in quella lingua malefica
+        cout << "Please insert the news of the target post:\n>";
         cin.ignore();
         getline(cin, tmp_news);
-        cout << "Please insert the date and the time of the post:\n>";
+        cout << "Please insert the date and the time (in format dd/mm/yyyy hh:mm) of the target post:\n>";
         cin.ignore();
         getline(cin, d_t);
-        cout << "Please insert the id who want to delete dislike:\n>";
+        cout << "Please insert the ID whose User did not dislike this post anymore:\n>";
         cin >> who;
 
         Post cmp_post(tmp_news, d_t);
@@ -555,10 +555,10 @@ int main_di_clara(/*int argc, char *argv[]*/) {
         if (manager.setReaction(0, 0, cmp_post, who)) {
           cout << "Done!" << endl;
         } else {
-          cout << "Error!" << endl; //1-NO ID, 2-NO AUTOLIKES, 3-NO POST
+          cout << "Error! I could not remove this dislike" << endl; //1-NO ID, 2-NO AUTOLIKES, 3-NO POST
         }
       } else {
-        cout << "You can't delete " << what << "." << endl;
+        cout << "I do not understand what you'd like to delete." << endl;
       }
     } else if (cmd == "add") {
       string what1, what2;
@@ -846,14 +846,14 @@ int main_di_clara(/*int argc, char *argv[]*/) {
               cout << "Error! " << id << "is not a User or it does not exist." << endl;
             }
           } else if (what2 == "relatives") {
-            cout << "Please insert the id:\n>";
+            cout << "Please insert the ID:\n>";
             cin >> id;
             num = manager.NumRelatives(id);
             if (num == 0) {
               cout << "Error! " << id << "is not a User or it does not exist." << endl;
             }
           } else if (what2 == "employees") {
-            cout << "Please insert the id of the company employer:\n>";
+            cout << "Please insert the ID of the company employer:\n>";
             cin >> id;
             num = manager.NumEmployees(id);
             if (num == 0) {
