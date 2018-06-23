@@ -7,14 +7,12 @@
 using namespace std;
 
 int main_di_clara(/*int argc, char *argv[]*/) {
-  //metterei una introduzione al funzionamento per l'utente, del tipo : hi, this is a console menu, write your commands, or
-  //write help for the list of commands (magari in inglese vero)
-  /*FH::FileHandler accounts_fh,          //FileHandler per il controllo e l'acquisizione dei dati da file
+  FH::FileHandler accounts_fh,          //FileHandler per il controllo e l'acquisizione dei dati da file
           relations_fh,
           posts_fh;
   IOBuffer buffer;                      //Buffer necessario per l'acquisizione dei dati
   
-  //Controllo dei parametri passati da linea di comando
+ /* //Controllo dei parametri passati da linea di comando
   if (argc != 0 && argc != 4) {
     cerr << "Parameters error. Plese insert input file names as follows: <accounts_file> <relations_file> <posts_file>.\n"
          << "You can also execute the program without specifying the files to open, and choose them later." << endl;
@@ -28,7 +26,49 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     accounts_fh.open(argv[3]);
   }*/
 
+  accounts_fh.fetchData(FH::accountsFile, buffer);
+  relations_fh.fetchData(FH::relationsFile, buffer);
+  posts_fh.fetchData(FH::postsFile, buffer);
   Manager manager;
+  User user_tmp;
+  Company comp_tmp;
+  Group group_tmp;
+  IOBuffer::m_Post post_tmp;
+  IOBuffer::Relation relation_tmp;
+  while(!buffer.usersEmpty()){
+    buffer >> user_tmp;
+    if(!manager.addAccount(user_tmp)){
+      //sto cercando di inserire un id già presente
+    }
+  }
+  while (!buffer.groupsEmpty()){
+    buffer >> group_tmp;
+    if(!manager.addAccount(group_tmp)){
+      //sto cercando di inserire un id già presente
+    }
+  }
+  while (!buffer.companiesEmpty()){
+    buffer >> comp_tmp;
+    if(!manager.addAccount(comp_tmp)){
+      //sto cercando di inserire un id già presente
+    }
+  }
+  while (!buffer.relationsEmpty()){
+    buffer >> relation_tmp;
+    if(!manager.addRelationship(relation_tmp.first.first, relation_tmp.first.second, relation_tmp.second)){
+
+    }
+  }
+  while (!buffer.postsEmpty()){
+    buffer >> post_tmp;
+    if(!manager.addPost(post_tmp.second, post_tmp.first)){
+
+    }
+
+  }
+
+
+
   string input;
   string cmd;
   bool exit = false;
