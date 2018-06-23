@@ -31,6 +31,10 @@ bool IOBuffer::postsEmpty() const { return _posts.empty(); }
 
 bool IOBuffer::relationsEmpty() const { return _relations.empty(); }
 
+size_t IOBuffer::size() const {
+  return _users.size() + _groups.size() + _companies.size() + _posts.size() + _relations.size();
+}
+
 void IOBuffer::clear() {
   while (!_users.empty())
     _users.pop_front();
