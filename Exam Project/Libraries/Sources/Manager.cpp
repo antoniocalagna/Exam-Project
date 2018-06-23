@@ -988,7 +988,7 @@ vector<vector<string>> Manager::GenealogicalTree(const string &whose_ID) const {
 vector<string> Manager::FormatTree (const vector<vector<string>> &tree_to_format) const
 {
   
-  if (tree_to_format.size() <= 3)
+  if (tree_to_format.size() < 3)
   {
     //L'albero non è valido
     return vector<string>();
