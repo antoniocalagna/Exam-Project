@@ -807,7 +807,7 @@ string Manager::RatioReactionAccount(const bool &best_1_worst_0) const
     
     if (ratio!=0)
     {
-      if (best_1_worst_0==true)
+      if (best_1_worst_0)
       {
         if (ratio>best_ratio)
         {
@@ -815,7 +815,7 @@ string Manager::RatioReactionAccount(const bool &best_1_worst_0) const
           best_ratio=ratio;
         }
       }
-      if (best_1_worst_0==false)
+      if (!best_1_worst_0)
       {
         if (ratio<best_ratio)
         {
@@ -869,7 +869,7 @@ vector<string> Manager::LonerPeople(const unsigned int &relations, const unsigne
         isLoner=false;
     }
     
-    if(isLoner==true)
+    if(isLoner)
       set.insert(it->second.getID());
     else
       isLoner=true; //per ricominciare il ciclo correttamente
@@ -1007,7 +1007,7 @@ vector<string> Manager::FormatTree (const vector<vector<string>> &tree_to_format
       ss << *it_gen << " ";
       
       vector<string> info_about = _graph.branches(*it_gen, relation::partner); //Ricavo le eventuali informazioni sui partner
-      if (info_about.size()!=0)
+      if (!info_about.empty())
       {
         ss<<"(+";
         for (auto it_partners=info_about.begin(); it_partners!=info_about.end(); it_partners++)
@@ -1018,7 +1018,7 @@ vector<string> Manager::FormatTree (const vector<vector<string>> &tree_to_format
       }
       
       info_about = _graph.branches(*it_gen, relation::born); //Ricavo le eventuali informazioni sui predecessori
-      if (info_about.size()!=0)
+      if (!info_about.empty())
       {
         ss<<"(from:";
         for (auto it_parent=info_about.begin(); it_parent!=info_about.end(); it_parent++)
