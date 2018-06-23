@@ -43,6 +43,7 @@ public:
   bool companiesEmpty() const;
   bool postsEmpty() const;
   bool relationsEmpty() const;
+  size_t size() const;
   
   /**General*/
   void clear();

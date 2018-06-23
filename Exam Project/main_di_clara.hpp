@@ -62,7 +62,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
   while (!buffer.postsEmpty()){
     buffer >> post_tmp;
     if(!manager.addPost(post_tmp.second, post_tmp.first)){
-
+    
     }
 
   }

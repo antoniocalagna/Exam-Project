@@ -919,6 +919,12 @@ vector<string> Manager::LonerPeople(const unsigned int &relations, const unsigne
 //DA COMPLETARE
 vector<vector<string>> Manager::GenealogicalTree(const string &whose_ID) const {
   //Rappresenta le varie generazioni della famiglia di whose_ID
+  //Controlla che l'ID richiesto esista
+  if(_map_users.count(whose_ID) == 0) {
+    //L'account non esiste
+    return std::vector<std::vector<std::string>>();       //Ritorna un vettore vuoto
+  }
+  
   using Node = std::pair<std::string, int>;
   
   std::set<std::string> analyzed_nodes;                   //Nodi già analizzati
@@ -981,6 +987,13 @@ vector<vector<string>> Manager::GenealogicalTree(const string &whose_ID) const {
 
 vector<string> Manager::FormatTree (const vector<vector<string>> &tree_to_format) const
 {
+  
+  if (tree_to_format.size() <= 3)
+  {
+    //L'albero non è valido
+    return vector<string>();
+  }
+  
   vector<string> tree;
   
   int gen_num = 1; //Conto il numero di generazioni ai fini della formattazione
