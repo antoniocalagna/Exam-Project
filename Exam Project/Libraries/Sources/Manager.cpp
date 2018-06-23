@@ -944,7 +944,7 @@ vector<vector<string>> Manager::GenealogicalTree(const string &whose_ID) const {
       bool node_in_list =
               std::find_if(nodes_to_analyze.begin(),
                            nodes_to_analyze.end(),
-                           [previous_generation](const Node &n) { return n.first == previous_generation[i]; }) //Lambda function
+                           [previous_generation, i](const Node &n) { return n.first == previous_generation[i]; }) //Lambda function
               != nodes_to_analyze.end();
       
       if (!node_analyzed && !node_in_list) {
@@ -958,7 +958,7 @@ vector<vector<string>> Manager::GenealogicalTree(const string &whose_ID) const {
       bool node_in_list =
               std::find_if(nodes_to_analyze.begin(),
                            nodes_to_analyze.end(),
-                           [next_generation](const Node &n) { return n.first == next_generation[i]; })
+                           [next_generation, i](const Node &n) { return n.first == next_generation[i]; })
               != nodes_to_analyze.end();
       
       if (!node_analyzed && !node_in_list) {
