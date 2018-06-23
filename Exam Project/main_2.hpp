@@ -131,7 +131,7 @@ int main_2(int argc, char *argv[]) {
         }
       }
         
-        //Get posts
+        //Get postscmd
       else if (what_to_get == "posts") {
         std::cout << "Insert the ID from which posts should be retrieved: " << std::endl;
         std::string id;
