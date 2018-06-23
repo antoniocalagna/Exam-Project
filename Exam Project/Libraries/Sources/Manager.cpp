@@ -937,7 +937,7 @@ vector<vector<string>> Manager::GenealogicalTree(const string &whose_ID) const {
     std::vector<std::string> previous_generation = _graph.branches(current_node.first, relation::born);
   
     for (int i = 0; i < previous_generation.size(); i++) {
-      bool node_analyzed = analyzed_nodes.find(current_node.first) != analyzed_nodes.end();
+      bool node_analyzed = analyzed_nodes.find(previous_generation[i]) != analyzed_nodes.end();
       /* Per controllare se il nodo è in lista bisogna usare la find_if, in quanto la lista è composta da pair, ma dei
        * pair in questo caso conta soltanto il primo elemento, l'ID del nodo. Viene perciò definita una Lambda function
        * per compattare il codice. */
@@ -954,7 +954,7 @@ vector<vector<string>> Manager::GenealogicalTree(const string &whose_ID) const {
     }
     for (int i = 0; i < next_generation.size(); i++) {
       //Controlla che il nodo non sia già stato analizzato/non sia già segnato in lista (nello stesso modo di prima):
-      bool node_analyzed = analyzed_nodes.find(current_node.first) != analyzed_nodes.end();
+      bool node_analyzed = analyzed_nodes.find(next_generation[i]) != analyzed_nodes.end();
       bool node_in_list =
               std::find_if(nodes_to_analyze.begin(),
                            nodes_to_analyze.end(),
