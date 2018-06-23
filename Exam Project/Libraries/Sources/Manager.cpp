@@ -918,53 +918,62 @@ vector<string> Manager::LonerPeople(const unsigned int &relations, const unsigne
 
 //DA COMPLETARE
 vector<vector<string>> Manager::GenealogicalTree(const string &whose_ID) const {
-  std::set<std::string> analyzed_nodes;
-  std::pair<std::deque<std::string>, std::deque<int>> nodes_to_analyze;     //Pair di ID-Generazione
-  std::map<int, std::vector<std::string>> generations;
-  std::string current_node = whose_ID;
-  int current_generation = 0;
+  //Rappresenta le varie generazioni della famiglia di whose_ID
+  using Node = std::pair<std::string, int>;
   
-  nodes_to_analyze.first.push_back(current_node);
-  nodes_to_analyze.second.push_back(current_generation);
+  std::set<std::string> analyzed_nodes;                              //Nodi già analizzati
+  std::deque<Node> nodes_to_analyze;          //Nodi da analizzare organizzati in una coda di nodo - generazione prevista
+  std::map<int, std::vector<std::string>> generations;               //Generazioni
   
-  while (!nodes_to_analyze.first.empty()) {
-    current_node = nodes_to_analyze.first.front();
-    nodes_to_analyze.first.pop_front();
-    current_generation = nodes_to_analyze.second.front();
-    nodes_to_analyze.second.pop_front();
+  Node current_node = {whose_ID, 0}; //Il nodo di partenza viene imposto a generazione 0
+  nodes_to_analyze.push_back(current_node);                 //Il primo nodo viene aggiunto alla coda
   
-    std::vector<std::string> next_generation = _graph.branches(current_node, relation::parent); //Ricerca i nodi di cui il nodo attuale è genitore
-    std::vector<std::string> previous_generation = _graph.branches(current_node, relation::born);
+  while (!nodes_to_analyze.empty()) {
+    current_node = nodes_to_analyze.front();
+    nodes_to_analyze.pop_front();
   
-    generations[current_generation].push_back(current_node);
-    analyzed_nodes.insert(current_node);
+    //Ottieni dal grafo tutti i nodi connessi al current_node tramite una relazione di paternità (in entrambi i versi)
+    std::vector<std::string> next_generation = _graph.branches(current_node.first, relation::parent);
+    std::vector<std::string> previous_generation = _graph.branches(current_node.first, relation::born);
   
     for (int i = 0; i < previous_generation.size(); i++) {
-      if (analyzed_nodes.find(previous_generation[i]) == analyzed_nodes.end() &&
-          std::find(nodes_to_analyze.first.begin(),
-                    nodes_to_analyze.first.end(),
-                    previous_generation[i])
-          == nodes_to_analyze.first.end()) {
-        nodes_to_analyze.first.push_back(previous_generation[i]);
-        nodes_to_analyze.second.push_back(current_generation - 1);
+      bool node_analyzed = analyzed_nodes.find(current_node.first) != analyzed_nodes.end();
+      bool node_in_list =
+              std::find_if(nodes_to_analyze.begin(),
+                           nodes_to_analyze.end(),
+                           [current_node](const Node &n) { return n.first == current_node.first; })
+              != nodes_to_analyze.end();
+      /* Sfrutta una lambda function per la find_if: Deve essere comparato soltanto l'ID del nodo nella ricerca,
+       * non il pair completo! */
+      
+      if (!node_analyzed && !node_in_list) {
+        //Metti il nodo i-esimo in lista ed assegnalo alla generazione antecedente a quella del current_node
+        nodes_to_analyze.emplace_back(std::make_pair(previous_generation[i], current_node.second - 1));
       }
     }
     for (int i = 0; i < next_generation.size(); i++) {
-      if (analyzed_nodes.find(next_generation[i]) == analyzed_nodes.end() &&
-          std::find(nodes_to_analyze.first.begin(),
-                    nodes_to_analyze.first.end(),
-                    next_generation[i])
-          == nodes_to_analyze.first.end()) {
-        nodes_to_analyze.first.push_back(next_generation[i]);
-        nodes_to_analyze.second.push_back(current_generation + 1);
+      //Controlla che il nodo non sia già stato analizzato/non sia già segnato in lista:
+      bool node_analyzed = analyzed_nodes.find(current_node.first) != analyzed_nodes.end();
+      bool node_in_list =
+              std::find_if(nodes_to_analyze.begin(),
+                           nodes_to_analyze.end(),
+                           [current_node](const Node &n) { return n.first == current_node.first; })
+              != nodes_to_analyze.end();
+      
+      if (!node_analyzed && !node_in_list) {
+        //Questa volta il nodo i-esimo deve appartenere alla generazione che segue quella del current_node
+        nodes_to_analyze.emplace_back(next_generation[i], current_node.second + 1);
       }
     }
+    //Aggiungi il nodo corrente alla mappa delle generazioni e segnalo come analizzato
+    generations[current_node.second].push_back(current_node.first);
+    analyzed_nodes.insert(current_node.first);
   }
   
-  vector<vector<string>> tree;
-  for (auto it_gen=generations.begin(); it_gen!=generations.end(); it_gen++)
-  {
-    tree.push_back(it_gen->second);
+  vector<vector<string>> tree(generations.size());
+  int i = 0;
+  for (auto it_gen = generations.begin(); it_gen != generations.end(); it_gen++, i++) {
+    tree[i] = it_gen -> second;
   }
   return tree;
 }
