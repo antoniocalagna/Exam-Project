@@ -11,20 +11,20 @@ int main_di_clara(/*int argc, char *argv[]*/) {
           relations_fh,
           posts_fh;
   IOBuffer buffer;                      //Buffer necessario per l'acquisizione dei dati
-  
- /* //Controllo dei parametri passati da linea di comando
-  if (argc != 0 && argc != 4) {
-    cerr << "Parameters error. Plese insert input file names as follows: <accounts_file> <relations_file> <posts_file>.\n"
-         << "You can also execute the program without specifying the files to open, and choose them later." << endl;
-    return -1;
-  }
-  
-  if(argc == 3) {
-    //Apri e controlla i file richiesti.
-    accounts_fh.open(argv[1]);
-    relations_fh.open(argv[2]);
-    accounts_fh.open(argv[3]);
-  }*/
+
+  /* //Controllo dei parametri passati da linea di comando
+   if (argc != 0 && argc != 4) {
+     cerr << "Parameters error. Plese insert input file names as follows: <accounts_file> <relations_file> <posts_file>.\n"
+          << "You can also execute the program without specifying the files to open, and choose them later." << endl;
+     return -1;
+   }
+
+   if(argc == 3) {
+     //Apri e controlla i file richiesti.
+     accounts_fh.open(argv[1]);
+     relations_fh.open(argv[2]);
+     accounts_fh.open(argv[3]);
+   }*/
 
   accounts_fh.fetchData(FH::accountsFile, buffer);
   relations_fh.fetchData(FH::relationsFile, buffer);
@@ -35,42 +35,70 @@ int main_di_clara(/*int argc, char *argv[]*/) {
   Group group_tmp;
   IOBuffer::m_Post post_tmp;
   IOBuffer::Relation relation_tmp;
-  while(!buffer.usersEmpty()){
+  while (!buffer.usersEmpty()) {
     buffer >> user_tmp;
-    if(!manager.addAccount(user_tmp)){
-      //sto cercando di inserire un id già presente
+    if (!manager.addAccount(user_tmp)) {
+      std::cerr << "Accounts file returned error code: " << user_tmp.getID() << "is not unique.\n"
+                << "File needs to be corrected before data can be acquire." << std::endl;
+      return -2;; //ritorno -2 quando l'id non è univoco
     }
   }
-  while (!buffer.groupsEmpty()){
+  while (!buffer.groupsEmpty()) {
     buffer >> group_tmp;
-    if(!manager.addAccount(group_tmp)){
-      //sto cercando di inserire un id già presente
+    if (!manager.addAccount(group_tmp)) {
+      std::cerr << "Accounts file returned error code: " << group_tmp.getID() << "is not unique.\n"
+                << "File needs to be corrected before data can be acquire." << std::endl;
+      return -2;
     }
   }
-  while (!buffer.companiesEmpty()){
+  while (!buffer.companiesEmpty()) {
     buffer >> comp_tmp;
-    if(!manager.addAccount(comp_tmp)){
-      //sto cercando di inserire un id già presente
+    if (!manager.addAccount(comp_tmp)) {
+      std::cerr << "Accounts file returned error code, the id: " << comp_tmp.getID() << "is not unique.\n"
+                << "File needs to be corrected before data can be acquire." << std::endl;
+      return -2;
     }
   }
-  while (!buffer.relationsEmpty()){
+  while (!buffer.relationsEmpty()) {
     buffer >> relation_tmp;
     string id_start, id_target, relationship;
     id_start = relation_tmp.first.first;
     id_target = relation_tmp.first.second;
     relationship = relation_tmp.second;
-    if(!manager.addRelationship(id_start, id_target, relationship)){
+    int err = manager.addRelationship(id_start, id_target, relationship);
+    if (err == -1) {
+      std::cerr << "Accounts file returned error code, the id " << id_start << " does not exist.\n"
+                << "File needs to be corrected before data can be acquire." << std::endl;
+      return -3; //ritorno -3 quando l'id non esiste
+
+    } else if (err == -2) {
+      std::cerr << "Accounts file returned error code, the id " << id_target << " does not exist.\n"
+                << "File needs to be corrected before data can be acquire." << std::endl;
+      return -3;
+
+    } else if (err == -3) {
+      std::cerr << "Accounts file returned error code, the relationship " << relationship << " does not exist.\n"
+                << "File needs to be corrected before data can be acquire." << std::endl;
+      return -4; //ritorno -4 quando la relazione non esiste o non può esistere
+
+    } else if (err == -4) {
+      std::cerr << "Accounts file returned error code, the relationship " << relationship
+                << " and the Users' ages are not compatible.\n"
+                << "File needs to be corrected before data can be acquire." << std::endl;
+      return -4;
 
     }
   }
-  while (!buffer.postsEmpty()){
+
+  while (!buffer.postsEmpty()) {
     buffer >> post_tmp;
-    if(!manager.addPost(post_tmp.second, post_tmp.first)){
-
+    if (!manager.addPost(post_tmp.second, post_tmp.first)) {
+      std::cerr << "Accounts file returned error code, the id " << post_tmp.first << " does not exist.\n"
+                << "File needs to be corrected before data can be acquire." << std::endl;
+      return -3;
     }
 
   }
-
 
 
   string input;
@@ -151,7 +179,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
       cout << ">";
 
       getline(cin, input);
-
+      
       command.clear();
       command.str(input);
       command >> cmd;
@@ -767,6 +795,8 @@ int main_di_clara(/*int argc, char *argv[]*/) {
               cout << "Error! The second ID does not exist!" << endl;
             } else if (error == -3) {
               cout << "Error! This relationship does not exist!" << endl;
+            } else if (error == -4) {
+              cout << "Error! The relationship and the Users' ages are not compatible!" << endl;
             } else if (error == 1) {
               cout << "Done!";
             }
@@ -1026,7 +1056,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
         pair<string, Post> worse_post;
         worse_post = manager.RatioReactionPost(0);
         cout << "The Post with the worse Like/Dislike ratio is:\n" << worse_post.second << endl
-             << "Wrote by: " <<worse_post.first;
+             << "Wrote by: " << worse_post.first;
       }
 
     } else if (cmd == "exit") {
