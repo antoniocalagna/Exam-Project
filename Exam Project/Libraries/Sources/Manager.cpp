@@ -921,15 +921,15 @@ vector<vector<string>> Manager::GenealogicalTree(const string &whose_ID) const {
   //Rappresenta le varie generazioni della famiglia di whose_ID
   using Node = std::pair<std::string, int>;
   
-  std::set<std::string> analyzed_nodes;                              //Nodi già analizzati
-  std::deque<Node> nodes_to_analyze;          //Nodi da analizzare organizzati in una coda di nodo - generazione prevista
-  std::map<int, std::vector<std::string>> generations;               //Generazioni
+  std::set<std::string> analyzed_nodes;                   //Nodi già analizzati
+  std::deque<Node> nodes_to_analyze;                      //Nodi da analizzare organizzati in una coda di nodo - generazione prevista
+  std::map<int, std::vector<std::string>> generations;    //Generazioni
   
-  Node current_node = {whose_ID, 0}; //Il nodo di partenza viene imposto a generazione 0
-  nodes_to_analyze.push_back(current_node);                 //Il primo nodo viene aggiunto alla coda
+  Node current_node = {whose_ID, 0};                      //Il nodo di partenza viene imposto a generazione 0
+  nodes_to_analyze.push_back(current_node);               //Il primo nodo viene aggiunto alla coda
   
-  while (!nodes_to_analyze.empty()) {
-    current_node = nodes_to_analyze.front();
+  while (!nodes_to_analyze.empty()) {                     //Scorri finchè la lista non è completa
+    current_node = nodes_to_analyze.front();              //Estrai il primo elemento della lista
     nodes_to_analyze.pop_front();
   
     //Ottieni dal grafo tutti i nodi connessi al current_node tramite una relazione di paternità (in entrambi i versi)
@@ -938,13 +938,14 @@ vector<vector<string>> Manager::GenealogicalTree(const string &whose_ID) const {
   
     for (int i = 0; i < previous_generation.size(); i++) {
       bool node_analyzed = analyzed_nodes.find(current_node.first) != analyzed_nodes.end();
+      /* Per controllare se il nodo è in lista bisogna usare la find_if, in quanto la lista è composta da pair, ma dei
+       * pair in questo caso conta soltanto il primo elemento, l'ID del nodo. Viene perciò definita una Lambda function
+       * per compattare il codice. */
       bool node_in_list =
               std::find_if(nodes_to_analyze.begin(),
                            nodes_to_analyze.end(),
-                           [current_node](const Node &n) { return n.first == current_node.first; })
+                           [current_node](const Node &n) { return n.first == current_node.first; }) //Lambda function
               != nodes_to_analyze.end();
-      /* Sfrutta una lambda function per la find_if: Deve essere comparato soltanto l'ID del nodo nella ricerca,
-       * non il pair completo! */
       
       if (!node_analyzed && !node_in_list) {
         //Metti il nodo i-esimo in lista ed assegnalo alla generazione antecedente a quella del current_node
@@ -952,7 +953,7 @@ vector<vector<string>> Manager::GenealogicalTree(const string &whose_ID) const {
       }
     }
     for (int i = 0; i < next_generation.size(); i++) {
-      //Controlla che il nodo non sia già stato analizzato/non sia già segnato in lista:
+      //Controlla che il nodo non sia già stato analizzato/non sia già segnato in lista (nello stesso modo di prima):
       bool node_analyzed = analyzed_nodes.find(current_node.first) != analyzed_nodes.end();
       bool node_in_list =
               std::find_if(nodes_to_analyze.begin(),
