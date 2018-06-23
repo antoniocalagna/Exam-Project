@@ -55,7 +55,11 @@ int main_di_clara(/*int argc, char *argv[]*/) {
   }
   while (!buffer.relationsEmpty()){
     buffer >> relation_tmp;
-    if(!manager.addRelationship(relation_tmp.first.first, relation_tmp.first.second, relation_tmp.second)){
+    string id_start, id_target, relationship;
+    id_start = relation_tmp.first.first;
+    id_target = relation_tmp.first.second;
+    relationship = relation_tmp.second;
+    if(!manager.addRelationship(id_start, id_target, relationship)){
 
     }
   }
