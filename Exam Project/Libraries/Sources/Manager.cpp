@@ -215,7 +215,6 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const User &new_a
   }
   else
     return false;
-  
 }
 
 bool Manager::replaceAccount(const std::string &ID_to_replace, const Company &new_account)
@@ -248,7 +247,10 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const Group &new_
     return false;
   
   if (ID_to_replace==new_account.getID())
+  {
     _map_groups[ID_to_replace]=new_account;
+    return true;
+  }
   
   size_t count=_map_users.count(ID_to_replace);
   if (count!=0)
@@ -262,6 +264,7 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const Group &new_
   else
     return false;
 }
+
 vector<Account> Manager::getAllAccounts() const
 {
   vector<Account> all;
