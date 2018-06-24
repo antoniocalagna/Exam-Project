@@ -25,6 +25,7 @@ set(                                                #Qui si fa una sorta di asse
         ${HDR}/Manager.h        ${SRC}/Manager.cpp
         ${HDR}/Post.h           ${SRC}/Post.cpp
         ${HDR}/IOBuffer.h       ${SRC}/IOBuffer.cpp
+        ${HDR}/Shell.h          ${SRC}/Shell.cpp
         ${HDR}/Account\ Hierarchy/Account.h     ${SRC}/Account\ Hierarchy/Account.cpp
         ${HDR}/Account\ Hierarchy/Company.h     ${SRC}/Account\ Hierarchy/Company.cpp
         ${HDR}/Account\ Hierarchy/Group.h       ${SRC}/Account\ Hierarchy/Group.cpp
