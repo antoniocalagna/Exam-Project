@@ -382,7 +382,7 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
       string new_inc;
       Date inc;
       cout << "Please insert the new date of inception (in format dd/mm/yyyy)." << endl;
-      ////cin.ignore(); da provare se ci vada o no
+      //cin.ignore(); da provare se ci vada o no
       getline(cin, new_inc);
       if (inc.CheckDate(new_inc)) {
         inc.scanDateByStr(new_inc);
@@ -397,17 +397,22 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
         return;
       }
     }
+    else {
+      cout << "Error! Cannot set \"" << what_to_set << " on a Group." << endl;
+      return;
+    }
+    
     new_data << group_new;
     data_to_delete << group_old;
     cout << "Done!" << endl;
   }
   else if (type == Account::company_type) {
-    string ID_to_set;
-    Company company_to_set;
-    cout << "Please insert the ID whose Company you'd like to set info about:\n>" << endl;
-    cin >> ID_to_set; //id "vecchio" account
-    company_to_set = manager.getCompany(ID_to_set);
-    if (company_to_set == Company()) {
+    Company company_old;
+    Company company_new;
+    company_old = manager.getCompany(ID_to_set);
+    company_new = company_old;
+    
+    if (company_old == Company()) {
       cout << "Error! This ID is not valid." << endl;
     }
     
@@ -416,14 +421,11 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
       cout << "Please insert the new name." << endl;
       ////cin.ignore(); da provare se ci vada o no
       getline(cin, new_name);
-      company_to_set.setName(new_name);
-      if (!manager.replaceAccount(ID_to_set, company_to_set)) { //da provare
+      company_new.setName(new_name);
+      if (!manager.replaceAccount(ID_to_set, company_new)) { //da provare
         cout << "Error! " << what_to_set << " could not be modified." << endl;
+        return;
       }
-      else {
-        cout << "Done!" << endl;
-      }
-      
     }
     
     else if (what_to_set == "subscription") {
@@ -434,18 +436,18 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
       getline(cin, new_sub);
       if (sub.CheckDate(new_sub)) {
         sub.scanDateByStr(new_sub);
-        company_to_set.setSubscription(new_sub);
-        if (!manager.replaceAccount(ID_to_set, company_to_set)) {
+        company_new.setSubscription(new_sub);
+        if (!manager.replaceAccount(ID_to_set, company_new)) {
           cout << "Error! This ID already exist." << endl;
-        }
-        else {
-          cout << "Done!" << endl;
+          return;
         }
       }
       else {
         cout << "Error! This date is not valid." << endl;
+        return;
       }
     }
+    
     else if (what_to_set == "inception") {
       string new_inc;
       Date inc;
@@ -454,15 +456,15 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
       getline(cin, new_inc);
       if (inc.CheckDate(new_inc)) {
         inc.scanDateByStr(new_inc);
-        company_to_set.setInception(inc);
-        if (!manager.replaceAccount(ID_to_set, company_to_set)) {
+        company_new.setInception(inc);
+        if (!manager.replaceAccount(ID_to_set, company_new)) {
           cout << "Error! " << what_to_set << " could not be modified." << endl;
           return;
         }
-        cout << "Done!" << endl;
       }
       else {
         cout << "Error! This date is not valid." << endl;
+        return;
       }
       
     }
@@ -471,12 +473,11 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
       cout << "Please insert the new financial location." << endl;
       ////cin.ignore(); da provare se ci vada o no
       getline(cin, new_loc);
-      company_to_set.setFinancialLocation(new_loc);
-      if (!manager.replaceAccount(ID_to_set, company_to_set)) {
+      company_new.setFinancialLocation(new_loc);
+      if (!manager.replaceAccount(ID_to_set, company_new)) {
         cout << "Error! " << what_to_set << " could not be modified." << endl;
         return;
       }
-      cout << "Done!" << endl;
     }
     
     else if (what_to_set == "operative_location") {
@@ -484,12 +485,11 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
       cout << "Please insert the new operative location." << endl;
       ////cin.ignore(); da provare se ci vada o no
       getline(cin, new_loc);
-      company_to_set.setOperativeLocation(new_loc);
-      if (!manager.replaceAccount(ID_to_set, company_to_set)) {
+      company_new.setOperativeLocation(new_loc);
+      if (!manager.replaceAccount(ID_to_set, company_new)) {
         cout << "Error! " << what_to_set << " could not be modified." << endl;
         return;
       }
-      cout << "Done!" << endl;
     }
     
     else if (what_to_set == "products") {
@@ -497,13 +497,16 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
       cout << "Please insert the new type of products." << endl;
       ////cin.ignore(); da provare se ci vada o no
       getline(cin, new_prod);
-      company_to_set.setTypeOfProduct(new_prod);
-      if (!manager.replaceAccount(ID_to_set, company_to_set)) {
+      company_new.setTypeOfProduct(new_prod);
+      if (!manager.replaceAccount(ID_to_set, company_new)) {
         cout << "Error! " << what_to_set << " could not be modified." << endl;
         return;
       }
-      cout << "Done!" << endl;
     }
+    
+    new_data << company_new;
+    data_to_delete << company_old;
+    std::cout << "Done!" << std::endl;
   }
 }
 

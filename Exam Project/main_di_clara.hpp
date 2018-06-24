@@ -250,12 +250,13 @@ int main_di_clara(/*int argc, char *argv[]*/) {
           else if (what2 == "group") {
             string tmp_n, tmp_id, tmp_loc, tmp_act, d1, d2;
             Date tmp_sub, tmp_inc;
+            cin.clear();
             cout << "Name:\n>";
             cin >> tmp_n;
             cout << "Id:\n>";
             cin >> tmp_id;
+            cin.clear();                     //Ignora l'andata a capo
             cout << "Legal location:\n>";
-            cin.ignore();                     //Ignora l'andata a capo
             getline(cin, tmp_loc);
             cout << "Type of activity:\n>";
             getline(cin, tmp_act);
