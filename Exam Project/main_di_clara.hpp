@@ -10,7 +10,8 @@ int main_di_clara(/*int argc, char *argv[]*/) {
   FH::FileHandler accounts_fh("Accounts_TEST.dat"),          //FileHandler per il controllo e l'acquisizione dei dati da file
                   relations_fh("Relations_TEST.dat"),
                   posts_fh("Posts_TEST.dat");
-  IOBuffer buffer;                      //Buffer necessario per l'acquisizione dei dati
+  IOBuffer new_data_buffer;                      //Buffer necessario per l'acquisizione dei dati
+  IOBuffer data_to_erase_buffer;
 
   /* //Controllo dei parametri passati da linea di comando
    if (argc != 0 && argc != 4) {
@@ -63,41 +64,41 @@ int main_di_clara(/*int argc, char *argv[]*/) {
 
   std::cout << "Beginning acquisition: " << std::endl;
 
-  accounts_fh.fetchData(FH::accountsFile, buffer);
-  relations_fh.fetchData(FH::relationsFile, buffer);
-  posts_fh.fetchData(FH::postsFile, buffer);
+  accounts_fh.fetchData(FH::accountsFile, new_data_buffer);
+  relations_fh.fetchData(FH::relationsFile, new_data_buffer);
+  posts_fh.fetchData(FH::postsFile, new_data_buffer);
   Manager manager;
   User user_tmp;
   Company comp_tmp;
   Group group_tmp;
   IOBuffer::m_Post post_tmp;
   IOBuffer::Relation relation_tmp;
-  while (!buffer.usersEmpty()) {
-    buffer >> user_tmp;
+  while (!new_data_buffer.usersEmpty()) {
+    new_data_buffer >> user_tmp;
     if (!manager.addAccount(user_tmp)) {
       std::cerr << "Accounts file returned error code: " << user_tmp.getID() << "is not unique.\n"
                 << "File needs to be corrected before data can be acquire." << std::endl;
       return -2;; //ritorno -2 quando l'id non è univoco
     }
   }
-  while (!buffer.groupsEmpty()) {
-    buffer >> group_tmp;
+  while (!new_data_buffer.groupsEmpty()) {
+    new_data_buffer >> group_tmp;
     if (!manager.addAccount(group_tmp)) {
       std::cerr << "Accounts file returned error code: " << group_tmp.getID() << "is not unique.\n"
                 << "File needs to be corrected before data can be acquire." << std::endl;
       return -2;
     }
   }
-  while (!buffer.companiesEmpty()) {
-    buffer >> comp_tmp;
+  while (!new_data_buffer.companiesEmpty()) {
+    new_data_buffer >> comp_tmp;
     if (!manager.addAccount(comp_tmp)) {
       std::cerr << "Accounts file returned error code, the id: " << comp_tmp.getID() << "is not unique.\n"
                 << "File needs to be corrected before data can be acquire." << std::endl;
       return -2;
     }
   }
-  while (!buffer.relationsEmpty()) {
-    buffer >> relation_tmp;
+  while (!new_data_buffer.relationsEmpty()) {
+    new_data_buffer >> relation_tmp;
     string id_start, id_target, relationship;
     id_start = relation_tmp.first.first;
     id_target = relation_tmp.first.second;
@@ -127,8 +128,8 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     }
   }
 
-  while (!buffer.postsEmpty()) {
-    buffer >> post_tmp;
+  while (!new_data_buffer.postsEmpty()) {
+    new_data_buffer >> post_tmp;
     if (!manager.addPost(post_tmp.second, post_tmp.first)) {
       std::cerr << "Accounts file returned error code, the id " << post_tmp.first << " does not exist.\n"
                 << "File needs to be corrected before data can be acquire." << std::endl;
@@ -223,6 +224,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
         if (who == "user") {
           string id_to_set;
           User user_to_set; //user a cui vuoi cambiare info
+          User user_new;
           cout << "Please insert the ID whose User you'd like to set info about:\n>" << endl;
           cin >> id_to_set; //id "vecchio" account
           user_to_set = manager.getUser(id_to_set); //se l'id non esiste, user_to_set è un default constructor
@@ -231,14 +233,17 @@ int main_di_clara(/*int argc, char *argv[]*/) {
           } else {
             if (what == "name") {
               string new_name;
+              user_new = user_to_set;
               cout << "Please insert the new" << what << "." << endl;
               //cin.ignore(); da provare se ci vada o no
               getline(cin, new_name);
-              user_to_set.setName(new_name);
-              if (!manager.replaceAccount(id_to_set, user_to_set)) { //da provare
+              user_new.setName(new_name);
+              if (!manager.replaceAccount(id_to_set, user_new)) { //da provare
                 cout << "Error! I could not modify your information." << endl;
               } else {
                 cout << "Done!" << endl;
+                data_to_erase_buffer << user_to_set; //SCISCIIII
+                new_data_buffer << user_new;
               }
             } else if (what == "surname") {
               string new_surname;
