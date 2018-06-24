@@ -36,7 +36,8 @@ int main_di_clara(/*int argc, char *argv[]*/) {
   std::cout << "Checking accounts file..." << std::endl;
   FH::Error check_results = accounts_fh.checkFile(FH::accountsFile);
   if (check_results.code == 0) {
-    std::cout << "* Accounts file correctly formatted and ready to be read." << std::endl;
+    std::cout << "* Accounts file correctly formatted and ready to be read. "
+                 "(" << check_results.data <<" lines analyzed)"<< std::endl;
   }
   else {
     std::cerr << "** Accounts file returned error code " << check_results.code << " at line " << check_results.data
@@ -49,7 +50,8 @@ int main_di_clara(/*int argc, char *argv[]*/) {
   //Controllo del file delle relazioni
   check_results = relations_fh.checkFile(FH::relationsFile);
   if (check_results.code == 0) {
-    std::cout << "* Relations file correctly formatted and ready to be read." << std::endl;
+    std::cout << "* Relations file correctly formatted and ready to be read. "
+                 "(" << check_results.data <<" lines analyzed)"<< std::endl;
   }
   else {
     std::cerr << "** Relations file returned error code " << check_results.code << " at line " << check_results.data
@@ -62,7 +64,8 @@ int main_di_clara(/*int argc, char *argv[]*/) {
   std::cout << "Checking posts file..." << std::endl;
   check_results = posts_fh.checkFile(FH::postsFile);
   if (check_results.code == 0) {
-    std::cout << "* Posts file correctly formatted and ready to be read." << std::endl;
+    std::cout << "* Posts file correctly formatted and ready to be read. "
+                 "(" << check_results.data <<" lines analyzed)"<< std::endl;
   }
   else {
     std::cerr << "** Posts file returned error code " << check_results.code << " at line " << check_results.data << "."
@@ -109,6 +112,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
   std::cout << "* Accounts correctly acquired." << std::endl;
   
   std::cout << "Acquiring relations..." << std::endl;
+  
   relations_fh.fetchData(FH::relationsFile, new_data_buffer);
   while (!new_data_buffer.relationsEmpty()) {
     IOBuffer::Relation relation_tmp;
@@ -164,13 +168,13 @@ int main_di_clara(/*int argc, char *argv[]*/) {
   std::cout << "Welcome. This program is shell based, so commands should be typed in shell-style.\n"
                "Type \"help\" for a list of useful commands." << std::endl;
   
-  std::map<std::string, Shell::Function> commands;      //Mappa di tutti i comandi e delle loro relative funzioni
-  
-  commands["help"] = Shell::help;
-  commands["list"] = Shell::list;
-  commands["get"] = Shell::get;
-  commands["set"] = Shell::set;
-  commands["delete"] = Shell::del;
+  std::map<std::string, Shell::Function> commands{      //Mappa che lega il nome del comando alla sua funzione
+          std::make_pair("help", Shell::help),          //Inizzializiamo le coppie come pair nome - pointer a funzione
+          std::make_pair("list", Shell::list),
+          std::make_pair("get", Shell::get),
+          std::make_pair("set", Shell::set),
+          std::make_pair("delete", Shell::del)
+  };
   
   bool exit = false;
   bool save_data = false;
@@ -239,23 +243,14 @@ int main_di_clara(/*int argc, char *argv[]*/) {
               cout << "Error! Your ID already exists!";
             }
             else cout << "Done!";
-            
-            getline(cin, input);
-            
-            command.clear();
-            command.str(input);
-            command >> cmd;
-            
           }
           else if (what2 == "group") {
             string tmp_n, tmp_id, tmp_loc, tmp_act, d1, d2;
             Date tmp_sub, tmp_inc;
-            cin.clear();
             cout << "Name:\n>";
             cin >> tmp_n;
             cout << "Id:\n>";
             cin >> tmp_id;
-            cin.clear();                     //Ignora l'andata a capo
             cout << "Legal location:\n>";
             getline(cin, tmp_loc);
             cout << "Type of activity:\n>";
@@ -272,12 +267,6 @@ int main_di_clara(/*int argc, char *argv[]*/) {
               cout << "Error! Your ID already exists!";
             }
             else cout << "Done!";
-            getline(cin, input);
-            
-            command.clear();
-            command.str(input);
-            command >> cmd;
-            
           }
           else if (what2 == "company") {
             string tmp_n, tmp_id, tmp_finloc, tmp_oploc, tmp_p, d1, d2;
@@ -308,13 +297,6 @@ int main_di_clara(/*int argc, char *argv[]*/) {
             }
             else
               cout << "Done!";
-            
-            getline(cin, input);
-            
-            command.clear();
-            command.str(input);
-            command >> cmd;
-            
           }
         }
         else if (what1 == "relationship") {
@@ -333,10 +315,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
                     "Employer\n" << endl;
             
             string who1, who2, type_rel;
-            getline(cin, input);
             
-            command.clear();
-            command.str(input);
             command >> who1 >> type_rel >> who2;
             
             if (who1.empty() || who2.empty() || type_rel.empty()) {
@@ -389,7 +368,6 @@ int main_di_clara(/*int argc, char *argv[]*/) {
           post_tmp.setLikes(likes);
           
           cout << "Dislikes (insert '-' at the end of the list):\n";
-          input.clear();
           while (input != "-") {
             cout << ">";
             getline(cin, input);
@@ -678,9 +656,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     else {
       cycles_without_saving++;
     }
-    
-    std::cin.clear();   //Pulizia degli stream
-    command.clear();
+    command.str(std::string());   //Svuota il buffer del comando
   } while (!exit);
   return 0;
 }

@@ -132,7 +132,7 @@ FH::Error FH::FileHandler::fetchData(Error (*fetcher_func)(stringstream &, IOBuf
     
     current_line++;
   }
-  return {0, 0};
+  return {0, current_line};
 }
 
 FH::Error FH::FileHandler::putData(std::string (*printer_func)(IOBuffer &), IOBuffer &to_add, IOBuffer &to_delete) {
