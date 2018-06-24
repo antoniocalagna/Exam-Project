@@ -10,8 +10,11 @@
 #include "Manager.h"
 
 namespace Shell {
-  using Function = void(*)(Manager&, IOBuffer&, IOBuffer&);
-  void get(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete);
+using Function = void (*)(std::stringstream &, Manager &, IOBuffer &, IOBuffer &);
+void help(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete);
+void list(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete);
+void get(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete);
+void set(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete);
 }
 
 #endif //SOCIAL_NETWORK_SHELL_H
