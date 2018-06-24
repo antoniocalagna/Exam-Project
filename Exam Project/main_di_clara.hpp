@@ -255,10 +255,9 @@ int main_di_clara(/*int argc, char *argv[]*/) {
             cout << "Id:\n>";
             cin >> tmp_id;
             cout << "Legal location:\n>";
-            cin.ignore();
+            cin.ignore();                     //Ignora l'andata a capo
             getline(cin, tmp_loc);
             cout << "Type of activity:\n>";
-            cin.ignore();
             getline(cin, tmp_act);
             cout << "Subscription:\n>";
             cin >> d1;
@@ -649,6 +648,9 @@ int main_di_clara(/*int argc, char *argv[]*/) {
       }
       
     }
+    else if (cmd == "save") {
+      save_data = true;
+    }
     else if (cmd == "exit") {
       save_data = true;             //Richiedi di salvare i dati
       exit = true;                  //Richiedi l'uscita
@@ -675,6 +677,9 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     else {
       cycles_without_saving++;
     }
+    
+    std::cin.clear();   //Pulizia degli stream
+    command.clear();
   } while (!exit);
   return 0;
 }
