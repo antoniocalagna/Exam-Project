@@ -7,9 +7,9 @@
 using namespace std;
 
 int main_di_clara(/*int argc, char *argv[]*/) {
-  FH::FileHandler accounts_fh,          //FileHandler per il controllo e l'acquisizione dei dati da file
-          relations_fh,
-          posts_fh;
+  FH::FileHandler accounts_fh("Accounts_TEST.dat"),          //FileHandler per il controllo e l'acquisizione dei dati da file
+                  relations_fh("Relations_TEST.dat"),
+                  posts_fh("Posts_TEST.dat");
   IOBuffer buffer;                      //Buffer necessario per l'acquisizione dei dati
 
   /* //Controllo dei parametri passati da linea di comando
@@ -25,6 +25,43 @@ int main_di_clara(/*int argc, char *argv[]*/) {
      relations_fh.open(argv[2]);
      accounts_fh.open(argv[3]);
    }*/
+  std::cout << "Beginning checks:" << std::endl;
+  //Controllo del file degli account
+  FH::Error check_results = accounts_fh.checkFile(FH::accountsFile);
+  if (check_results.code == 0) {
+    std::cout << "* Accounts file correctly formatted and ready to be read." << std::endl;
+  } else {
+    std::cerr << "** Accounts file returned error code " << check_results.code << " at line " << check_results.data
+              << "."
+              << "File needs to be corrected before data can be read." << std::endl;
+    return -1;
+  }
+
+  //Controllo del file delle relazioni
+  check_results = relations_fh.checkFile(FH::relationsFile);
+  if (check_results.code == 0) {
+    std::cout << "* Relations file correctly formatted and ready to be read." << std::endl;
+  } else {
+    std::cerr << "** Relations file returned error code " << check_results.code << " at line " << check_results.data
+              << "."
+              << "File needs to be corrected before data can be read." << std::endl;
+    return -1;
+  }
+
+  //Controllo del file dei post
+  check_results = posts_fh.checkFile(FH::postsFile);
+  if (check_results.code == 0) {
+    std::cout << "* Posts file correctly formatted and ready to be read." << std::endl;
+  } else {
+    std::cerr << "** Posts file returned error code " << check_results.code << " at line " << check_results.data << "."
+              << "File needs to be corrected before data can be read." << std::endl;
+    return -1;
+  }
+
+  //Controlli completati
+  std::cout << "Checks completed.\n" << std::endl;
+
+  std::cout << "Beginning acquisition: " << std::endl;
 
   accounts_fh.fetchData(FH::accountsFile, buffer);
   relations_fh.fetchData(FH::relationsFile, buffer);
@@ -176,13 +213,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
       cout << "average_age\n"
               "best_post\n"
               "worse_post\n";
-      cout << ">";
 
-      getline(cin, input);
-      
-      command.clear();
-      command.str(input);
-      command >> cmd;
     } else if (cmd == "set") {
       string what, who; //non so se questi nomi sono messi per scherzo, a me sembrano carini
       command >> who >> what;
@@ -511,45 +542,109 @@ int main_di_clara(/*int argc, char *argv[]*/) {
         }
       }
     } else if (cmd == "get") {
-      string who, what;
-      command >> who >> what;
-      if (what.empty()) {
-        cout << "Error! I do not understand what information you'd like to retreive." << endl;
+      //GET: Interfaccia per ottenere informazioni e dati
+      std::string what_to_get;
+      command >> what_to_get;
+      //Get info
+      if (what_to_get == "info") {
+        std::cout << "Insert ID:" << std::endl;
+        std::string requested_id /*= promptInput();*/;   // PER SCISCI
+        char account_type = manager.getAccountType(requested_id);   //Controlla il tipo di account di cui sono richieste le informazioni
+        if (account_type == 0) {
+          std::cout << "Requested ID not found" << std::endl;
+        }
+          //Get info - user
+        else if (account_type == Account::user_type) {
+          User user = manager.getUser(requested_id);
+          std::cout << "Name:" << user.getName() << "\n"
+                    << "Surname: " << user.getSurname() << "\n"
+                    << "Gender: " << user.getGender() << "\n"
+                    << "Address: " << user.getAddress() << "\n"
+                    << "Birth Date :" << user.getBirth() << "\n"
+                    << "Subscription Date: " << user.getSubscription() << std::endl;
+
+        }
+          //Get info - group
+        else if (account_type == Account::group_type) {
+          Group group = manager.getGroup(requested_id);
+          std::cout << "Name: " << group.getName() << "\n"
+                    << "Legal location: " << group.getLegalLocation() << "\n"
+                    << "Activity: " << group.getTypeOfActivity() << "\n"
+                    << "Inception: " << group.getInception() << "\n"
+                    << "Birth Date: " << group.getSubscription() << std::endl;
+        }
+          //Get info - company
+        else if (account_type == Account::company_type) {
+          Company company = manager.getCompany(requested_id);
+          std::cout << "Name: " << company.getName() << "\n"
+                    << "Financial location: " << company.getFinancialLocation() << "\n"
+                    << "Operative location: " << company.getOperativeLocation() << "\n"
+                    << "Product: " << company.getTypeOfProduct() << "\n"
+                    << "Inception: " << company.getInception() << "\n"
+                    << "Birth Date: " << company.getSubscription() << std::endl;
+        }
       }
-      if (who == "user") {
-        if (what == "info") {
-          string id;
-          User u;
-          cout << "Please insert the ID:\n>";
-          cin >> id;
-          u = manager.getUser(id);
-          cout << u.getName() << "\n" << u.getSurname() << "\n" << u.getID() << "\n" << u.getAddress() << "\n"
-               << u.getSubscription() << "\n" << u.getBirth() << "\n" << u.getGender() << endl;
+        //Get relation
+      else if (what_to_get == "relation") {
+        std::string id1, id2;
+        std::cout << "Insert the two IDs: " << std::endl;
+        std::cout << ">";
+        std::cin >> id1 >> id2;
+        std::string relation = manager.getRelationship(id1, id2);
+        if (relation.empty()) {
+          std::cout << "No relation found between " << id1 << " and  " << id2;
         }
-      } else if (who == "group") {
-        if (what == "info") {
-          string id;
-          Group g;
-          cout << "Please insert the ID:\n>";
-          cin >> id;
-          g = manager.getGroup(id);
-          cout << g.getName() << "\n" << g.getID() << "\n" << g.getLegalLocation() << "\n" << g.getTypeOfActivity()
-               << "\n" << g.getSubscription() << "\n" << g.getInception() << endl;
-        }
-      } else if (who == "company") {
-        if (what == "info") {
-          string id;
-          Company c;
-          cout << "Please insert the ID:\n>";
-          cin >> id;
-          c = manager.getCompany(id);
-          cout << c.getName() << "\n" << c.getID() << "\n" << c.getFinancialLocation() << "\n"
-               << c.getOperativeLocation() << "\n" << c.getTypeOfProduct() << "\n" << c.getSubscription() << "\n"
-               << c.getInception() << endl;
+        else {
+          std::cout << "Relation: " << relation << std::endl;
         }
       }
 
-    } else if (cmd == "delete") {
+        //Get posts
+      else if (what_to_get == "posts") {
+        std::cout << "Insert the ID from which posts should be retrieved: " << std::endl;
+        std::string id;
+        command >> id;
+        std::vector<Post> posts = manager.getPosts(id);
+        if (posts.empty()) {
+          std::cout << "No posts from " << id << " found" << std::endl;
+        }
+        else {
+          for (int i = 0; i < posts.size(); i++) {
+            std::cout << i + 1 << ":" << std::endl                 //Indice del post
+                      << "\n" << posts[i].getNews() << "\n" << std::endl
+                      << "[" << posts[i].getDate() << "]" << std::endl;
+            std::vector<std::string> likes, dislikes;
+            likes = posts[i].getLikes();
+            dislikes = posts[i].getDislikes();
+            if (!likes.empty()) {
+              std::cout << "Likes: ";
+              for (int j = 0; j < likes.size(); j++) {
+                std::cout << likes[i];
+                if (j != likes.size() - 1)
+                  std::cout << ",";
+              }
+              std::cout << std::endl;
+            }
+            if (!dislikes.empty()) {
+              std::cout << "Disikes: ";
+              for (int j = 0; j < dislikes.size(); j++) {
+                std::cout << dislikes[j];
+                if (j != dislikes.size() - 1)
+                  std::cout << ",";
+              }
+              std::cout << std::endl;
+            }
+          }
+        }
+      }
+
+        //Get <something_not_valid>
+      else {
+        std::cout << "Cannot get \"" << what_to_get << "\"" << std::endl;
+        std::cout << "Possible parameters:";
+      }
+    }
+    else if (cmd == "delete") {
       string what;
       command >> what;
       if (what.empty()) {
