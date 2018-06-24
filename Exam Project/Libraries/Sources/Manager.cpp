@@ -199,8 +199,11 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const User &new_a
     return false;
   
   if (ID_to_replace==new_account.getID())
+  {
     _map_users[ID_to_replace]=new_account;
-  
+    return true;
+  }
+
   size_t count=_map_users.count(ID_to_replace);
   if (count!=0)
   {
@@ -212,6 +215,7 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const User &new_a
   }
   else
     return false;
+  
 }
 
 bool Manager::replaceAccount(const std::string &ID_to_replace, const Company &new_account)
@@ -220,7 +224,10 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const Company &ne
     return false;
   
   if (ID_to_replace==new_account.getID())
+  {
     _map_companies[ID_to_replace]=new_account;
+    return true;
+  }
   
   size_t count=_map_companies.count(ID_to_replace);
   if (count!=0)
@@ -990,7 +997,7 @@ vector<string> Manager::FormatTree (const vector<vector<string>> &tree_to_format
   
   if (tree_to_format.size() <= 3)
   {
-    //L'albero non è valido
+    //L'albero non è lungo a sufficienza
     return vector<string>();
   }
   
@@ -1047,6 +1054,17 @@ string Manager::PrintTree(const std::string &whose_ID) const
   vector<string> tree_to_print = FormatTree(GenealogicalTree(whose_ID)); //Invoco a cascata le funzioni di creazione dell'albero e la formattazione dello stesso
   stringstream ss;
   
+  if (tree_to_print==vector<string>())
+  {
+    //L'albero non è valido poiché non lungo a sufficienza
+    return string();
+  }
+  
+  if (*tree_to_print.begin()=="ID")
+  {
+    return string();
+  }
+  
   for (auto it=tree_to_print.begin(); it!=tree_to_print.end(); it++) //Stampo ogni livello generazionale
   {
     ss<<*it<<endl;
@@ -1055,7 +1073,7 @@ string Manager::PrintTree(const std::string &whose_ID) const
   return ss.str();
 }
 
-string Manager::PrintAllTrees() const
+vector<string> Manager::PrintAllTrees() const
 {
   //Adotto il set come una "coda", gli utenti stampati in un albero vengono rimossi da tale coda.
   //Il set mi consente di eliminare agilmente la key con .erase!
@@ -1063,6 +1081,7 @@ string Manager::PrintAllTrees() const
   vector<string> all_IDs = getUsersIDs();
   set<string> IDs;
   stringstream ss;
+  vector<string> trees_to_print;
   
   for (auto it=all_IDs.begin(); it!=all_IDs.end(); it++)
   {
@@ -1072,23 +1091,33 @@ string Manager::PrintAllTrees() const
   int count = 1;
   while (!IDs.empty())
   {
-    ss<<"##### Tree no. "<<count<<" #####"<<endl; //Formatto
-    ss<<PrintTree(*IDs.begin()); //Carico un albero
-    
     vector<vector<string>> tree = GenealogicalTree(*IDs.begin()); //Ricavo l'albero così da estrapolare gli ID già trattati e rimuoverli dalla coda
     
-    for (auto it_tree=tree.begin(); it_tree!=tree.end(); it_tree++)
+    if (tree.size() > 3)
     {
-      for (auto it_IDs=it_tree->begin(); it_IDs!=it_tree->end(); it_IDs++)
+      ss.str(string());
+      ss<<"##### Tree no. "<<count<<" #####"<<endl; //Formatto
+      ss<<PrintTree(*IDs.begin()); //Carico un albero
+      
+      for (auto it_tree=tree.begin(); it_tree!=tree.end(); it_tree++)
       {
-        if (IDs.count(*it_IDs)!=0)
-          IDs.erase(*it_IDs);
+        for (auto it_IDs=it_tree->begin(); it_IDs!=it_tree->end(); it_IDs++)
+        {
+          if (IDs.count(*it_IDs)!=0)
+            IDs.erase(*it_IDs);
+        }
       }
+      
+      count++;
+      ss<<endl;
+      trees_to_print.push_back(ss.str());
     }
     
-    count++;
-    ss<<endl;
+    else
+    {
+      IDs.erase(*IDs.begin());
+    }
   }
   
-  return ss.str();
+  return trees_to_print;
 }

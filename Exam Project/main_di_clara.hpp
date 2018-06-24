@@ -542,7 +542,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
         else if (what2 == "born_after") {
           string date;
           Date born_d;
-          int not_valid;
+          //int not_valid;
           cout << "Please insert the starting date (in format dd/mm/yyyy):\n>";
           cin >> date;
           if (born_d.CheckDate(date)) {

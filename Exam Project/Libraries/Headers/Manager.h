@@ -105,7 +105,7 @@ public:
   vector<vector<string>> GenealogicalTree(const string &whose_ID) const;
   vector<string> FormatTree (const vector<vector<string>> &tree_to_format) const;
   string PrintTree (const string &whose_ID) const;
-  string PrintAllTrees() const;
+  vector<string> PrintAllTrees() const;
 
 private:
   unordered_map<string, User> _map_users;
