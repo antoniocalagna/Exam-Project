@@ -1,6 +1,9 @@
 #include "Shell.h"
 #include "FileHandler.h"
 
+#define BUFF_TOTAL_SIZE_MAX 5
+#define CYCLES_WITHOUT_SAVING_MAX 10
+
 using namespace std;
 
 void flushBuffers(FH::FileHandler &fh, IOBuffer &new_data, IOBuffer &data_to_delete);
@@ -170,6 +173,8 @@ int main_di_clara(/*int argc, char *argv[]*/) {
   commands["delete"] = Shell::del;
   
   bool exit = false;
+  bool save_data = false;
+  unsigned int cycles_without_saving = 0;
   do {
     string input;             //Input dell'utente
     string cmd;               //Nome del comando (primo parametro dell'input)
@@ -178,12 +183,12 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     do {                      //Acquisisci ignorando le righe vuote
       cout << ">";
       getline(cin, input);
-    } while(input.empty());
+    } while (input.empty());
     
     stringstream command(input);
     command >> cmd;
     
-    if(commands.count(cmd) == 1) {
+    if (commands.count(cmd) == 1) {
       //Il comando è stato trovato. Esegui la funzione ad esso associata
       commands.at(cmd)(command, manager, new_data_buffer, data_to_erase_buffer);
     }
@@ -645,15 +650,31 @@ int main_di_clara(/*int argc, char *argv[]*/) {
       
     }
     else if (cmd == "exit") {
-      exit = true;
+      save_data = true;             //Richiedi di salvare i dati
+      exit = true;                  //Richiedi l'uscita
     }
+    
     else {
       std::cout << "Command \"" << cmd << "\" unknown." << std::endl;
     }
-  
-    accounts_fh.putData(FH::accountsFile, new_data_buffer, data_to_erase_buffer);
-    relations_fh.putData(FH::relationsFile, new_data_buffer, data_to_erase_buffer);
-    posts_fh.putData(FH::postsFile, new_data_buffer, data_to_erase_buffer);
+    
+    /**************************************    Salvataggio dati     ***************************************************/
+    if (new_data_buffer.size() + data_to_erase_buffer.size() >= BUFF_TOTAL_SIZE_MAX ||
+        cycles_without_saving >= CYCLES_WITHOUT_SAVING_MAX) {
+      save_data = true;
+    }
+    
+    if (save_data) {
+      std::cout << "Saving data..." << std::endl;
+      accounts_fh.putData(FH::accountsFile, new_data_buffer, data_to_erase_buffer);
+      relations_fh.putData(FH::relationsFile, new_data_buffer, data_to_erase_buffer);
+      posts_fh.putData(FH::postsFile, new_data_buffer, data_to_erase_buffer);
+      std::cout << "Data saved." << std::endl;
+      cycles_without_saving = 0;
+    }
+    else {
+      cycles_without_saving++;
+    }
   } while (!exit);
   return 0;
 }
