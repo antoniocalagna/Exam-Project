@@ -132,6 +132,11 @@ int Date::yearsFrom(const Date &d) const {
 
 void Date::scanDateByStr(const string &s) {
   //La funzione acquisisce una data da una stringa formattata nel seguente modo: dd/mm/yyyy
+  
+  if(s == "now") {
+    setCurrentDate();
+  }
+  
   std::stringstream ss(s);
   std::string day, month, year;
   std::getline(ss, day, '/');

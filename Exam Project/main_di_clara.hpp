@@ -250,15 +250,15 @@ int main_di_clara(/*int argc, char *argv[]*/) {
           else if (what2 == "group") {
             string tmp_n, tmp_id, tmp_loc, tmp_act, d1, d2;
             Date tmp_sub, tmp_inc;
+            cin.clear();
             cout << "Name:\n>";
             cin >> tmp_n;
             cout << "Id:\n>";
             cin >> tmp_id;
+            cin.clear();                     //Ignora l'andata a capo
             cout << "Legal location:\n>";
-            cin.ignore();
             getline(cin, tmp_loc);
             cout << "Type of activity:\n>";
-            cin.ignore();
             getline(cin, tmp_act);
             cout << "Subscription:\n>";
             cin >> d1;
@@ -649,6 +649,9 @@ int main_di_clara(/*int argc, char *argv[]*/) {
       }
       
     }
+    else if (cmd == "save") {
+      save_data = true;
+    }
     else if (cmd == "exit") {
       save_data = true;             //Richiedi di salvare i dati
       exit = true;                  //Richiedi l'uscita
@@ -675,6 +678,9 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     else {
       cycles_without_saving++;
     }
+    
+    std::cin.clear();   //Pulizia degli stream
+    command.clear();
   } while (!exit);
   return 0;
 }

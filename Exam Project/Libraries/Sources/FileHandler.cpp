@@ -142,8 +142,7 @@ FH::Error FH::FileHandler::putData(std::string (*printer_func)(IOBuffer &), IOBu
   _file.open(_filename, std::ios::out | std::ios::app);
   
   std::string data_to_add = printer_func(to_add);
-  if (!data_to_add.empty())
-    _file << data_to_add << std::endl;                  //Non aggiungere un endl se data_to_add è vuoto
+  _file << data_to_add << std::endl;
   
   _file.close();
   _file.open(_filename, std::ios::in);                  //Apri il file in modalità lettura
