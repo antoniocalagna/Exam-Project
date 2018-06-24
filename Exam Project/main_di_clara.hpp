@@ -3,6 +3,8 @@
 
 using namespace std;
 
+void flushBuffers(FH::FileHandler &fh, IOBuffer &new_data, IOBuffer &data_to_delete);
+
 int main_di_clara(/*int argc, char *argv[]*/) {
   Manager manager;
   FH::FileHandler accounts_fh("Accounts_TEST.dat"),        //FileHandler per il controllo e l'acquisizione dei dati da file
@@ -159,20 +161,22 @@ int main_di_clara(/*int argc, char *argv[]*/) {
   std::cout << "Welcome. This program is shell based, so commands should be typed in shell-style.\n"
                "Type \"help\" for a list of useful commands." << std::endl;
   
-  std::map<std::string, Shell::Function> commands;
+  std::map<std::string, Shell::Function> commands;      //Mappa di tutti i comandi e delle loro relative funzioni
   
   commands["help"] = Shell::help;
   commands["list"] = Shell::list;
   commands["get"] = Shell::get;
   commands["set"] = Shell::set;
+  commands["delete"] = Shell::del;
   
   bool exit = false;
   do {
     string input;             //Input dell'utente
     string cmd;               //Nome del comando (primo parametro dell'input)
     
+    std::cout << std::endl;
     do {                      //Acquisisci ignorando le righe vuote
-      cout << "\n>";
+      cout << ">";
       getline(cin, input);
     } while(input.empty());
     
@@ -184,112 +188,6 @@ int main_di_clara(/*int argc, char *argv[]*/) {
       commands.at(cmd)(command, manager, new_data_buffer, data_to_erase_buffer);
     }
     
-    else if (cmd == "delete") {
-      string what;
-      command >> what;
-      if (what.empty()) {
-        cout << "Error! I do not understand what you would like to delete." << endl;
-      }
-      if (what == "account") {
-        string who;
-        command >> who;
-        if (who.empty()) {
-          cout << "Error! I do not understand the ID whose User you'd like to delete." << endl;
-        }
-        else {
-          manager.deleteAccount(who);
-        }
-        
-      }
-      else if (what == "relationship") {
-        string id_start, id_target;
-        cout << "Please insert: <id_subject> <id_target>:\n";
-        cin >> id_start >> id_target;
-        if (id_start.empty() || id_target.empty()) {
-          cout << "Error! I do not understand which IDs I have to work with." << endl;
-        }
-        if (!manager.deleteRelationship(id_start, id_target)) {
-          cout << "Error! One or both of your IDs don't exist." << endl;
-        }
-      }
-      else if (what == "post") {
-        string who, tmp_news, d_t;
-        vector<Post> post;
-        int find = 0;
-        cout << "Please insert the ID whose user wrote this post:\n>";
-        cin >> who;
-        if (who.empty()) {
-          cout << "Error! You did not write any ID." << endl;
-        }
-        post = manager.getPosts(who);
-        cout << "Please insert the news of the target post:\n>";
-        cin.ignore();
-        getline(cin, tmp_news);
-        cout << "Please insert date and the time (in format dd/mm/yyyy hh:mm) of the target post:\n>";
-        cin.ignore();
-        getline(cin, d_t);
-        
-        Post cmp_post(tmp_news, d_t);
-        
-        for (auto it = post.begin(); it != post.end(); it++) {
-          if (*it == cmp_post) {
-            manager.deletePost(*it, who);
-            find = 1;
-          }
-        }
-        if (find != 1) {
-          cout << "Post not found!" << endl;
-        }
-      }
-      else if (what == "like") {
-        string who, tmp_news, d_t;
-        pair<string, vector<Post>> post;
-        
-        cout << "Please insert the news of the target post:\n>";
-        cin.ignore();
-        getline(cin, tmp_news);
-        cout << "Please insert the date and the time (in format dd/mm/yyyy hh:mm) of the target post:\n>";
-        cin.ignore();
-        getline(cin, d_t);
-        cout << "Please insert the ID whose User did not like this post anymore:\n>";
-        cin >> who;
-        
-        Post cmp_post(tmp_news, d_t);
-        
-        if (manager.setReaction(1, 0, cmp_post, who)) {
-          cout << "Done!" << endl;
-        }
-        else {
-          cout << "Error! I could not remove this like" << endl; //1-NO ID, 2-NO AUTOLIKES, 3-NO POST
-        }
-        
-      }
-      else if (what == "dislike") {
-        string who, tmp_news, d_t;
-        pair<string, vector<Post>> post;
-        
-        cout << "Please insert the news of the target post:\n>";
-        cin.ignore();
-        getline(cin, tmp_news);
-        cout << "Please insert the date and the time (in format dd/mm/yyyy hh:mm) of the target post:\n>";
-        cin.ignore();
-        getline(cin, d_t);
-        cout << "Please insert the ID whose User did not dislike this post anymore:\n>";
-        cin >> who;
-        
-        Post cmp_post(tmp_news, d_t);
-        
-        if (manager.setReaction(0, 0, cmp_post, who)) {
-          cout << "Done!" << endl;
-        }
-        else {
-          cout << "Error! I could not remove this dislike" << endl; //1-NO ID, 2-NO AUTOLIKES, 3-NO POST
-        }
-      }
-      else {
-        cout << "I do not understand what you'd like to delete." << endl;
-      }
-    }
     else if (cmd == "add") {
       string what1, what2;
       command >> what1 >> what2;
@@ -752,6 +650,10 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     else {
       std::cout << "Command \"" << cmd << "\" unknown." << std::endl;
     }
+  
+    accounts_fh.putData(FH::accountsFile, new_data_buffer, data_to_erase_buffer);
+    relations_fh.putData(FH::relationsFile, new_data_buffer, data_to_erase_buffer);
+    posts_fh.putData(FH::postsFile, new_data_buffer, data_to_erase_buffer);
   } while (!exit);
   return 0;
 }

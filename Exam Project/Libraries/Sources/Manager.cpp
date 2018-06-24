@@ -195,7 +195,7 @@ bool Manager::deleteAccount (const string &ID)
 
 bool Manager::replaceAccount(const std::string &ID_to_replace, const User &new_account)
 {
-  if (_exist_as_node(new_account.getID()))
+  if (!_exist_as_node(new_account.getID()))
     return false;
   
   if (ID_to_replace==new_account.getID())
@@ -216,7 +216,7 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const User &new_a
 
 bool Manager::replaceAccount(const std::string &ID_to_replace, const Company &new_account)
 {
-  if (_exist_as_node(new_account.getID()))
+  if (!_exist_as_node(new_account.getID()))
     return false;
   
   if (ID_to_replace==new_account.getID())
@@ -237,7 +237,7 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const Company &ne
 
 bool Manager::replaceAccount(const std::string &ID_to_replace, const Group &new_account)
 {
-  if (_exist_as_node(new_account.getID()))
+  if (!_exist_as_node(new_account.getID()))
     return false;
   
   if (ID_to_replace==new_account.getID())

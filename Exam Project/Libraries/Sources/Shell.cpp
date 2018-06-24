@@ -206,18 +206,19 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
     string id_to_set;
     User user_to_set; //user a cui vuoi cambiare info
     User user_new;
-    cout << "Please insert the ID whose User you'd like to set info about:\n>" << endl;
+    cout << "Please insert the ID whose User you'd like to set info about:" << endl;
     cin >> id_to_set; //id "vecchio" account
     user_to_set = manager.getUser(id_to_set); //se l'id non esiste, user_to_set è un default constructor
     if (user_to_set == User()) {
       cout << "Error! This ID is not valid." << endl;
     }
     else {
+      
       if (what_to_set == "name") {
         string new_name;
         user_new = user_to_set;
-        cout << "Please insert the new" << what_to_set << "." << endl;
-        //cin.ignore(); da provare se ci vada o no
+        cout << "Please insert the new " << what_to_set << "." << endl;
+        cin.ignore();
         getline(cin, new_name);
         user_new.setName(new_name);
         
@@ -514,5 +515,111 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
       }
       cout << "Done!" << endl;
     }
+  }
+}
+
+void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete) {
+  string what_to_delete;
+  command >> what_to_delete;
+  if (what_to_delete.empty()) {
+    cout << "Error! Missing parameter." << endl;
+  }
+  if (what_to_delete == "account") {
+    string ID_to_delete;
+    command >> ID_to_delete;
+    if (ID_to_delete.empty()) {
+      cout << "Error! Missing parameter." << endl;
+      return;
+    }
+    manager.deleteAccount(ID_to_delete);
+  }
+  
+  else if (what_to_delete == "relationship") {
+    string id_start, id_target;
+    cout << "Please insert: <id_subject> <id_target>:\n";
+    command >> id_start >> id_target;
+    if (id_start.empty() || id_target.empty()) {
+      cout << "Error! I do not understand which IDs I have to work with." << endl;
+    }
+    if (!manager.deleteRelationship(id_start, id_target)) {
+      cout << "Error! One or both of your IDs don't exist." << endl;
+    }
+  }
+  else if (what_to_delete == "post") {
+    string who, tmp_news, d_t;
+    vector<Post> post;
+    int find = 0;
+    cout << "Please insert the ID whose user wrote this post:\n>";
+    cin >> who;
+    if (who.empty()) {
+      cout << "Error! You did not write any ID." << endl;
+    }
+    post = manager.getPosts(who);
+    cout << "Please insert the news of the target post:\n>";
+    cin.ignore();
+    getline(cin, tmp_news);
+    cout << "Please insert date and the time (in format dd/mm/yyyy hh:mm) of the target post:\n>";
+    cin.ignore();
+    getline(cin, d_t);
+    
+    Post cmp_post(tmp_news, d_t);
+    
+    for (auto it = post.begin(); it != post.end(); it++) {
+      if (*it == cmp_post) {
+        manager.deletePost(*it, who);
+        find = 1;
+      }
+    }
+    if (find != 1) {
+      cout << "Post not found!" << endl;
+    }
+  }
+  else if (what_to_delete == "like") {
+    string who, tmp_news, d_t;
+    pair<string, vector<Post>> post;
+    
+    cout << "Please insert the news of the target post:\n>";
+    cin.ignore();
+    getline(cin, tmp_news);
+    cout << "Please insert the date and the time (in format dd/mm/yyyy hh:mm) of the target post:\n>";
+    cin.ignore();
+    getline(cin, d_t);
+    cout << "Please insert the ID whose User did not like this post anymore:\n>";
+    cin >> who;
+    
+    Post cmp_post(tmp_news, d_t);
+    
+    if (manager.setReaction(1, 0, cmp_post, who)) {
+      cout << "Done!" << endl;
+    }
+    else {
+      cout << "Error! I could not remove this like" << endl; //1-NO ID, 2-NO AUTOLIKES, 3-NO POST
+    }
+    
+  }
+  else if (what_to_delete == "dislike") {
+    string who, tmp_news, d_t;
+    pair<string, vector<Post>> post;
+    
+    cout << "Please insert the news of the target post:\n>";
+    cin.ignore();
+    getline(cin, tmp_news);
+    cout << "Please insert the date and the time (in format dd/mm/yyyy hh:mm) of the target post:\n>";
+    cin.ignore();
+    getline(cin, d_t);
+    cout << "Please insert the ID whose User did not dislike this post anymore:\n>";
+    cin >> who;
+    
+    Post cmp_post(tmp_news, d_t);
+    
+    if (manager.setReaction(0, 0, cmp_post, who)) {
+      cout << "Done!" << endl;
+    }
+    else {
+      cout << "Error! I could not remove this dislike" << endl; //1-NO ID, 2-NO AUTOLIKES, 3-NO POST
+    }
+  }
+  else {
+    cout << "I do not understand what you'd like to delete." << endl;
   }
 }

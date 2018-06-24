@@ -82,7 +82,7 @@ Error relationsFile(std::stringstream &line, IOBuffer &buff);
 Error postsFile(std::stringstream &line, IOBuffer &buff);
 
 //Stampa su file
-std::string accountsfile(IOBuffer &buff);
+std::string accountsFile(IOBuffer &buff);
 std::string relationsFile(IOBuffer &buff);
 std::string postsFile(IOBuffer &buff);
 

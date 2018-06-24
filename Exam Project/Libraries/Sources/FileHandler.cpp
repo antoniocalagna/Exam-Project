@@ -48,7 +48,8 @@ bool FH::FileHandler::open(std::string filename, bool relative_path) {
   if (relative_path) {
     if (FH::FileHandler::win_system) {
       filename = windows_relative_path + filename;
-    } else {
+    }
+    else {
       filename = mac_relative_path + filename;
     }
   }
@@ -138,10 +139,11 @@ FH::Error FH::FileHandler::putData(std::string (*printer_func)(IOBuffer &), IOBu
   std::string data_to_skip = printer_func(to_delete);   //Prepara una stringa contenente le righe del file da non copiare
   std::stringstream data_to_copy;
   _file.close();
-  _file.open(_filename, std::ios::out | std::ios::ate);
+  _file.open(_filename, std::ios::out | std::ios::app);
   
   std::string data_to_add = printer_func(to_add);
-  _file << data_to_add << std::endl;
+  if (!data_to_add.empty())
+    _file << data_to_add << std::endl;                  //Non aggiungere un endl se data_to_add è vuoto
   
   _file.close();
   _file.open(_filename, std::ios::in);                  //Apri il file in modalità lettura
@@ -345,7 +347,8 @@ FH::Error FH::accountsFile(std::stringstream &line) {
     checkField(subscription, Date::CheckDate, 0x3, 0x5);
     birth = readField("birth", info);                           //Controllo data di nascita
     checkField(birth, Date::CheckDate, 0x3, 0x6);
-  } else if (type == Account::group_type) {
+  }
+  else if (type == Account::group_type) {
     //L'account è un gruppo
     std::string name, location, activity;
     std::string inception, subscription;
@@ -360,7 +363,8 @@ FH::Error FH::accountsFile(std::stringstream &line) {
     checkField(inception, Account::nameValid, 0x3, 0x8);
     subscription = readField("sub", info);                     //Controllo data di iscrizione
     checkField(subscription, Account::nameValid, 0x3, 0x5);
-  } else if (type == Account::company_type) {
+  }
+  else if (type == Account::company_type) {
     //L'account è una compagnia
     std::string name, f_location, op_location, prod;
     std::string inception, subscription;
@@ -465,7 +469,8 @@ FH::Error FH::accountsFile(std::stringstream &line, IOBuffer &buff) {
     
     User new_user(name, surname, id, address, subscription, birth, gender[0]);
     buff << new_user;
-  } else if (type == Account::group_type) {
+  }
+  else if (type == Account::group_type) {
     //L'account è un gruppo
     std::string name, location, activity;
     Date inception, subscription;
@@ -479,7 +484,8 @@ FH::Error FH::accountsFile(std::stringstream &line, IOBuffer &buff) {
     Group new_group(name, id, location, activity, subscription, inception);
     buff << new_group;
     
-  } else if (type == Account::company_type) {
+  }
+  else if (type == Account::company_type) {
     //L'account è una compagnia
     std::string name, f_location, op_location, prod;
     Date inception, subscription;
@@ -552,7 +558,7 @@ FH::Error FH::postsFile(std::stringstream &line, IOBuffer &buff) {
  * ## Printers ##
  * ##############
  */
-std::string FH::accountsfile(IOBuffer &buff) {
+std::string FH::accountsFile(IOBuffer &buff) {
   std::stringstream out;                      //Prepara uno stringstream per poi trasformarlo in stringa
   while (!buff.usersEmpty()) {
     User usr;
