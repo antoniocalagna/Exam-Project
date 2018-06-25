@@ -33,13 +33,13 @@ int main_di_clara(/*int argc, char *argv[]*/) {
    }*/
 
   ///////////////////////////////////              CONTROLLI             //////////////////////////////////////////////
-  std::cout << "\e[1m" << "Beginning checks:" << "\e[0m" << std::endl;
+  std::cout << "\E[1m\E[33m" << "Beginning checks:" << "\E[0m" << std::endl;
   //Controllo del file degli account
-  std::cout << "Checking accounts file..." << std::endl;
+  std::cout << "\E[35mChecking accounts file...\E[0m" << std::endl;
   FH::Error check_results = accounts_fh.checkFile(FH::accountsFile);
   if (check_results.code == 0) {
-    std::cout << "* Accounts file correctly formatted and ready to be read. "
-                 "(" << check_results.data << " lines analyzed)" << std::endl;
+    std::cout << "\E[32m* Accounts file correctly formatted and ready to be read. "
+                 "(" << check_results.data << " lines analyzed)\E[0m" << std::endl;
   } else {
     std::cerr << "** Accounts file returned error code " << check_results.code << " at line " << check_results.data
               << "."
@@ -47,12 +47,12 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     return -1;
   }
 
-  std::cout << "Checking relations file..." << std::endl;
+  std::cout << "\E[35mChecking relations file...\E[0m" << std::endl;
   //Controllo del file delle relazioni
   check_results = relations_fh.checkFile(FH::relationsFile);
   if (check_results.code == 0) {
-    std::cout << "* Relations file correctly formatted and ready to be read. "
-                 "(" << check_results.data << " lines analyzed)" << std::endl;
+    std::cout << "\E[32m* Relations file correctly formatted and ready to be read. "
+                 "(" << check_results.data << " lines analyzed)\E[0m" << std::endl;
   } else {
     std::cerr << "** Relations file returned error code " << check_results.code << " at line " << check_results.data
               << "."
@@ -61,11 +61,11 @@ int main_di_clara(/*int argc, char *argv[]*/) {
   }
 
   //Controllo del file dei post
-  std::cout << "Checking posts file..." << std::endl;
+  std::cout << "\E[35mChecking posts file...\E[0m" << std::endl;
   check_results = posts_fh.checkFile(FH::postsFile);
   if (check_results.code == 0) {
-    std::cout << "* Posts file correctly formatted and ready to be read. "
-                 "(" << check_results.data << " lines analyzed)" << std::endl;
+    std::cout << "\E[32m* Posts file correctly formatted and ready to be read. "
+                 "(" << check_results.data << " lines analyzed)\E[0m" << std::endl;
   } else {
     std::cerr << "** Posts file returned error code " << check_results.code << " at line " << check_results.data << "."
               << "File needs to be corrected before data can be read." << std::endl;
@@ -73,13 +73,13 @@ int main_di_clara(/*int argc, char *argv[]*/) {
   }
 
   //Controlli completati
-  std::cout << "Checks completed.\n" << std::endl;
+  std::cout << "\E[33mChecks completed.\E[0m\n" << std::endl;
 
   ///////////////////////////////////            ACQUISIZIONE             //////////////////////////////////////////////
 
-  std::cout << "Beginning acquisition: " << std::endl;
+  std::cout << "\E[1m\E[33mBeginning acquisition:\E[0m" << std::endl;
 
-  std::cout << "Acquiring accounts..." << std::endl;
+  std::cout << "\E[35mAcquiring accounts...\E[0m" << std::endl;
   accounts_fh.fetchData(FH::accountsFile, new_data_buffer);
   while (!new_data_buffer.usersEmpty()) {
     User user_tmp;
@@ -108,9 +108,9 @@ int main_di_clara(/*int argc, char *argv[]*/) {
       return -2;
     }
   }
-  std::cout << "* Accounts correctly acquired." << std::endl;
+  std::cout << "\E[32m* Accounts correctly acquired.\E[0m" << std::endl;
 
-  std::cout << "Acquiring relations..." << std::endl;
+  std::cout << "\E[35mAcquiring relations...\E[0m" << std::endl;
 
   relations_fh.fetchData(FH::relationsFile, new_data_buffer);
   while (!new_data_buffer.relationsEmpty()) {
@@ -144,9 +144,9 @@ int main_di_clara(/*int argc, char *argv[]*/) {
 
     }
   }
-  std::cout << "* Relations correctly acquired." << std::endl;
+  std::cout << "\E[32m* Relations correctly acquired.\E[0m" << std::endl;
 
-  std::cout << "Acquiring posts..." << std::endl;
+  std::cout << "\E[35mAcquiring posts...\E[0m" << std::endl;
   posts_fh.fetchData(FH::postsFile, new_data_buffer);
   while (!new_data_buffer.postsEmpty()) {
     IOBuffer::m_Post post_tmp;
@@ -157,12 +157,12 @@ int main_di_clara(/*int argc, char *argv[]*/) {
       return -3;
     }
   }
-  std::cout << "* Posts correctly acquired." << std::endl;
-  std::cout << "Acquisition completed.\n" << std::endl;
+  std::cout << "\E[32m* Posts correctly acquired.\E[0m" << std::endl;
+  std::cout << "\E[33mAcquisition completed.\E[0m\n" << std::endl;
 
   ///////////////////////////////////          INIZIO  PROGRAMMA          //////////////////////////////////////////////
-  std::cout << "Welcome. This program is shell based, so commands should be typed in shell-style.\n"
-               "Type \"help\" for a list of useful commands." << std::endl;
+  std::cout << "\E[1m\E[34mWelcome. This program is shell based, so commands should be typed in shell-style.\n"
+               "Type \"help\" for a list of useful commands.\E[0m" << std::endl;
 
   std::map<std::string, Shell::Function> commands{      //Mappa che lega il nome del comando alla sua funzione
           std::make_pair("help", Shell::help),          //Inizzializiamo le coppie come pair nome - pointer a funzione
