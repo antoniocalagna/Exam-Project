@@ -104,7 +104,11 @@ Group Manager::getGroup(const std::string &ID) const
 
 vector<Post> Manager::getPosts(const std::string &ID) const
 {
-  return _map_posts.at(ID);
+  vector<Post> output;
+   if(_map_posts.count(ID)) {
+     output = _map_posts.at(ID);
+   }
+  return output;
 }
 
 string Manager::getRelationship(const std::string &starting_ID, const std::string &target_ID) const
@@ -373,12 +377,15 @@ bool Manager::addPost(const Post &post_to_add, const std::string &whose_ID)
   return true;
 }
 
-bool Manager::deletePost(const Post &post_to_delete, const std::string &whose_ID)
+bool Manager::deletePost(const std::string &whose_ID, int post_num)
 {
   if (_map_posts.count(whose_ID)==0)
     return false;
-  auto it=find(_map_posts.at(whose_ID).begin(), _map_posts.at(whose_ID).end(), post_to_delete);
-  _map_posts.at(whose_ID).erase(it);
+  vector<Post> &posts = _map_posts.at(whose_ID);
+  if(posts.size() <= post_num) {
+    return false;                                   //L'account non ha il post richiesto
+  }
+  _map_posts.at(whose_ID).erase(posts.begin() + post_num);
   return true;
 }
 

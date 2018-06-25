@@ -591,6 +591,7 @@ std::string FH::postsFile(IOBuffer &buff) {
   std::stringstream out;
   while (!buff.postsEmpty()) {
     IOBuffer::m_Post post;
+    buff >> post;
     out << formatOutput(post);
   }
   return out.str();
