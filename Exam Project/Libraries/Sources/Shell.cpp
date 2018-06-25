@@ -59,22 +59,22 @@ void Shell::help(std::stringstream &command, Manager &manager, IOBuffer &new_dat
           "stats number members\n"
           "stats number born_after\n"
        << endl;
-  cout << "most employing_company\n" //DA UNIRE
-          "most employing_partnership\n"
-          "most user_friends\n"
-          "most user_acquaintances\n"
-          "most liked_post\n"
-          "most disliked_post\n"
-          "most liked_account\n"
-          "most disliked_account\n"
+  cout << "stats most employing_company\n" //DA UNIRE
+          "stats most employing_partnership\n"
+          "stats most user_friends\n"
+          "stats most user_acquaintances\n"
+          "stats most liked_post\n"
+          "stats most disliked_post\n"
+          "stats most liked_account\n"
+          "stats most disliked_account\n"
        << endl;
-  cout << "average_age\n"
-          "best_post\n"
-          "worse_post\n"
+  cout << "stats average_age\n"
+          "stats best_post\n"
+          "stats worse_post\n"
        << endl;
   cout << "search genealogical_trees\n"
           "search genealogical_tree\n"
-          "search loner_people\n"   //consulente di inglese: Brendan Polidori
+          "search loner_people\n"
           "search friendly_companies\n"
           << endl;
 }
@@ -574,5 +574,161 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
     }
   } else {
     cout << "I do not understand what you'd like to delete." << endl;
+  }
+}
+
+void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete){
+  string what1, what2;
+  command >> what1 >> what2;
+  if (what1 == "number") {
+    size_t num;
+    string id;
+    if (what2 == "accounts")
+      num = manager.NumAccounts();
+    else if (what2 == "users")
+      num = manager.NumUsers();
+    else if (what2 == "groups")
+      num = manager.NumGroups();
+    else if (what2 == "companies")
+      num = manager.NumCompanies();
+    else if (what2 == "friends") {
+      cout << "Please insert the target ID:\n>";
+      cin >> id;
+      num = manager.NumFriends(id);
+      if (num == 0) {
+        cout << "Error! " << id << " is not a User or it does not exist." << endl;
+      } else {
+        cout << "The number of " << what2 << " is: " << num << endl;
+      }
+    } else if (what2 == "relatives") {
+      cout << "Please insert the ID:\n>";
+      cin >> id;
+      num = manager.NumRelatives(id);
+      if (num == 0) {
+        cout << "Error! " << id << " is not a User or it does not exist." << endl;
+      } else {
+        cout << "The number of " << what2 << " is: " << num << endl;
+      }
+    } else if (what2 == "employees") {
+      cout << "Please insert the ID of the Company employer:\n>";
+      cin >> id;
+      num = manager.NumEmployees(id);
+      if (num == 0) {
+        cout << "Error! " << id <<  "is not a Company or it does not exist." << endl;
+      } else {
+        cout << "The number of " << what2 << " is: " << num << endl;
+      }
+    } else if (what2 == "subsidiaries") {
+      cout << "Please insert the target ID:\n>";
+      cin >> id;
+      num = manager.NumSubsidiaries(id);
+      if (num == 0) {
+        cout << "Error! " << id << " is not a Company or it does not exist." << endl;
+      } else {
+        cout << "The number of " << what2 << " is: " << num << endl;
+      }
+    } else if (what2 == "members") {
+      cout << "Please insert the target ID:\n>";
+      cin >> id;
+      num = manager.NumMembers(id);
+      if (num == 0) {
+        cout << "Error! " << id << " is not a Group or it does not exist." << endl;
+      } else {
+        cout << "The number of " << what2 << " is: " << num << endl;
+      }
+    } else if (what2 == "born_after") {
+      string date;
+      Date born_d;
+      //int not_valid;
+      cout << "Please insert the starting date (in format dd/mm/yyyy):\n>";
+      cin >> date;
+      if (born_d.CheckDate(date)) {
+        born_d.scanDateByStr(date);
+        num = manager.NumBornAfter(born_d);
+        cout << "The number of people born after your date is: " << num << endl;
+      } else {
+        cout << "Error! This date is not valid." << endl;
+        num = 0;
+      }
+    } else {
+      cout << "Error! I do not understand what statistic you'd like to retreive." << endl;
+      num = 0;
+    }
+    cout << num ;
+
+  } else if (what1 == "most") {
+    if (what2 == "employing_company") {
+      Company empl_comp;
+      empl_comp = manager.MostEmployingCompany();
+      cout << "Name: " << empl_comp.getName() << "\n"
+           << "Financial location: " << empl_comp.getFinancialLocation() << "\n"
+           << "Operative location: " << empl_comp.getOperativeLocation() << "\n"
+           << "Product: " << empl_comp.getTypeOfProduct() << "\n"
+           << "Inception: " << empl_comp.getInception() << "\n"
+           << "Birth Date: " << empl_comp.getSubscription() << std::endl;
+
+    } else if (what2 == "employing_partnership") {
+      vector<string> part;
+      part = manager.MostEmployingPartnership();
+      cout << "The members of the Most Employing Partnership are:\n";
+      for (auto it = part.begin(); it != part.end(); it++) {
+        cout << *it << endl;
+      }
+    } else if (what2 == "user_friends") {
+      User mostfr_user;
+      mostfr_user = manager.UserWithMostFriends();
+      cout << "Name:" << mostfr_user.getName() << "\n"
+           << "Surname: " << mostfr_user.getSurname() << "\n"
+           << "Gender: " << mostfr_user.getGender() << "\n"
+           << "Address: " << mostfr_user.getAddress() << "\n"
+           << "Birth Date :" << mostfr_user.getBirth() << "\n"
+           << "Subscription Date: " << mostfr_user.getSubscription() << std::endl;
+
+    } else if (what2 == "user_acquaintances") {
+      User mostacq_user;
+      mostacq_user = manager.UserWithMostAcquaintances();
+      cout << "Name:" << mostacq_user.getName() << "\n"
+           << "Surname: " << mostacq_user.getSurname() << "\n"
+           << "Gender: " << mostacq_user.getGender() << "\n"
+           << "Address: " << mostacq_user.getAddress() << "\n"
+           << "Birth Date :" << mostacq_user.getBirth() << "\n"
+           << "Subscription Date: " << mostacq_user.getSubscription() << std::endl;
+
+    } else if (what2 == "liked_post") {
+      pair<string, Post> l_post;
+      l_post = manager.MostLikedPost();
+      cout << "The Most Liked Post is:\n" << l_post.second << endl
+           << "Wrote by: " << l_post.first;
+
+    } else if (what2 == "disliked_post") {
+      pair<string, Post> d_post;
+      d_post = manager.MostDislikedPost();
+      cout << "The Most Disliked Post is:\n" << d_post.second << endl
+           << "Wrote by: " << d_post.first;
+
+    } else if (what2 == "liked_account") {
+      cout << "The Most Liked Account is:\n" << manager.MostLiked_DislikedAccount(1);
+
+    } else if (what2 == "disliked_account") {
+      cout << "The Most Disliked Account is:\n" << manager.MostLiked_DislikedAccount(0);
+
+    } else {
+      cout << "Error! I do not understand what statistic you'd like to retreive." << endl;
+    }
+
+  } else if (what1 == "average_age") {
+    cout << "The Average of Users' ages is:\n"
+         << manager.UsersAverageAge() << endl;
+
+  } else if (what1 == "best_post") {
+    pair<string, Post> best_post;
+    best_post = manager.RatioReactionPost(1);
+    cout << "The Post with the best Like/Dislike ratio is:\n" << best_post.second << endl
+         << "Wrote by: " << best_post.first;
+  } else if (what1 == "worse_post") {
+    pair<string, Post> worse_post;
+    worse_post = manager.RatioReactionPost(0);
+    cout << "The Post with the worse Like/Dislike ratio is:\n" << worse_post.second << endl
+         << "Wrote by: " << worse_post.first;
   }
 }
