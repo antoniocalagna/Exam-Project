@@ -42,7 +42,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
                  "(" << check_results.data << " lines analyzed)" << std::endl;
   }
   else {
-    std::cerr << "** Accounts file returned error code " << check_results.code << " at line " << check_results.data
+    std::cerr << "** Accounts file returned error code " << std::hex << check_results.code << " at line " << std::dec <<check_results.data
               << "."
               << "File needs to be corrected before data can be read." << std::endl;
     return -1;
@@ -56,7 +56,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
                  "(" << check_results.data << " lines analyzed)" << std::endl;
   }
   else {
-    std::cerr << "** Relations file returned error code " << check_results.code << " at line " << check_results.data
+    std::cerr << "** Relations file returned error code " << std::hex <<check_results.code << " at line " << std::dec << check_results.data
               << "."
               << "File needs to be corrected before data can be read." << std::endl;
     return -1;
@@ -70,7 +70,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
                  "(" << check_results.data << " lines analyzed)" << std::endl;
   }
   else {
-    std::cerr << "** Posts file returned error code " << check_results.code << " at line " << check_results.data << "."
+    std::cerr << "** Posts file returned error code " << std::hex <<check_results.code << " at line " << check_results.data << "."
               << "File needs to be corrected before data can be read." << std::endl;
     return -1;
   }
@@ -88,7 +88,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     User user_tmp;
     new_data_buffer >> user_tmp;
     if (!manager.addAccount(user_tmp)) {
-      std::cerr << "Accounts file returned error code: " << user_tmp.getID() << "is not unique.\n"
+      std::cerr << "Accounts file returned an error. " <<user_tmp.getID() << "is not unique.\n"
                 << "File needs to be corrected before data can be acquired." << std::endl;
       return -2;; //ritorno -2 quando l'id non è univoco
     }
@@ -97,7 +97,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     Group group_tmp;
     new_data_buffer >> group_tmp;
     if (!manager.addAccount(group_tmp)) {
-      std::cerr << "Accounts file returned error code: " << group_tmp.getID() << "is not unique.\n"
+      std::cerr << "Accounts file returned an error. " << group_tmp.getID() << "is not unique.\n"
                 << "File needs to be corrected before data can be acquired." << std::endl;
       return -2;
     }
@@ -106,7 +106,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     Company comp_tmp;
     new_data_buffer >> comp_tmp;
     if (!manager.addAccount(comp_tmp)) {
-      std::cerr << "Accounts file returned error code, the id: " << comp_tmp.getID() << "is not unique.\n"
+      std::cerr << "Accounts file returned an error. " << comp_tmp.getID() << "is not unique.\n"
                 << "File needs to be corrected before data can be acquired." << std::endl;
       return -2;
     }

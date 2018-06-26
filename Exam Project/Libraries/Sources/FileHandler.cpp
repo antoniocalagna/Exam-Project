@@ -109,7 +109,7 @@ FH::Error FH::FileHandler::fetchLineData(Error (*fetcher_func)(stringstream &, I
     return {0, 0};     //Ignora le righe vuote
   }
   
-  if (line.size() >= 2) {
+  if (line.size() > 2) {
     if (line.substr(0, 2) == "//") {
       return {0, 0};    //Riga commento
     }
@@ -269,7 +269,7 @@ std::string FH::formatOutput(const Company &company) {
   std::stringstream out;
   out << company.getID() << "," << Account::company_type
       << ",{" << "name:{" << company.getName()
-      << "},finantial_loc:{" << company.getFinancialLocation()
+      << "},financial_loc:{" << company.getFinancialLocation()
       << "},operative_loc:{" << company.getOperativeLocation()
       << "},inception:{" << company.getInception()
       << "},prod:{" << company.getTypeOfProduct()
@@ -315,13 +315,18 @@ std::string FH::formatOutput(const IOBuffer::m_Post &post) {
  */
 FH::Error FH::accountsFile(std::stringstream &line) {
   std::string id, type_s;
+  FH::Error check_result;
   //Acquisisci e controlla l'ID
   std::getline(line, id, ',');                                  //Acquisisci l'ID
-  checkField(id, Account::IDValid, 0x1, 0x1);                   //Controllalo
+  check_result = check_result = checkField(id, Account::IDValid, 0x1, 0x1);
+  if(check_result.code != 0)
+    return check_result;                //Controllalo
   
   //Acquisisci e controlla il tipo di account
   std::getline(line, type_s, ',');                              //Acquisisci il tipo
-  checkField(type_s, Account::typeValid, 0x2, 0x1);
+  check_result = check_result = checkField(type_s, Account::typeValid, 0x2, 0x1);
+  if(check_result.code != 0)
+    return check_result;
   char type = type_s[0];
   type_s.clear();                                               //Libera la stringa
   
@@ -335,17 +340,29 @@ FH::Error FH::accountsFile(std::stringstream &line) {
     std::string birth, subscription;
     
     name = readField("name", info);                             //Controllo nome
-    checkField(name, Account::nameValid, 0x3, 0x1);
+    check_result = checkField(name, Account::nameValid, 0x3, 0x1);
+    if(check_result.code != 0)
+      return check_result;
     surname = readField("surname", info);                       //Controllo cognome
-    checkField(surname, Account::nameValid, 0x3, 0x2);
+    check_result = checkField(surname, Account::nameValid, 0x3, 0x2);
+    if(check_result.code != 0)
+      return check_result;
     gender = readField("gender", info);                         //Controllo genere
-    checkField(gender, Account::nameValid, 0x3, 0x3);
+    check_result = checkField(gender, Account::nameValid, 0x3, 0x3);
+    if(check_result.code != 0)
+      return check_result;
     address = readField("addr", info);                          //Controllo indirizzo
-    checkField(address, Account::nameValid, 0x3, 0x4);
+    check_result = checkField(address, Account::nameValid, 0x3, 0x4);
+    if(check_result.code != 0)
+      return check_result;
     subscription = readField("sub", info);                      //Controllo data di iscrizione
-    checkField(subscription, Date::CheckDate, 0x3, 0x5);
+    check_result = checkField(subscription, Date::CheckDate, 0x3, 0x5);
+    if(check_result.code != 0)
+      return check_result;
     birth = readField("birth", info);                           //Controllo data di nascita
-    checkField(birth, Date::CheckDate, 0x3, 0x6);
+    check_result = checkField(birth, Date::CheckDate, 0x3, 0x6);
+    if(check_result.code != 0)
+      return check_result;
   }
   else if (type == Account::group_type) {
     //L'account è un gruppo
@@ -353,15 +370,25 @@ FH::Error FH::accountsFile(std::stringstream &line) {
     std::string inception, subscription;
     
     name = readField("name", info);                             //Controllo nome
-    checkField(name, Account::nameValid, 0x3, 0x1);
+    check_result = checkField(name, Account::nameValid, 0x3, 0x1);
+    if(check_result.code != 0)
+      return check_result;
     location = readField("location", info);                     //Controllo posizione legale
-    checkField(location, Account::nameValid, 0x3, 0x4);
+    check_result = checkField(location, Account::nameValid, 0x3, 0x4);
+    if(check_result.code != 0)
+      return check_result;
     activity = readField("activity", info);                     //Controllo attività
-    checkField(activity, Account::nameValid, 0x3, 0x7);
+    check_result = checkField(activity, Account::nameValid, 0x3, 0x7);
+    if(check_result.code != 0)
+      return check_result;
     inception = readField("inception", info);                   //Controllo data di creazione del gruppo
-    checkField(inception, Account::nameValid, 0x3, 0x8);
+    check_result = checkField(inception, Account::nameValid, 0x3, 0x8);
+    if(check_result.code != 0)
+      return check_result;
     subscription = readField("sub", info);                     //Controllo data di iscrizione
-    checkField(subscription, Account::nameValid, 0x3, 0x5);
+    check_result = checkField(subscription, Account::nameValid, 0x3, 0x5);
+    if(check_result.code != 0)
+      return check_result;
   }
   else if (type == Account::company_type) {
     //L'account è una compagnia
@@ -369,17 +396,29 @@ FH::Error FH::accountsFile(std::stringstream &line) {
     std::string inception, subscription;
     
     name = readField("name", info);                                     //Controllo nome
-    checkField(name, Account::nameValid, 0x3, 0x1);
+    check_result = checkField(name, Account::nameValid, 0x3, 0x1);
+    if(check_result.code != 0)
+      return check_result;
     prod = readField("prod", info);                                     //Controllo prodotto
-    checkField(prod, Account::nameValid, 0x3, 0xA);
-    f_location = readField("financial_loc", info);                      //Controllo della finantial location
-    checkField(f_location, Account::nameValid, 0x3, 0x4);
+    check_result = checkField(prod, Account::nameValid, 0x3, 0xA);
+    if(check_result.code != 0)
+      return check_result;
+    f_location = readField("finncial_loc", info);                      //Controllo della finantial location
+    check_result = checkField(f_location, Account::nameValid, 0x3, 0x4);
+    if(check_result.code != 0)
+      return check_result;
     op_location = readField("operative_loc", info);                     //Controllo della operative location
-    checkField(f_location, Account::nameValid, 0x3, 0x4);
+    check_result = checkField(f_location, Account::nameValid, 0x3, 0x4);
+    if(check_result.code != 0)
+      return check_result;
     inception = readField("inception", info);              //Controllo data di creazione della compagnia
-    checkField(inception, Date::CheckDate, 0x3, 0x8);
+    check_result = checkField(inception, Date::CheckDate, 0x3, 0x8);
+    if(check_result.code != 0)
+      return check_result;
     subscription = readField("sub", info);                 //Controllo data di iscrizione
-    checkField(subscription, Date::CheckDate, 0x3, 0x5);
+    check_result = checkField(subscription, Date::CheckDate, 0x3, 0x5);
+    if(check_result.code != 0)
+      return check_result;
   }
   return {0, 0};
 }
@@ -404,9 +443,12 @@ FH::Error FH::postsFile(std::stringstream &line) {
   std::string id, message;
   std::string like, dislike;
   std::string date;
+  FH::Error check_result;
   
   std::getline(line, id, ',');                                        //Acquisici l'ID
-  checkField(id, Account::IDValid, 0x1, 0x1);
+  check_result = checkField(id, Account::IDValid, 0x1, 0x1);
+  if(check_result.code != 0)
+    return check_result;
   
   std::getline(line, message, ',');
   while (!isFormatChar(line.str(), message.size() + id.size() + 1)) {
@@ -417,27 +459,33 @@ FH::Error FH::postsFile(std::stringstream &line) {
   if (!line.good()) { return {0x13000009, 0}; }                       //Errore di formattazione del messaggio
   
   std::getline(line, date, ',');
-  checkField(date, Date::CheckDate, 0x3, 0xB);
+  check_result = checkField(date, Date::CheckDate, 0x3, 0xB);
+  if(check_result.code != 0)
+    return check_result;
   
   std::string reactions;
   std::getline(line, reactions);                                      //Acquisici il resto della riga
   std::stringstream likes_ss(readField("likes", reactions));          //Metti i likes in uno stringstream
   while (likes_ss.good() && likes_ss.gcount() != 0) {
     std::getline(likes_ss, like, ',');
-    checkField(like, Account::IDValid, 0x1, 0x1);
+    check_result = checkField(like, Account::IDValid, 0x1, 0x1);
+    if(check_result.code != 0)
+      return check_result;
   }
   
   std::stringstream dislikes_ss(readField("dislikes", reactions));   //Metti i dislikes in uno stringstream
   while (dislikes_ss.good() && dislikes_ss.gcount() != 0) {
     std::getline(dislikes_ss, dislike);
-    checkField(dislike, Account::IDValid, 0x1, 0x1);
+    check_result = checkField(dislike, Account::IDValid, 0x1, 0x1);
+    if(check_result.code != 0)
+      return check_result;
   }
   return {0, 0};
 }
 
-/**###################
- * ## Acquisitzione ##
- * ###################
+/**#################
+ * ## Acquisition ##
+ * #################
  */
 FH::Error FH::accountsFile(std::stringstream &line, IOBuffer &buff) {
   std::string id;
