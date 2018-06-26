@@ -526,9 +526,8 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     string tmp_n, tmp_s, tmp_id, tmp_a, d1, d2;
     Date tmp_sub, tmp_b;
     char tmp_g;
-    cin.ignore();
     cout << "Name:\n>";
-    getline(cin, tmp_n);
+    getline(cin, tmp_s);
     cout << "Surname:\n>";
     getline(cin, tmp_n);
     cout << "Id:\n>";
