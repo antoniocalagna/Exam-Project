@@ -596,7 +596,7 @@ FH::Error FH::postsFile(std::stringstream &line, IOBuffer &buff) {
   
   std::stringstream dislikes_ss(readField("dislikes", reactions));   //Metti i dislikes in uno stringstream
   while (dislikes_ss.good() && dislikes_ss.gcount() != 0) {
-    std::getline(dislikes_ss, dislike);
+    std::getline(dislikes_ss, dislike, ',');
     new_post.AddDislike(dislike);
   }
   buff << std::pair<std::string, Post>(id, new_post);
