@@ -555,6 +555,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
       cout << "Error! Account could not be created." << endl;
       return;
     }
+    new_data << new_u;
   }
   else if (what_to_add == "group") {
     string tmp_n, tmp_id, tmp_loc, tmp_act, d1, d2;
@@ -577,8 +578,9 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     Group new_g(tmp_n, tmp_id, tmp_loc, tmp_act, tmp_sub, tmp_inc);
     if (!manager.addAccount(new_g)) {
       cout << "Error! Your ID already exists!";
+      return;
     }
-    else cout << "Done!";
+    new_data << new_g;
   }
   else if (what_to_add == "company") {
     string tmp_n, tmp_id, tmp_finloc, tmp_oploc, tmp_p, d1, d2;
@@ -650,6 +652,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
         cout << "Error! The relationship and the Users' ages are not compatible!" << endl;
         return;
       }
+      new_data << std::make_pair(std::make_pair(who1, who2), type_rel);
     }
   }
   else if (what_to_add == "post") {

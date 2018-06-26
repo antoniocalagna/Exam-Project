@@ -5,6 +5,8 @@
 #ifndef SOCIAL_NETWORK_SHELL_H
 #define SOCIAL_NETWORK_SHELL_H
 
+#include <iostream>
+#include <utility>
 #include <fstream>
 #include "IOBuffer.h"
 #include "Manager.h"
