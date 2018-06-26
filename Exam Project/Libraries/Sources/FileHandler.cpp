@@ -382,11 +382,11 @@ FH::Error FH::accountsFile(std::stringstream &line) {
     if(check_result.code != 0)
       return check_result;
     inception = readField("inception", info);                   //Controllo data di creazione del gruppo
-    check_result = checkField(inception, Account::nameValid, 0x3, 0x8);
+    check_result = checkField(inception, Date::CheckDate, 0x3, 0x8);
     if(check_result.code != 0)
       return check_result;
     subscription = readField("sub", info);                     //Controllo data di iscrizione
-    check_result = checkField(subscription, Account::nameValid, 0x3, 0x5);
+    check_result = checkField(subscription, Date::CheckDate, 0x3, 0x5);
     if(check_result.code != 0)
       return check_result;
   }
