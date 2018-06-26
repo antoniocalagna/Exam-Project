@@ -285,7 +285,7 @@ std::string FH::formatOutput(const IOBuffer::Relation &relation) {
 
 std::string FH::formatOutput(const IOBuffer::m_Post &post) {
   std::stringstream out;
-  out << post.first << "," << formatString(post.second.getNews()) << "," /*<< post.second.getDate()*/;    //Formatta il messaggio
+  out << post.first << "," << formatString(post.second.getNews()) << "," ;    //Formatta il messaggio
   
   out << "," << post.second.getDate() <<  ",";                        //Formatta la data
   
