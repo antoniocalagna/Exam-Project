@@ -42,9 +42,9 @@ int main_di_clara(/*int argc, char *argv[]*/) {
                  "(" << check_results.data << " lines analyzed)" << std::endl;
   }
   else {
-    std::cerr << "** Accounts file returned error code " << check_results.code << " at line " << check_results.data
+    std::cerr << "** Accounts file returned error code " << std::hex << check_results.code << " at line " << std::dec <<check_results.data
               << "."
-              << "File needs to be corrected before data can be read." << std::endl;
+              << " File needs to be corrected before data can be read." << std::endl;
     return -1;
   }
   
@@ -56,9 +56,9 @@ int main_di_clara(/*int argc, char *argv[]*/) {
                  "(" << check_results.data << " lines analyzed)" << std::endl;
   }
   else {
-    std::cerr << "** Relations file returned error code " << check_results.code << " at line " << check_results.data
+    std::cerr << "** Relations file returned error code " << std::hex <<check_results.code << " at line " << std::dec << check_results.data
               << "."
-              << "File needs to be corrected before data can be read." << std::endl;
+              << " File needs to be corrected before data can be read." << std::endl;
     return -1;
   }
   
@@ -70,8 +70,8 @@ int main_di_clara(/*int argc, char *argv[]*/) {
                  "(" << check_results.data << " lines analyzed)" << std::endl;
   }
   else {
-    std::cerr << "** Posts file returned error code " << check_results.code << " at line " << check_results.data << "."
-              << "File needs to be corrected before data can be read." << std::endl;
+    std::cerr << "** Posts file returned error code " << std::hex <<check_results.code << " at line " << check_results.data << "."
+              << " File needs to be corrected before data can be read." << std::endl;
     return -1;
   }
   
@@ -88,8 +88,8 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     User user_tmp;
     new_data_buffer >> user_tmp;
     if (!manager.addAccount(user_tmp)) {
-      std::cerr << "Accounts file returned error code: " << user_tmp.getID() << "is not unique.\n"
-                << "File needs to be corrected before data can be acquired." << std::endl;
+      std::cerr << "Accounts file returned an error. " <<user_tmp.getID() << "is not unique.\n"
+                << " File needs to be corrected before data can be acquired." << std::endl;
       return -2;; //ritorno -2 quando l'id non è univoco
     }
   }
@@ -97,8 +97,8 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     Group group_tmp;
     new_data_buffer >> group_tmp;
     if (!manager.addAccount(group_tmp)) {
-      std::cerr << "Accounts file returned error code: " << group_tmp.getID() << "is not unique.\n"
-                << "File needs to be corrected before data can be acquired." << std::endl;
+      std::cerr << "Accounts file returned an error. " << group_tmp.getID() << "is not unique.\n"
+                << " File needs to be corrected before data can be acquired." << std::endl;
       return -2;
     }
   }
@@ -106,8 +106,8 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     Company comp_tmp;
     new_data_buffer >> comp_tmp;
     if (!manager.addAccount(comp_tmp)) {
-      std::cerr << "Accounts file returned error code, the id: " << comp_tmp.getID() << "is not unique.\n"
-                << "File needs to be corrected before data can be acquired." << std::endl;
+      std::cerr << "Accounts file returned an error. " << comp_tmp.getID() << "is not unique.\n"
+                << " File needs to be corrected before data can be acquired." << std::endl;
       return -2;
     }
   }
@@ -126,26 +126,26 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     int err = manager.addRelationship(id_start, id_target, relationship);
     if (err == -1) {
       std::cerr << "Accounts file returned error code, the id " << id_start << " does not exist.\n"
-                << "File needs to be corrected before data can be acquiredd." << std::endl;
+                << " File needs to be corrected before data can be acquiredd." << std::endl;
       return -3; //ritorno -3 quando l'id non esiste
       
     }
     else if (err == -2) {
       std::cerr << "Accounts file returned error code, the id " << id_target << " does not exist.\n"
-                << "File needs to be corrected before data can be acquired." << std::endl;
+                << " File needs to be corrected before data can be acquired." << std::endl;
       return -3;
       
     }
     else if (err == -3) {
       std::cerr << "Accounts file returned error code, the relationship " << relationship << " does not exist.\n"
-                << "File needs to be corrected before data can be acquired." << std::endl;
+                << " File needs to be corrected before data can be acquired." << std::endl;
       return -4; //ritorno -4 quando la relazione non esiste o non può esistere
       
     }
     else if (err == -4) {
       std::cerr << "Accounts file returned error code, the relationship " << relationship
                 << " and the Users' ages are not compatible.\n"
-                << "File needs to be corrected before data can be acquired." << std::endl;
+                << " File needs to be corrected before data can be acquired." << std::endl;
       return -4;
       
     }
@@ -159,7 +159,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     new_data_buffer >> post_tmp;
     if (!manager.addPost(post_tmp.second, post_tmp.first)) {
       std::cerr << "Accounts file returned error code, the id " << post_tmp.first << " does not exist.\n"
-                << "File needs to be corrected before data can be acquired." << std::endl;
+                << " File needs to be corrected before data can be acquired." << std::endl;
       return -3;
     }
   }
