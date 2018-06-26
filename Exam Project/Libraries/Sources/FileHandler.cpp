@@ -403,7 +403,7 @@ FH::Error FH::accountsFile(std::stringstream &line) {
     check_result = checkField(prod, Account::nameValid, 0x3, 0xA);
     if(check_result.code != 0)
       return check_result;
-    f_location = readField("finncial_loc", info);                      //Controllo della finantial location
+    f_location = readField("financial_loc", info);                      //Controllo della finantial location
     check_result = checkField(f_location, Account::nameValid, 0x3, 0x4);
     if(check_result.code != 0)
       return check_result;
