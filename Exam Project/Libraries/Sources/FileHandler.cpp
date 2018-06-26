@@ -289,7 +289,7 @@ std::string FH::formatOutput(const IOBuffer::m_Post &post) {
   
   out << "," << post.second.getDate() <<  ",";                        //Formatta la data
   
-  out << ",likes:{";                                                  //Elabora la lista dei likes
+  out << "likes:{";                                                  //Elabora la lista dei likes
   std::vector<std::string> temp = post.second.getLikes();
   for (int i = 0; i < temp.size(); i++) {
     out << temp[i];
