@@ -778,7 +778,31 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
       cout << "Error! Missing parameter." << endl;
       return;
     }
-    manager.deleteAccount(ID_to_delete);
+    
+    char type = manager.getAccountType(ID_to_delete);
+    
+    if(type == Account::user_type) {
+      User temp = manager.getUser(ID_to_delete);
+      if (manager.deleteAccount(ID_to_delete)) {
+        data_to_delete << temp;
+      }
+    }
+    else if(type == Account::group_type) {
+      Group temp = manager.getGroup(ID_to_delete);
+      if (manager.deleteAccount(ID_to_delete)) {
+        data_to_delete << temp;
+      }
+    }
+    else if(type == Account::company_type) {
+      Company temp = manager.getCompany(ID_to_delete);
+      if (manager.deleteAccount(ID_to_delete)) {
+        data_to_delete << temp;
+      }
+    }
+    else {
+      std::cout << "Account not valid." << std::endl;
+      return;
+    }
   }
   
   else if (what_to_delete == "relationship") {
@@ -794,10 +818,16 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
     std::string post_owner;
     unsigned int post_num;
     command >> post_owner >> post_num;
+    std:vector<Post> posts = manager.getPosts(post_owner);
+    if(posts.size() <= post_num) {
+      std::cout << post_owner << " does not have post " << post_num << std::endl;
+      return;
+    }
     if(!manager.deletePost(post_owner, post_num)) {
       cout << "Error! Post " << post_num << " from " << post_owner << " could not be deleted." << endl;
       return;
     }
+    data_to_delete << std::make_pair(post_owner, posts[post_num]);
   }
   
   else if (what_to_delete == "like") {
@@ -805,21 +835,17 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
     pair<string, vector<Post>> post;
     
     cout << "Please insert the news of the target post:\n>";
-    cin.ignore();
     getline(cin, tmp_news);
     cout << "Please insert the date and the time (in format dd/mm/yyyy hh:mm) of the target post:\n>";
-    cin.ignore();
     getline(cin, d_t);
     cout << "Please insert the ID whose User did not like this post anymore:\n>";
-    cin >> who;
+    getline(cin, who);
     
     Post cmp_post(tmp_news, d_t);
     
-    if (manager.setReaction(1, 0, cmp_post, who)) {
-      cout << "Done!" << endl;
-    }
-    else {
-      cout << "Error! I could not remove this like" << endl; //1-NO ID, 2-NO AUTOLIKES, 3-NO POST
+    if (!manager.setReaction(1, 0, cmp_post, who)) {
+      cout << "Error! Operation not successful." << endl; //1-NO ID, 2-NO AUTOLIKES, 3-NO POST
+      return;
     }
     
   }
@@ -838,16 +864,16 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
     
     Post cmp_post(tmp_news, d_t);
     
-    if (manager.setReaction(0, 0, cmp_post, who)) {
-      cout << "Done!" << endl;
-    }
-    else {
-      cout << "Error! I could not remove this dislike" << endl; //1-NO ID, 2-NO AUTOLIKES, 3-NO POST
+    if (!manager.setReaction(0, 0, cmp_post, who)) {
+      cout << "Error! I could not remove this dislike" << endl; //1-NO ID, 2-NO AUTOLIKES, 3-NO POST    }
+      return;
     }
   }
   else {
-    cout << "I do not understand what you'd like to delete." << endl;
+    cout << "Cannot delete \"" << what_to_delete << "." << endl;
+    return;
   }
+  std::cout << "Done!" << std::endl;
 }
 
 void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete) {

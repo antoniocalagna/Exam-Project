@@ -171,29 +171,15 @@ bool Manager::deleteAccount (const string &ID)
 {
   size_t count=0;
   
-  count=_map_users.count(ID);
-  if (count!=0)
-  {
-    _map_users.erase(ID);
-  }
-  
-  count=_map_companies.count(ID);
-  if (count!=0)
-  {
-    _map_companies.erase(ID);
-  }
-  
-  count=_map_groups.count(ID);
-  if (count!=0)
-  {
-    _map_groups.erase(ID);
-  }
-  
-  if (count==0)
-  {
+  count=_map_users.count(ID) + _map_groups.count(ID) + _map_companies.count(ID);
+  if(count == 0) {
+    //L'account non esiste
     return false;
   }
   
+  _map_users.erase(ID);
+  _map_groups.erase(ID);
+  _map_companies.erase(ID);
   _graph.popNode(ID);
   _map_posts.erase(ID);
   return true;
