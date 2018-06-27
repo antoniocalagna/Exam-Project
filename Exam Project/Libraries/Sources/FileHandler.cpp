@@ -271,8 +271,8 @@ std::string FH::formatOutput(const Company &company) {
       << ",{" << "name:{" << company.getName()
       << "},financial_loc:{" << company.getFinancialLocation()
       << "},operative_loc:{" << company.getOperativeLocation()
-      << "},inception:{" << company.getInception()
       << "},prod:{" << company.getTypeOfProduct()
+      << "},inception:{" << company.getInception()
       << "},sub:{" << company.getSubscription() << "}}";
   return out.str();
 }
