@@ -85,7 +85,9 @@ void Shell::help(std::stringstream &command, Manager &manager, IOBuffer &new_dat
   std::cout << "get <data_to_get> <id1> [<id2>]"
             << "\n\tPrints the required data. In case of \"get relation\", the two IDs need to be inserted.\n"
                "\tPossible data to get:\n"
-               "\tinfo, relation, posts"
+               "\tinfo, relation (between two IDs), posts, <type_of_relation>."
+               "\tget relation id1 1d2 returns the relation between two IDs,"
+               "\t get <type_of_relation> id returns a list of all accounts related to that ID through the required relation."
             << std::endl;
   std::cout << "set <field_to_set> <id>\n\tSets the field as required. Possible fields: \n"
                "\tname, surname, gender, address, birth, subscription (USERS)\n"
@@ -206,11 +208,24 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
       }
     }
   }
-    
+    //Get <relation_type> <id>
+  else if (relation::belong(what_to_get)) {
+    std::string id;
+    command >> id;
+    std::vector<std::string> relations = manager.getRelated(id, what_to_get);
+    if(relations.empty()) {
+      std::cout << id << " has no " << what_to_get << "." << std::endl;
+      return;
+    }
+    for(int i = 0; i < relations.size(); i++) {
+      std::cout << relations[i] << std::endl;
+    }
+    std::cout << std::endl;
+  }
     //Get <something_not_valid>
   else {
     std::cout << "Cannot get \"" << what_to_get << "\"" << std::endl;
-    std::cout << "Possible parameters: info <id>, relation <id1> <id2>, posts <id>";
+    std::cout << "Possible parameters: info <id>, relation <id1> <id2>, posts <id>, <relation> <id>";
     return;
   }
 }
@@ -560,23 +575,23 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     string tmp_n, tmp_id, tmp_loc, tmp_act, d1, d2;
     Date tmp_sub, tmp_inc;
     cout << "Name:\n>";
-    cin >> tmp_n;
+    getline(cin, tmp_n);
     cout << "Id:\n>";
-    cin >> tmp_id;
+    getline(cin, tmp_id);
     cout << "Legal location:\n>";
     getline(cin, tmp_loc);
     cout << "Type of activity:\n>";
     getline(cin, tmp_act);
     cout << "Subscription:\n>";
-    cin >> d1;
+    getline(cin, d1);
     tmp_sub.scanDateByStr(d1);
     cout << "Inception:\n>";
-    cin >> d2;
+    getline(cin, d2);
     tmp_inc.scanDateByStr(d2);
     
     Group new_g(tmp_n, tmp_id, tmp_loc, tmp_act, tmp_sub, tmp_inc);
     if (!manager.addAccount(new_g)) {
-      cout << "Error! Your ID already exists!";
+      cout << "Error! This ID already exists!";
       return;
     }
     new_data << new_g;
@@ -611,24 +626,9 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
   }
   
   else if (what_to_add == "relation") {
-    int error = 0;
-    while (error != 1) {
-      cout << "Please insert: <id_subject> <type_of_relation> <id_target>\n"
-              "Your available relationships are:\n"
-              "Friendship\n"
-              "Knowings\n"
-              "Parent\n"
-              "Born\n"
-              "Partner\n"
-              "Membership\n"
-              "Partnership\n"
-              "Employee\n"
-              "Employer\n" << endl;
-      
-      string who1, who2, type_rel;
-      
+   int error;
+    string who1, who2, type_rel;
       command >> who1 >> type_rel >> who2;
-      
       if (who1.empty() || who2.empty() || type_rel.empty()) {
         cout << "Error! Your data were not inserted properly, I got some of them empty. Please retry!" << endl;
         return;
@@ -645,14 +645,24 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
       }
       else if (error == -3) {
         cout << "Error! This relationship does not exist!" << endl;
+        cout << "Possible relations:\n"
+                "\tfriend (U - U)\n"
+                "\tknowings (U - U)\n"
+                "\tparent (U - U)\n"
+                "\tborn(U - U)\n"
+                "\tpartner (U - U)\n"
+                "\tmember (U - G)\n"
+                "\tpartner\n"
+                "\temployee (U -> C)\n"
+                "\temployer (C -> U)\n" << endl;
+  
         return;
       }
       else if (error == -4) {
         cout << "Error! The relationship and the Users' ages are not compatible!" << endl;
         return;
       }
-      new_data << std::make_pair(std::make_pair(who1, who2), type_rel);
-    }
+      new_data << std::make_pair(std::make_pair(who1, who2), type_rel);   //In caso di successo
   }
   else if (what_to_add == "post") {
     string news, d_t, whose_ID;

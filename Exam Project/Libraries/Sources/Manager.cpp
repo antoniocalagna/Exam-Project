@@ -128,6 +128,10 @@ vector<string> Manager::getUsersIDs() const
   return IDs;
 }
 
+vector<string> Manager::getRelated(const string &ID, const string &relation) {
+  return _graph.branches(ID, relation);
+}
+
 //addAccount polimorfica controlla che l'ID non sia già esistente e poi lo aggiunge ordinatamente nel vettore opportuno
 
 bool Manager::addAccount(const User &account_to_add)

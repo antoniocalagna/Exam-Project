@@ -632,7 +632,7 @@ std::string FH::relationsFile(IOBuffer &buff) {
   while (!buff.relationsEmpty()) {
     IOBuffer::Relation rel;
     buff >> rel;
-    out << formatOutput(rel);
+    out << formatOutput(rel) << std::endl;
   }
   return out.str();
 }
