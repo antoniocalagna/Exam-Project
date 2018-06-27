@@ -153,7 +153,7 @@ FH::Error FH::FileHandler::putData(std::set<std::string> (*printer_func)(IOBuffe
   while (_file.good()) {
     std::string line;
     std::getline(_file, line);
-    if (data_to_skip.count(line) == 0) {  //Copia solo le righe che non siano da saltare
+    if (data_to_skip.count(line) == 0 && !line.empty()) {  //Copia solo le righe che non siano da saltare
       data_to_copy << line << std::endl;
     }
   }
@@ -281,7 +281,15 @@ std::string FH::formatOutput(const Company &company) {
 
 std::string FH::formatOutput(const IOBuffer::Relation &relation) {
   std::stringstream out;
-  out << relation.first.first << "," << relation.first.second << "," + relation.second;
+  std::string id1 = relation.first.first, id2 = relation.first.second;
+  if(relation.second == relation::friendship) {
+    if (id1 > id2) { //Ordinali alfabeticamente dato che friendship è simmetrica
+      std::string temp = id1;
+      id1 = id2;
+      id2 = temp;
+    }
+  }
+  out << id1 << "," << id2 << "," + relation.second;
   return out.str();
 }
 

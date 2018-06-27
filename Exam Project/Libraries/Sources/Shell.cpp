@@ -805,13 +805,15 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
     }
   }
   
-  else if (what_to_delete == "relationship") {
+  else if (what_to_delete == "relation") {
     string id_start, id_target;
     command >> id_start >> id_target;
+    std::string relation = manager.getRelationship(id_start, id_target);
     if (!manager.deleteRelationship(id_start, id_target)) {
       cout << "Error! IDs not found." << endl;
       return;
     }
+    data_to_delete << std::make_pair(std::make_pair(id_start, id_target), relation);
   }
   
   else if (what_to_delete == "post") {
@@ -870,7 +872,7 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
     }
   }
   else {
-    cout << "Cannot delete \"" << what_to_delete << "." << endl;
+    cout << "Cannot delete \"" << what_to_delete << "\"." << endl;
     return;
   }
   std::cout << "Done!" << std::endl;
