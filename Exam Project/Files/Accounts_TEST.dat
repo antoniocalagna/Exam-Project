@@ -1,7 +1,7 @@
 domi_123,U,{name:{Domenico},surname:{Di Grusa},gender:{M},addr:{Viale Regione Siciliana 5300},sub:{20/07/2012},birth:{20/10/1997}}
-sofa000,U,{name:{Sofia},surname:{Faiella},gender:{F},addr:{Via Amari 63},sub:{21/2/2012},birth:{09/05/1998}}
+sofa000,U,{name:{Sofia},surname:{Faiella},gender:{F},addr:{Via Amari 63},sub:{21/02/2012},birth:{09/05/1998}}
 totina,U,{name:{Antonio},surname:{Calagna},gender:{N},addr:{Porta Venezia},sub:{22/10/2016},birth:{27/10/1998}}
-caesar_salad,U,{name:{Cesare},surname:{Faiella},gender:{M},addr:{Via Amari 63},sub:{10/3/2010},birth:{19/02/1965}}
+caesar_salad,U,{name:{Cesare},surname:{Faiella},gender:{M},addr:{Via Amari 63},sub:{10/03/2010},birth:{19/02/1965}}
 bal_spiagg,G,{name:{Balenottere Spiaggiate},location:{Spiaggia},activity:{Spiaggiarsi in spiaggia},inception:{15/01/1990},sub:{18/07/2011}}
 PoliTO,G,{name:{Politecnico di Torino},location:{Torino},activity:{Mangiare anime},inception:{15/01/1885},sub:{18/07/2000}}
 sams,C,{name:{Samsung},financial_loc:{Bu Korea},operative_loc:{Sempre Korea},prod:{Tech},inception:{15/01/1933},sub:{18/10/2011}}
