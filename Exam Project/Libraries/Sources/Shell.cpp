@@ -692,6 +692,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     }
     post_tmp.setLikes(likes);
     
+    input.clear(); //Altrimenti non entra nei dislike
     cout << "Dislikes (insert '-' at the end of the list):\n";
     while (input != "-") {
       cout << ">";
