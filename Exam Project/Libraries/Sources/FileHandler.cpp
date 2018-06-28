@@ -599,13 +599,15 @@ FH::Error FH::postsFile(std::stringstream &line, IOBuffer &buff) {
   std::string reactions;
   std::getline(line, reactions);                                      //Acquisici il resto della riga
   std::stringstream likes_ss(readField("likes", reactions));          //Metti i likes in uno stringstream
-  while (likes_ss.good() && likes_ss.gcount() != 0) {
+  size_t ch_count = likes_ss.str().size();
+  while (likes_ss.good() /*&&likes_ss.gcount() != 0*/ && ch_count != 0) {
     std::getline(likes_ss, like, ',');
     new_post.AddLike(like);
   }
   
   std::stringstream dislikes_ss(readField("dislikes", reactions));   //Metti i dislikes in uno stringstream
-  while (dislikes_ss.good() && dislikes_ss.gcount() != 0) {
+  ch_count = dislikes_ss.str().size();
+  while (dislikes_ss.good() /*&& dislikes_ss.gcount() != 0*/&& ch_count != 0) {
     std::getline(dislikes_ss, dislike, ',');
     new_post.AddDislike(dislike);
   }

@@ -190,14 +190,14 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
         if (!likes.empty()) {
           std::cout << "Likes: ";
           for (int j = 0; j < likes.size(); j++) {
-            std::cout << likes[i];
+            std::cout << likes[j];
             if (j != likes.size() - 1)
               std::cout << ",";
           }
           std::cout << std::endl;
         }
         if (!dislikes.empty()) {
-          std::cout << "Disikes: ";
+          std::cout << "Dislikes: ";
           for (int j = 0; j < dislikes.size(); j++) {
             std::cout << dislikes[j];
             if (j != dislikes.size() - 1)
@@ -692,7 +692,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     }
     post_tmp.setLikes(likes);
     
-    input.clear(); //Altrimenti non entra nei dislike
+    input.clear(); //Altrimenti non entra nel ciclo dei dislike
     cout << "Dislikes (insert '-' at the end of the list):\n";
     while (input != "-") {
       cout << ">";
@@ -724,6 +724,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
       cout << "Could not create post." << endl;
       return;
     }
+    new_data << std::make_pair(whose_ID, post_tmp); //MANCAVA QUESTO, TESTO.
   }
   else if (what_to_add == "like" || what_to_add == "dislike") {
     string post_owner, reaction_id, post_num_str;
