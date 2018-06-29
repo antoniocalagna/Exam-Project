@@ -9,7 +9,7 @@ using namespace std;
 
 void flushBuffers(FH::FileHandler &fh, IOBuffer &new_data, IOBuffer &data_to_delete);
 
-int main_di_clara(int argc, char *argv[]) {
+int main_di_clara(int argc, const char *argv[]) {
   Manager manager;
   FH::FileHandler accounts_fh, //FileHandler per il controllo e l'acquisizione dei dati da file
           relations_fh,
