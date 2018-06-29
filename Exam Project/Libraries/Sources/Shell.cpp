@@ -85,9 +85,9 @@ void Shell::help(std::stringstream &command, Manager &manager, IOBuffer &new_dat
   std::cout << "get <data_to_get> <id1> [<id2>]"
             << "\n\tPrints the required data. In case of \"get relation\", the two IDs need to be inserted.\n"
                "\tPossible data to get:\n"
-               "\tinfo, relation (between two IDs), posts, <type_of_relation>."
-               "\tget relation id1 1d2 returns the relation between two IDs,"
-               "\t get <type_of_relation> id returns a list of all accounts related to that ID through the required relation."
+               "\tinfo, relation (between two IDs), posts, <type_of_relation>.\n"
+               "\tget relation id1 1d2 returns the relation between two IDs,\n"
+               "\tget <type_of_relation> id returns a list of all accounts related to that ID through the required relation."
             << std::endl;
   std::cout << "set <field_to_set> <id>\n\tSets the field as required. Possible fields: \n"
                "\tname, surname, gender, address, birth, subscription (USERS)\n"
