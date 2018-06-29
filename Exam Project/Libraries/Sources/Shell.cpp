@@ -702,7 +702,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     }
     post_tmp.setDislikes(dislikes);
     
-    cout << news << " " << d_t << endl;
+    /*cout << news << " " << d_t << endl;
     
     if (!likes.empty()) {
       cout << "\nLikes:" << endl;
@@ -717,7 +717,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
       for (auto it = dislikes.begin(); it != dislikes.end(); it++) {
         cout << *it << endl;
       }
-    }
+    }*/
     cout << "Who wrote the post?:\n>";
     getline(cin, whose_ID);
     if (!manager.addPost(post_tmp, whose_ID)) {
