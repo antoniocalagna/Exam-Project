@@ -289,15 +289,19 @@ std::string FH::formatOutput(const Company &company) {
 
 std::string FH::formatOutput(const IOBuffer::Relation &relation) {
   std::stringstream out;
-  std::string id1 = relation.first.first, id2 = relation.first.second;
-  if(relation.second == relation::friendship) {
+  std::string id1 = relation.first.first, id2 = relation.first.second,
+          rel = relation.second;
+  if(relation::isSymmetrical(rel)) {
     if (id1 > id2) { //Ordinali alfabeticamente dato che friendship è simmetrica
-      std::string temp = id1;
-      id1 = id2;
-      id2 = temp;
+      std::swap(id1, id2);
     }
   }
-  out << id1 << "," << id2 << "," + relation.second;
+  else if(!relation::isDominant(rel)) {
+    //In questo caso la relazione è indicata come non dominante. Scambia gli ID e inverti la relazione
+    std::swap(id1, id2);
+    rel = relation::getInverse(rel);
+  }
+  out << id1 << "," << id2 << "," + rel;
   return out.str();
 }
 

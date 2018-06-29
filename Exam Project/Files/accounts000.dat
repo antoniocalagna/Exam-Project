@@ -2,6 +2,7 @@ CsanG,U,{name:{Claudio},surname:{Sangari},gender:{M},addr:{Via Libera Russia 10}
 MYSSKETA,U,{name:{Monica},surname:{Ketamina},gender:{F},addr:{Porta Venezia},sub:{30/08/1997},birth:{27/04/1983}}
 PoliTO,G,{name:{Politecnico di Torino},location:{Torino},activity:{Mangiare anime},inception:{15/01/1885},sub:{18/07/2000}}
 alvicheese,U,{name:{Alessia},surname:{Alvich},gender:{F},addr:{Via Principe di Paterno' 32},sub:{04/02/2012},birth:{23/03/1998}}
+appl,C,{name:{Apple},financial_loc:{Cupertino USA},operative_loc:{Cupertino USA},prod:{Tech},inception:{20/06/1970},sub:{29/06/2018}}
 bal_spiagg,G,{name:{Balenottere Spiaggiate},location:{Spiaggia},activity:{Spiaggiarsi in spiaggia},inception:{15/01/1990},sub:{18/07/2011}}
 bocce_squad,G,{name:{Giocatori di Bocce},location:{Turin},activity:{Svago},inception:{17/10/1888},sub:{07/09/2013}}
 caesar_salad,U,{name:{Cesare},surname:{Faiella},gender:{M},addr:{Via Amari 63},sub:{10/03/2010},birth:{19/02/1965}}

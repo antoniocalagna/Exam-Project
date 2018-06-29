@@ -54,6 +54,7 @@ bool Account::operator==(const Account &to_be_compared) const {
 bool Account::operator==(const string &string_to_compare) const {
   return (this->_ID == string_to_compare);
 }
+
 bool Account::operator!=(const Account &to_be_compared) const {
   return (!(this->_ID == to_be_compared._ID));
 }
@@ -66,7 +67,7 @@ bool Account::operator<(const Account &is_greater) const {
   return (this->_ID < is_greater._ID);
 }
 
-Account& Account::operator=(const Account &to_be_assigned) {
+Account &Account::operator=(const Account &to_be_assigned) {
   this->_name = to_be_assigned._name;
   this->_ID = to_be_assigned._ID;
   this->_type = to_be_assigned._type;
@@ -92,7 +93,7 @@ bool Account::typeValid(char type) {
 }
 
 bool Account::typeValid(const std::string &type) {
-  if(type.size() != 1) {
+  if (type.size() != 1) {
     return false;
   }
   return typeValid(type[0]);
@@ -117,4 +118,30 @@ bool relation::isValid(const std::string &r) {
           (r == relation::partnership) ||
           (r == (relation::employee)) ||
           (r == relation::membership));
-} 
+}
+
+bool relation::isDominant(const string &r) {
+  return r == relation::parent ||
+         r == relation::employee;
+}
+
+bool relation::isSymmetrical(const string &r) {
+  return r == friendship ||
+         r == knowings ||
+         r == partner ||
+         r == membership;
+}
+
+string relation::getInverse(const string &r) {
+  if (isSymmetrical(r))
+    return r;
+  else if (r == parent)
+    return born;
+  else if (r == born)
+    return parent;
+  else if (r == employee)
+    return employer;
+  else if (r == employer)
+    return employee;
+  return "";
+}

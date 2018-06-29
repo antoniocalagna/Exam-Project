@@ -298,20 +298,33 @@ void Graph<node_T, edge_T>::bsetEdge(const node_T &starting_node, const node_T &
 
 template<class node_T, class edge_T>
 std::vector<std::pair<node_T, edge_T>> Graph<node_T, edge_T>::inwardsBranches(const node_T &starting_node) const {
-
+  std::vector<std::pair<node_T, edge_T>> branches;
+  
+  if (_nodes.find(starting_node) == _nodes.end()) {              //Il nodo non è presente
+    return branches;
+  }
+  const node_T *node_ptr = _getPtr(starting_node);
+  
+  for (auto it = _nodes.begin(); it != _nodes.end(); it++) {
+    if (it->second.count(node_ptr) == 1) {
+      //Esiste una connessione
+      branches.emplace_back(std::make_pair(it->first, it->second.at(node_ptr)));
+    }
+  }
+  return branches;
 }
 
 template<class node_T, class edge_T>
 std::vector<std::pair<node_T, edge_T>> Graph<node_T, edge_T>::outwardsBranches(const node_T &starting_node) const {
   std::vector<std::pair<node_T, edge_T>> branches;
   
-  if(_nodes.find(starting_node) == _nodes.end()) {              //Il nodo non è presente
+  if (_nodes.find(starting_node) == _nodes.end()) {              //Il nodo non è presente
     return branches;
   }
   
   branches.resize(outDegree(starting_node));
   int i = 0;
-  for(auto it = _nodes.at(starting_node).begin(); it != _nodes.at(starting_node).end(); it++, i++) {
+  for (auto it = _nodes.at(starting_node).begin(); it != _nodes.at(starting_node).end(); it++, i++) {
     branches[i] = std::make_pair(*(it->first), it->second);
   }
   return branches;
@@ -327,13 +340,10 @@ std::vector<node_T> Graph<node_T, edge_T>::branches(const node_T &starting_node,
   if (_nodes.find(starting_node) == _nodes.end())
     return branches;                          //Nodo non trovato
   
-  branches.resize(outDegree(starting_node));
-  int i = 0;
-  
-  for (auto it = _nodes.at(starting_node).begin(); it != _nodes.at(starting_node).end(); it++, i++) {
+  for (auto it = _nodes.at(starting_node).begin(); it != _nodes.at(starting_node).end(); it++) {
     if (it->second == edge) {
       //In second è salvato il valore del contenuto mappato, in questo caso dell'arco (la chiave è l'elemento!)
-      branches[i] = *(it->first);
+      branches.push_back(*(it->first));
     }
   }
   return branches;
