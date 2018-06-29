@@ -63,9 +63,10 @@ public:
   //Imposta il valore di un arco BIDIREZIONALE
   void bsetEdge(const node_T &starting_node, const node_T &target_node, const edge_T &new_value);
   
-  //Ritorna una lista di nodi connessi al nodo di partenza da un arco del valore richiesto
+  //Ritorna una lista di coppie nodo-arco uscenti/entranti da un nodo di partenza
   std::vector<std::pair<node_T, edge_T>> inwardsBranches(const node_T &starting_node) const;
   std::vector<std::pair<node_T, edge_T>> outwardsBranches(const node_T &starting_node) const;
+  //Ritorna una lista di nodi connessi al nodo di partenza da un arco del valore richiesto
   std::vector<node_T> branches(const node_T &starting_node, const edge_T &edge) const;
   
   /**Operators */

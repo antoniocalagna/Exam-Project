@@ -116,7 +116,8 @@ bool relation::isValid(const std::string &r) {
           (r == relation::born) ||
           (r == relation::partner) ||
           (r == relation::partnership) ||
-          (r == (relation::employee)) ||
+          (r == relation::employee) ||
+          (r == relation::employer) ||
           (r == relation::membership));
 }
 
@@ -127,8 +128,8 @@ bool relation::isDominant(const string &r) {
 
 bool relation::isSymmetrical(const string &r) {
   return r == friendship ||
-         r == knowings ||
          r == partner ||
+         r == partnership ||
          r == membership;
 }
 

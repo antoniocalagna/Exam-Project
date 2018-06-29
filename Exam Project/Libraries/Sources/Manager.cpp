@@ -152,12 +152,20 @@ vector<string> Manager::getGroupsIDs() const
   return IDs;
 }
 
-vector<string> Manager::getRelated(const string &ID, const string &relation) const {
+vector<string> Manager::getRelated(const string &ID, const string &relation) const
+{
   return _graph.branches(ID, relation);
 }
 
-vector<pair<pair<string, string>, string>> Manager::getAllRelationships(const string &ID) const {
+vector<pair<pair<string, string>, string>> Manager::getAllRelationships(const string &ID) const
+{
   vector<pair<pair<string, string>, string>> relations;
+  vector<pair<string, string>> outwardsBranches = _graph.outwardsBranches(ID);
+  
+  for (auto it_in=outwardsBranches.begin(); it_in!=outwardsBranches.end(); it_in++)
+  {
+    relations.push_back(make_pair(make_pair(ID, it_in->first), it_in->second));
+  }
   
   return relations;
 }
