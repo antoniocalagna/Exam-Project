@@ -122,7 +122,31 @@ vector<string> Manager::getUsersIDs() const
   
   for (auto it=_map_users.begin(); it!=_map_users.end(); it++)
   {
-    IDs.push_back(it->second.getID());
+    IDs.push_back(it->first);
+  }
+  
+  return IDs;
+}
+
+vector<string> Manager::getCompaniesIDs() const
+{
+  vector<string> IDs;
+  
+  for (auto it=_map_companies.begin(); it!=_map_companies.end(); it++)
+  {
+    IDs.push_back(it->first);
+  }
+  
+  return IDs;
+}
+
+vector<string> Manager::getGroupsIDs() const
+{
+  vector<string> IDs;
+  
+  for (auto it=_map_groups.begin(); it!=_map_groups.end(); it++)
+  {
+    IDs.push_back(it->first);
   }
   
   return IDs;
@@ -924,6 +948,66 @@ vector<string> Manager::LonerPeople(const unsigned int &relations, const unsigne
  
   vector<string> list (set.begin(), set.end()); //Converto il set in un vector
   return list;
+}
+
+vector<pair<string, float>> Manager::SortedNewsRatioCompanies(const bool &with_partners, const float &min_ratio) const
+{
+  vector<pair<string, float>> companies_ratio; //Vettore di coppie ID-rapporto
+  vector<string> all_IDs = getCompaniesIDs(); //Vettore di ID delle companies
+  
+  for (auto it_ids=all_IDs.begin(); it_ids!=all_IDs.end(); it_ids++)  //Per ogni compagnia..
+  {
+    vector<Post> posts_tmp = _map_posts.at(*it_ids); //Accedo al suo vettore di post
+    float total_ratio_tmp = 0;
+    float sum_ratios = 0;
+    size_t num_posts = posts_tmp.size();
+    
+    for (auto it_post=posts_tmp.begin(); it_post!=posts_tmp.end(); it_post++)
+    {
+      sum_ratios+=it_post->RatioReaction(); //Per ogni post sommo i singoli rapporti
+    }
+    
+    if (with_partners) //Se devo considerare anche le consociate..
+    {
+      vector<string> co_workers_IDs = _graph.branches(*it_ids, relation::partnership); //Estraggo il vettore di ID delle consociate dal grafo
+      
+      for (auto it_coworkers=co_workers_IDs.begin(); it_coworkers!=co_workers_IDs.end(); it_coworkers++) //Per ogni consociata..
+      {
+        vector<Post> posts_tmp_coworker = _map_posts.at(*it_coworkers); //Accedo al suo vettore di post
+        num_posts+=posts_tmp_coworker.size(); //Sommo al numero di post complessivi anche quello dei post delle consociate
+        
+        for (auto it_post_coworker=posts_tmp_coworker.begin(); it_post_coworker!=posts_tmp_coworker.end(); it_post_coworker++) //Per ogni post..
+        {
+          sum_ratios+=it_post_coworker->RatioReaction(); //Aggiungo i rapporti alla precedente somma
+        }
+      }
+    }
+    
+    if (num_posts==0) //Se complessivamente non ci sono post allora il rapporto sarà nullo, evito la divisione per 0.
+      total_ratio_tmp=0;
+    else
+      total_ratio_tmp=sum_ratios/num_posts; //Calcolo il rapporto complessivo dividendo la somma dei rapporti per il numero di post
+  
+    if (total_ratio_tmp>=min_ratio) //Se supera il rapporto minimo lo inserisco nella lista delle coppie
+      companies_ratio.push_back(make_pair(*it_ids, total_ratio_tmp));
+    
+  } //Fine delle compagnie
+  
+  sort(companies_ratio.begin(), companies_ratio.end(),
+       [](const pair<string, float> &pair1, const pair<string, float> &pair2) {
+         return pair1.second > pair2.second;
+       }); //Ordino il vettore di coppie in base al rapporto sfruttando una lambda function.
+  
+  /*vector<string> sorted_list; //Sarà il vettore di ID che ritornerò
+  
+  for (auto it=companies_ratio.begin(); it!=companies_ratio.end(); it++)
+  {
+    sorted_list.push_back(it->first);
+  }
+  
+  return sorted_list;*/
+  
+  return companies_ratio;
 }
 
 

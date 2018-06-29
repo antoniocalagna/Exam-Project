@@ -48,6 +48,8 @@ public:
   vector<Post> getPosts (const string &ID) const;
   string getRelationship (const string &starting_ID, const string &target_ID) const;
   vector<string> getUsersIDs() const;
+  vector<string> getCompaniesIDs() const;
+  vector<string> getGroupsIDs() const;
   char getAccountType(const std::string &ID) const;
   vector<string> getRelated(const string &ID, const string &relation);
   
@@ -102,6 +104,8 @@ public:
   string RatioReactionAccount(const bool &best_1_worst_0) const;
   
   vector<string> LonerPeople(const unsigned int &relations, const unsigned int &memberships, const bool &employed, const unsigned int &newsreactions) const;
+  
+  vector<pair<string, float>> SortedNewsRatioCompanies(const bool &with_partners, const float &min_ratio) const;
   
   vector<vector<string>> GenealogicalTree(const string &whose_ID) const;
   vector<string> FormatTree (const vector<vector<string>> &tree_to_format) const;
