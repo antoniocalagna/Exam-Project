@@ -181,7 +181,7 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
     }
     else {
       for (int i = 0; i < posts.size(); i++) {
-        std::cout << i + 1 << ":" << std::endl                 //Indice del post
+        std::cout << "\n" << i + 1 << ":" << std::endl                 //Indice del post
                   << "\n" << posts[i].getNews() << "\n" << std::endl
                   << "[" << posts[i].getDate() << "]" << std::endl;
         std::vector<std::string> likes, dislikes;
@@ -728,7 +728,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
   }
   else if (what_to_add == "like" || what_to_add == "dislike") {
     string post_owner, reaction_id, post_num_str;
-    int post_num;
+    unsigned int post_num;
     vector<Post> posts;
     
     cout << "Please insert the post owner's ID:" <<endl;
@@ -752,7 +752,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     Post &old_post = posts[post_num];
     
     bool like = what_to_add == "like";      //Decidi se mettere like o dislike
-    if(!manager.setReaction(like, true, {post_owner, posts[post_num ]}, reaction_id)) {
+    if(!manager.setReaction(like, true, post_owner, post_num, reaction_id)) {
       cout << "Error! Could find post " << post_num + 1<< " from " << post_owner << "." <<endl;
       return;
     }
@@ -869,7 +869,7 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
     Post cmp_post(tmp_news, d_t);
     
     if (!manager.setReaction(0, 0, cmp_post, who)) {
-      cout << "Error! I could not remove this dislike" << endl; //1-NO ID, 2-NO AUTOLIKES, 3-NO POST    }
+      cout << "Error! I could not remove this dislike" << endl; //1-NO ID, 2-NO AUTOLIKES, 3-NO POST
       return;
     }
   }

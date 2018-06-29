@@ -403,11 +403,11 @@ bool Manager::deletePost(const std::string &whose_ID, int post_num)
   return true;
 }
 
-bool Manager::setReaction(const bool &like_1_dislike_0, const bool &add1_remove_0, const Post &post_liked, const std::string &ID)
+bool Manager::setReaction(const bool &like_1_dislike_0, const bool &add1_remove_0, const Post &post_liked, const std::string &reacting_ID)
 {
   //Controllo l'esistenza dell'ID nella mappa dei vettori di Post.
   
-  if (_map_posts.count(ID)==0)
+  if (_map_posts.count(reacting_ID)==0)
     return false;
   
   //Non essendo fornito l'ID del proprietario del post devo scorrere tutta la mappa e ogni vettore alla ricerca di quel post.
@@ -419,27 +419,23 @@ bool Manager::setReaction(const bool &like_1_dislike_0, const bool &add1_remove_
       //Lo scorro alla ricerca del post di interesse
       if (*it_post==post_liked)
       {
-        if (ID==it_map->first) //Evito gli autolikes.
+        if (reacting_ID==it_map->first) //Evito gli autolikes.
           return false;
         
         //Se lo trovo aggiungo il like/dislike
         if (like_1_dislike_0)
         {
           if (add1_remove_0)
-            it_post->AddLike(ID);
+            return it_post->AddLike(reacting_ID);
           else
-            it_post->RemoveLike(ID);
-          
-          return true;
+            return it_post->RemoveLike(reacting_ID);
         }
         else
         {
           if (add1_remove_0)
-            it_post->AddDislike(ID);
+            return it_post->AddDislike(reacting_ID);
           else
-            it_post->RemoveDislike(ID);
-          
-          return true;
+            return it_post->RemoveDislike(reacting_ID);
         }
       }
     }
@@ -448,15 +444,15 @@ bool Manager::setReaction(const bool &like_1_dislike_0, const bool &add1_remove_
   return false; //Il post non è stato trovato
 }
 
-bool Manager::setReaction(const bool &like_1_dislike_0, const bool &add1_remove_0, const pair<string,Post> &post_liked, const std::string &ID)
+bool Manager::setReaction(const bool &like_1_dislike_0, const bool &add1_remove_0, const pair<string,Post> &post_liked, const std::string &reacting_ID)
 {
   //Controllo l'esistenza degli ID nella mappa dei vettori di Post.
   //Per l'univocità degli ID questo controllo si riflette anche sull'esistenza dell'ID stesso in generale.
   if (_map_posts.count(post_liked.first)==0) //Esiste il proprietario del post
     return false;
-  if (_map_posts.count(ID)==0) //Esiste l'account che ha messo like
+  if (_map_posts.count(reacting_ID)==0) //Esiste l'account che ha messo like
     return false;
-  if (ID==post_liked.first) //Non sono ammessi autolikes.
+  if (reacting_ID==post_liked.first) //Non sono ammessi autolikes.
     return false;
   
   //Cerco nella mappa il vettore di post associato al proprietario
@@ -471,24 +467,54 @@ bool Manager::setReaction(const bool &like_1_dislike_0, const bool &add1_remove_
       if (like_1_dislike_0) //Controllo se si tratta di un like o un dislike
       {
         if (add1_remove_0) //Controllo se è stata richiesta l'aggiunta o la rimozione
-          it_post->AddLike(ID);
+          return it_post->AddLike(reacting_ID);
         else
-          it_post->RemoveLike(ID);
-        
-        return true;
+          return it_post->RemoveLike(reacting_ID);
       }
       else
       {
         if (add1_remove_0)
-          it_post->AddDislike(ID);
+          return it_post->AddDislike(reacting_ID);
         else
-          it_post->RemoveDislike(ID);
-        return true;
+          return it_post->RemoveDislike(reacting_ID);
       }
     }
   }
   
   return false; //Il post non è stato trovato
+}
+
+bool Manager::setReaction (const bool &like_1_dislike_0, const bool &add1_remove_0, const string &owner_ID, const unsigned int &pos, const string &reacting_ID)
+{
+  //Controllo l'esistenza degli ID nella mappa dei vettori di Post.
+  //Per l'univocità degli ID questo controllo si riflette anche sull'esistenza dell'ID stesso in generale.
+  if (_map_posts.count(owner_ID)==0) //Esiste il proprietario del post
+    return false;
+  if (_map_posts.count(reacting_ID)==0) //Esiste l'account che ha messo like
+    return false;
+  if (reacting_ID==owner_ID) //Non sono ammessi autolikes.
+    return false;
+  
+  //Cerco nella mappa il vettore di post associato al proprietario
+  auto it_map=_map_posts.find(owner_ID); //Prelevo il vettore di post di quell'account
+  
+  if (it_map->second.size()-1<pos) //Se il vettore non presenta post alla posizione desiderata ritorno
+    return false; //La dimensione - 1 indica l'ultima posizione del vettore disponibile all'accesso
+  
+  if (add1_remove_0)
+  {
+    if (like_1_dislike_0)
+      return it_map->second[pos].AddLike(reacting_ID);
+    else
+      return it_map->second[pos].AddDislike(reacting_ID);
+  }
+  else
+  {
+    if (like_1_dislike_0)
+      return it_map->second[pos].RemoveLike(reacting_ID);
+    else
+      return it_map->second[pos].RemoveDislike(reacting_ID);
+  }
 }
 
 //PRIVATE METHODS
