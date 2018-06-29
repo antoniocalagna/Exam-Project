@@ -78,6 +78,6 @@ const string employer = "employer";         //La compagnia da lavoro all'utente
 
 const string membership = "member";         //L'utente è membro del gruppo
 
-bool belong(const string &r);
+bool isValid(const string &r);
 }
 #endif /* Account_h */

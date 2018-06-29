@@ -297,7 +297,7 @@ int Manager::addRelationship(const string &ID_start, const string &ID_target, co
     return -1;
   if(!_exist_as_node(ID_target))
     return -2;
-  if(!relation::belong(relationship))
+  if(!relation::isValid(relationship))
     return -3; //Controllo che la relazione esista.
   
   //Controllo che l'età dei due utenti non entri in contraddizione con una parentela.
@@ -337,7 +337,7 @@ bool Manager::deleteRelationship(const std::string &ID_start, const std::string 
 
 vector<string> Manager::getListConnection(const std::string &starting_ID, const std::string &relationship)
 {
-  if(!relation::belong(relationship))
+  if(!relation::isValid(relationship))
     return vector<string>();
   return _graph.branches(starting_ID, relationship);
 }

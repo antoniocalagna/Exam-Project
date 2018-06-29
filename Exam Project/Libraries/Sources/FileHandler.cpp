@@ -453,7 +453,7 @@ FH::Error FH::relationsFile(std::stringstream &line) {
   if (!Account::IDValid(id2)) return {0x21000000, 0};
   
   std::getline(line, relation);                                         //Controllo della relazione
-  if (!relation::belong(relation)) return {0x24000000, 0};
+  if (!relation::isValid(relation)) return {0x24000000, 0};
   return {0, 0};
 }
 

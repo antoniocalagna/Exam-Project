@@ -108,7 +108,7 @@ bool Account::nameValid(const std::string &name) {
   return true;
 }
 
-bool relation::belong(const std::string &r) {
+bool relation::isValid(const std::string &r) {
   return ((r == relation::friendship) ||
           (r == relation::knowings) ||
           (r == relation::parent) ||

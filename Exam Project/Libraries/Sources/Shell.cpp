@@ -209,7 +209,7 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
     }
   }
     //Get <relation_type> <id>
-  else if (relation::belong(what_to_get)) {
+  else if (relation::isValid(what_to_get)) {
     std::string id;
     command >> id;
     std::vector<std::string> relations = manager.getRelated(id, what_to_get);
@@ -647,13 +647,13 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
         cout << "Error! This relationship does not exist!" << endl;
         cout << "Possible relations:\n"
                 "\tfriend (U - U)\n"
-                "\tknowings (U - U)\n"
+                "\tacquaintance (U - U)\n"
                 "\tparent (U - U)\n"
-                "\tborn(U - U)\n"
+                "\tson (U - U)\n"
                 "\tpartner (U - U)\n"
                 "\tmember (U - G)\n"
                 "\tpartner\n"
-                "\temployee (U -> C)\n"
+                "\tworker (U -> C)\n"
                 "\temployer (C -> U)\n" << endl;
   
         return;
