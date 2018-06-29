@@ -1,12 +1,12 @@
-domi_123,U,{name:{Domenico},surname:{Di Grusa},gender:{M},addr:{Viale Regione Siciliana 5300},sub:{20/07/2012},birth:{20/10/1997}}
-sofa000,U,{name:{Sofia},surname:{Faiella},gender:{F},addr:{Via Amari 63},sub:{21/02/2012},birth:{09/05/1998}}
-totina,U,{name:{Antonio},surname:{Calagna},gender:{N},addr:{Porta Venezia},sub:{22/10/2016},birth:{27/10/1998}}
-caesar_salad,U,{name:{Cesare},surname:{Faiella},gender:{M},addr:{Via Amari 63},sub:{10/03/2010},birth:{19/02/1965}}
-bal_spiagg,G,{name:{Balenottere Spiaggiate},location:{Spiaggia},activity:{Spiaggiarsi in spiaggia},inception:{15/01/1990},sub:{18/07/2011}}
-PoliTO,G,{name:{Politecnico di Torino},location:{Torino},activity:{Mangiare anime},inception:{15/01/1885},sub:{18/07/2000}}
-sams,C,{name:{Samsung},financial_loc:{Bu Korea},operative_loc:{Sempre Korea},prod:{Tech},inception:{15/01/1933},sub:{18/10/2011}}
-stb,C,{name:{Stabilo},financial_loc:{Germany},operative_loc:{Germany},prod:{Cartoleria},inception:{15/01/1940},sub:{5/07/2012}}
 CsanG,U,{name:{Claudio},surname:{Sangari},gender:{M},addr:{Via Libera Russia 10},sub:{07/01/2013},birth:{16/02/1997}}
-triX,U,{name:{Clara},surname:{Moscoloni},gender:{F},addr:{Via Cavour 5},sub:{20/01/2012},birth:{27/07/1998}}
-pao_bao,U,{name:{Barone},surname:{Paolino},gender:{m},addr:{Via Leopardi 3},sub:{26/06/2018},birth:{20/01/1998}}
+PoliTO,G,{name:{Politecnico di Torino},location:{Torino},activity:{Mangiare anime},inception:{15/01/1885},sub:{18/07/2000}}
+bal_spiagg,G,{name:{Balenottere Spiaggiate},location:{Spiaggia},activity:{Spiaggiarsi in spiaggia},inception:{15/01/1990},sub:{18/07/2011}}
 bocce_squad,G,{name:{Giocatori di Bocce},location:{Turin},activity:{Svago},inception:{17/10/1888},sub:{07/09/2013}}
+caesar_salad,U,{name:{Cesare},surname:{Faiella},gender:{M},addr:{Via Amari 63},sub:{10/03/2010},birth:{19/02/1965}}
+domi_123,U,{name:{Domenico},surname:{Di Grusa},gender:{M},addr:{Viale Regione Siciliana 5300},sub:{20/07/2012},birth:{20/10/1997}}
+pao_bao,U,{name:{Barone},surname:{Paolino},gender:{m},addr:{Via Leopardi 3},sub:{26/06/2018},birth:{20/01/1998}}
+sams,C,{name:{Samsung},financial_loc:{Bu Korea},operative_loc:{Sempre Korea},prod:{Tech},inception:{15/01/1933},sub:{18/10/2011}}
+sofa000,U,{name:{Sofia},surname:{Faiella},gender:{F},addr:{Via Amari 63},sub:{21/02/2012},birth:{09/05/1998}}
+stb,C,{name:{Stabilo},financial_loc:{Germany},operative_loc:{Germany},prod:{Cartoleria},inception:{15/01/1940},sub:{05/07/2012}}
+totina,U,{name:{Antonio},surname:{Calagna},gender:{N},addr:{Porta Venezia},sub:{22/10/2016},birth:{27/10/1998}}
+triX,U,{name:{Clara},surname:{Moscoloni},gender:{F},addr:{Via Cavour 5},sub:{20/01/2012},birth:{27/07/1998}}

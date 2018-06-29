@@ -18,8 +18,8 @@ bool IOBuffer::replicatedID(const std::string &ID) const {
 }
 
 bool IOBuffer::overwritingRelation(const Relation &rel) {
-  for(auto it = _relations.begin(); it != _relations.end(); it++) {
-    if(it->first == rel.first)                                      //Coppia di ID ripetuta
+  for (auto it = _relations.begin(); it != _relations.end(); it++) {
+    if (it->first == rel.first)                                      //Coppia di ID ripetuta
       return true;
   }
   return false;
@@ -40,14 +40,28 @@ size_t IOBuffer::size() const {
 }
 
 void IOBuffer::clear() {
-  while (!_users.empty())
-    _users.pop_front();
-  while (!_companies.empty())
-    _companies.pop_front();
-  while (!_groups.empty())
-    _groups.pop_front();
-  while (!_users.empty())
-    _posts.pop_front();
+  _users.clear();
+  _companies.clear();
+  _groups.clear();
+  _posts.clear();
+}
+
+void IOBuffer::append(const IOBuffer &buff) {
+  for(auto it = buff._users.begin(); it != buff._users.end(); it++) {
+    _users.push_back(*it);
+  }
+  for(auto it = buff._groups.begin(); it != buff._groups.end(); it++) {
+    _groups.push_back(*it);
+  }
+  for(auto it = buff._companies.begin(); it != buff._companies.end(); it++) {
+    _companies.push_back(*it);
+  }
+  for(auto it = buff._posts.begin(); it != buff._posts.end(); it++) {
+    _posts.push_back(*it);
+  }
+  for(auto it = buff._relations.begin(); it != buff._relations.end(); it++) {
+    _relations.push_back(*it);
+  }
 }
 
 IOBuffer &IOBuffer::operator<<(const User &to_get) {

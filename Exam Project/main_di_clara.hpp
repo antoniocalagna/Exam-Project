@@ -81,10 +81,12 @@ int main_di_clara(/*int argc, char *argv[]*/) {
   ///////////////////////////////////            ACQUISIZIONE             //////////////////////////////////////////////
   std::cout << "Beginning acquisition:" << std::endl;
   
+  IOBuffer reorganizing_buffer;
   std::cout << "Acquiring accounts..." << std::endl;
-  accounts_fh.fetchData(FH::accountsFile, new_data_buffer);
-  IOBuffer correcting_accounts(new_data_buffer);
-  while (!new_data_buffer.usersEmpty()) {
+  accounts_fh.fetchData(FH::accountsFile, new_data_buffer);         //Leggi i dati dal file degli account
+  
+  reorganizing_buffer.append(new_data_buffer);                      //Prepara il buffer per la riorganizzazione dei file
+  while (!new_data_buffer.usersEmpty()) {                           //Svuota il buffer degli utenti
     User user_tmp;
     new_data_buffer >> user_tmp;
     if (!manager.addAccount(user_tmp)) {
@@ -93,7 +95,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
       return -2;; //ritorno -2 quando l'id non è univoco
     }
   }
-  while (!new_data_buffer.groupsEmpty()) {
+  while (!new_data_buffer.groupsEmpty()) {                          //Svuota il buffer dei gruppi
     Group group_tmp;
     new_data_buffer >> group_tmp;
     if (!manager.addAccount(group_tmp)) {
@@ -102,7 +104,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
       return -2;
     }
   }
-  while (!new_data_buffer.companiesEmpty()) {
+  while (!new_data_buffer.companiesEmpty()) {                       //Svuota il buffer delle compagnie
     Company comp_tmp;
     new_data_buffer >> comp_tmp;
     if (!manager.addAccount(comp_tmp)) {
@@ -112,12 +114,12 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     }
   }
   std::cout << "* Accounts correctly acquired." << std::endl;
-  accounts_fh.clear();
-  accounts_fh.putData(FH::accountsFile, correcting_accounts);
   
   std::cout << "Acquiring relations..." << std::endl;
   
   relations_fh.fetchData(FH::relationsFile, new_data_buffer);
+  reorganizing_buffer.append(new_data_buffer);                        //Prepara il buffer per la riorganizzazione
+  
   while (!new_data_buffer.relationsEmpty()) {
     IOBuffer::Relation relation_tmp;
     new_data_buffer >> relation_tmp;
@@ -156,6 +158,8 @@ int main_di_clara(/*int argc, char *argv[]*/) {
   
   std::cout << "Acquiring posts..." << std::endl;
   posts_fh.fetchData(FH::postsFile, new_data_buffer);
+  reorganizing_buffer.append(new_data_buffer);
+  
   while (!new_data_buffer.postsEmpty()) {
     IOBuffer::m_Post post_tmp;
     new_data_buffer >> post_tmp;
@@ -167,7 +171,21 @@ int main_di_clara(/*int argc, char *argv[]*/) {
   }
   std::cout << "* Posts correctly acquired." << std::endl;
   std::cout << "Acquisition completed.\n" << std::endl;
+  ///////////////////////////////////       RIORGANIZZAZIONE DEI FILE     //////////////////////////////////////////////
+  std::cout << "Beginning accounts file reorganization..." << std::endl;
+  accounts_fh.clear();
+  accounts_fh.putData(FH::accountsFile, reorganizing_buffer);
+  std::cout << "\t*Accounts file correctly reorganized." << std::endl;
   
+  std::cout << "Beginning relations file reorganization..." << std::endl;
+  relations_fh.clear();
+  relations_fh.putData(FH::relationsFile, reorganizing_buffer);
+  std::cout << "\t*Relations file correctly reorganized." << std::endl;
+  
+  std::cout << "Beginning posts file reorganization..." << std::endl;
+  posts_fh.clear();
+  posts_fh.putData(FH::postsFile, reorganizing_buffer);
+  std::cout << "\t*Posts file correctly reorganized." << std::endl;
   ///////////////////////////////////          INIZIO  PROGRAMMA          //////////////////////////////////////////////
   std::cout << "Welcome. This program is shell based, so commands should be typed in shell-style.\n"
                "Type \"help\" for a list of useful commands." << std::endl;

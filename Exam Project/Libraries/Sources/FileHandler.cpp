@@ -303,7 +303,7 @@ std::string FH::formatOutput(const IOBuffer::m_Post &post) {
   std::stringstream out;
   out << post.first << "," << formatString(post.second.getNews()) << "," ;    //Formatta il messaggio
   
-  out << "," << post.second.getDate() <<  ",";                        //Formatta la data
+  out << post.second.getDate() <<  ",";                        //Formatta la data
   
   out << "likes:{";                                                  //Elabora la lista dei likes
   std::vector<std::string> temp = post.second.getLikes();

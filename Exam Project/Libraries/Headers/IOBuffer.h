@@ -48,6 +48,7 @@ public:
   
   /**General*/
   void clear();
+  void append(const IOBuffer &buff);
   
   /**Operators*/
   IOBuffer &operator<<(const User &to_get);
