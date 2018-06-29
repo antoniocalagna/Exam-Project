@@ -68,10 +68,9 @@ const string knowings = "acquaintance";     //Conoscenza tra utenti
 
 const string parent = "parent";             //Paternità tra utenti
 const string born = "son";                  //Paternità inversa
-
 const string partner = "partner";           //Coppie di utenti
 
-const string partnership = "partner of";      //Partnership tra aziende
+const string partnership = "working_with";      //Partnership tra aziende
 
 const string employee = "worker";           //L'utente lavora per la compagnia
 const string employer = "employer";         //La compagnia da lavoro all'utente

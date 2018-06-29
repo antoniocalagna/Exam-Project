@@ -53,6 +53,8 @@ bool FH::FileHandler::open(std::string filename, bool relative_path) {
       filename = mac_relative_path + filename;
     }
   }
+  filename += ".dat";
+  
   _file.open(filename);
   _filename = filename;
   return _file.is_open();

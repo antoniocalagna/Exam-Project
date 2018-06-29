@@ -27,5 +27,5 @@ prezzi27,U,{name:{Giovanni},surname:{Li Calsi},gender:{M},addr:{Villabate},sub:{
 lore_barb,U,{name:{Lorenzo},surname:{Barbaro},gender:{O},addr:{Via Liberta'},sub:{12/03/2005},birth:{15/04/1997}}
 mario_db,U,{name:{Mario},surname:{Di Blasi},gender:{N},addr:{Cardillo},sub:{12/03/2005},birth:{11/02/1997}}
 
-pelide,U,{name:{Achille},surname:{Figlio_di_Peleo},gender:{A},addr:{Magna Grecia},sub:{01/01/1900},birth:{01/01/2000}}
-ettorre,U,{name:{Ettore},surname:{Principe_di_Troia},gender:{M},addr:{Troia},sub:{01/01/1900},birth:{01/01/2000}}
+pelide,U,{name:{Achille},surname:{Figlio di Peleo},gender:{A},addr:{Magna Grecia},sub:{01/01/1900},birth:{01/01/2000}}
+ettorre,U,{name:{Ettore},surname:{Principe di Troia},gender:{M},addr:{Troia},sub:{01/01/1900},birth:{01/01/2000}}

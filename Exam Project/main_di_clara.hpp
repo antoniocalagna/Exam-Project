@@ -9,28 +9,27 @@ using namespace std;
 
 void flushBuffers(FH::FileHandler &fh, IOBuffer &new_data, IOBuffer &data_to_delete);
 
-int main_di_clara(/*int argc, char *argv[]*/) {
+int main_di_clara(int argc, char *argv[]) {
   Manager manager;
-  FH::FileHandler accounts_fh(
-          "Accounts_TEST.dat"),        //FileHandler per il controllo e l'acquisizione dei dati da file
-          relations_fh("Relations_TEST.dat"),
-          posts_fh("Posts_TEST.dat");
+  FH::FileHandler accounts_fh, //FileHandler per il controllo e l'acquisizione dei dati da file
+          relations_fh,
+          posts_fh;
   IOBuffer new_data_buffer;                                 //Buffer necessario per l'acquisizione dei dati
   IOBuffer data_to_erase_buffer;                            //Buffer per i dati da cancellare
   
-  /* //Controllo dei parametri passati da linea di comando
-   if (argc != 0 && argc != 4) {
-     cerr << "Parameters error. Plese insert input file names as follows: <accounts_file> <relations_file> <posts_file>.\n"
-          << "You can also execute the program without specifying the files to open, and choose them later." << endl;
-     return -1;
-   }
-
-   if(argc == 3) {
-     //Apri e controlla i file richiesti.
-     accounts_fh.open(argv[1]);
-     relations_fh.open(argv[2]);
-     accounts_fh.open(argv[3]);
-   }*/
+  //Controllo dei parametri passati da linea di comando
+  if (argc != 4) {
+    std::cerr
+            << "Parameters error. Plese insert input file names as follows: <accounts_file> <relations_file> <posts_file>."
+            << std::endl;
+    return -1;
+  }
+  
+  //Apri e controlla i file richiesti.
+  accounts_fh.open(argv[1]);
+  relations_fh.open(argv[2]);
+  posts_fh.open(argv[3]);
+  
   
   ///////////////////////////////////              CONTROLLI             //////////////////////////////////////////////
   std::cout << "" << "Beginning checks:" << "" << std::endl;
@@ -42,7 +41,8 @@ int main_di_clara(/*int argc, char *argv[]*/) {
                  "(" << check_results.data << " lines analyzed)" << std::endl;
   }
   else {
-    std::cerr << "** Accounts file returned error code " << std::hex << check_results.code << " at line " << std::dec <<check_results.data
+    std::cerr << "** Accounts file returned error code " << std::hex << check_results.code << " at line " << std::dec
+              << check_results.data
               << "."
               << " File needs to be corrected before data can be read." << std::endl;
     return -1;
@@ -56,7 +56,8 @@ int main_di_clara(/*int argc, char *argv[]*/) {
                  "(" << check_results.data << " lines analyzed)" << std::endl;
   }
   else {
-    std::cerr << "** Relations file returned error code " << std::hex <<check_results.code << " at line " << std::dec << check_results.data
+    std::cerr << "** Relations file returned error code " << std::hex << check_results.code << " at line " << std::dec
+              << check_results.data
               << "."
               << " File needs to be corrected before data can be read." << std::endl;
     return -1;
@@ -70,7 +71,8 @@ int main_di_clara(/*int argc, char *argv[]*/) {
                  "(" << check_results.data << " lines analyzed)" << std::endl;
   }
   else {
-    std::cerr << "** Posts file returned error code " << std::hex <<check_results.code << " at line " << check_results.data << "."
+    std::cerr << "** Posts file returned error code " << std::hex << check_results.code << " at line "
+              << check_results.data << "."
               << " File needs to be corrected before data can be read." << std::endl;
     return -1;
   }
@@ -90,7 +92,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     User user_tmp;
     new_data_buffer >> user_tmp;
     if (!manager.addAccount(user_tmp)) {
-      std::cerr << "Accounts file returned an error. " <<user_tmp.getID() << "is not unique.\n"
+      std::cerr << "Accounts file returned an error. " << user_tmp.getID() << "is not unique.\n"
                 << " File needs to be corrected before data can be acquired." << std::endl;
       return -2;; //ritorno -2 quando l'id non è univoco
     }
@@ -308,5 +310,9 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     }
     command.str(std::string());   //Svuota il buffer del comando
   } while (!exit);
+  
+  accounts_fh.close();
+  relations_fh.close();
+  posts_fh.close();
   return 0;
 }
