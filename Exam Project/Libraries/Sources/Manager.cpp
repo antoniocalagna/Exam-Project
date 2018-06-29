@@ -844,8 +844,23 @@ string Manager::MostLiked_DislikedAccount(const bool &like_1_dislike_0) const
 
 pair<string, Post> Manager::RatioReactionPost(const bool &best_1_worst_0) const
 {
-  std::string best_id = _map_posts.begin()->first;                                    //Assumi che il primo sia il migliore
-          size_t best_post=0;
+  std::string best_id;
+  size_t best_post=0;
+  bool done = false;
+  auto it_post = _map_posts.begin();
+  while (!done)
+  {
+    if (it_post->second.size()!=0)
+    {
+      best_id = it_post->first;
+      done = true;
+    }
+    
+    it_post++;
+  }
+  
+  //Non posso assumere che il primo sia il migliore, l'algoritmo accede alla mappa tramite .at, se il primo ID non possiede post il programma va in EXCEPTION.
+  //Fisso come "migliore ID iniziale" il primo ID avente almeno un post.
   
   //Per ogni ID determino quale post abbia il miglior/peggior rapporto di gradimento
   for(auto it = _map_posts.begin(); it != _map_posts.end(); it++) {                    //Scorri tutti gli account
