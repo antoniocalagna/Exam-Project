@@ -49,6 +49,7 @@ public:
   void close();
   Error checkLineFormat(Error (*checker_func)(std::stringstream &), const std::string &line) const;
   Error checkFile(Error (*checker_func)(std::stringstream &));
+  void clear();
   
   /**File data exchange*/
   //Viene assunto che tutte le righe siano correttamente formattate. Qui vengono eseguiti controlli quali ripetizioni.

@@ -79,11 +79,11 @@ int main_di_clara(/*int argc, char *argv[]*/) {
   std::cout << "Checks completed.\n" << std::endl;
   
   ///////////////////////////////////            ACQUISIZIONE             //////////////////////////////////////////////
-  
   std::cout << "Beginning acquisition:" << std::endl;
   
   std::cout << "Acquiring accounts..." << std::endl;
   accounts_fh.fetchData(FH::accountsFile, new_data_buffer);
+  IOBuffer correcting_accounts(new_data_buffer);
   while (!new_data_buffer.usersEmpty()) {
     User user_tmp;
     new_data_buffer >> user_tmp;
@@ -112,6 +112,8 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     }
   }
   std::cout << "* Accounts correctly acquired." << std::endl;
+  accounts_fh.clear();
+  accounts_fh.putData(FH::accountsFile, correcting_accounts);
   
   std::cout << "Acquiring relations..." << std::endl;
   

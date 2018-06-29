@@ -33,6 +33,7 @@ private:
 public:
   /**Constructors & Destructor*/
   IOBuffer() = default;
+  IOBuffer(const IOBuffer &to_copy);
   ~IOBuffer() = default;
   
   /**Getters*/
@@ -59,6 +60,8 @@ public:
   IOBuffer &operator>>(m_Post &to_return);
   IOBuffer &operator<<(const Relation &to_get);
   IOBuffer &operator>>(Relation &to_return);
+  
+  IOBuffer &operator=(const IOBuffer &to_copy) = default;
 };
 
 

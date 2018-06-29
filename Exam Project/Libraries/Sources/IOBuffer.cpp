@@ -4,6 +4,10 @@
 
 #include "IOBuffer.h"
 
+IOBuffer::IOBuffer(const IOBuffer &to_copy) {
+  *this = to_copy;
+}
+
 bool IOBuffer::replicatedID(const std::string &ID) const {
   if (std::find(_users.begin(), _users.end(), ID) != _users.end() ||
       std::find(_groups.begin(), _groups.end(), ID) != _groups.end() ||

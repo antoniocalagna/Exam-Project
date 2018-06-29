@@ -103,6 +103,12 @@ FH::Error FH::FileHandler::checkFile(Error (*checker_func)(std::stringstream &))
   return {0, current_line};
 }
 
+void FH::FileHandler::clear() {
+  _file.close();
+  _file.open(_filename, std::ios::out | std::ios::trunc);
+  _file.flush();
+}
+
 FH::Error FH::FileHandler::fetchLineData(Error (*fetcher_func)(stringstream &, IOBuffer &), const std::string &line,
                                          IOBuffer &buff) {
   if (line.empty()) {
