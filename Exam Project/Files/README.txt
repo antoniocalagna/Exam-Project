@@ -10,7 +10,8 @@ Dove il numero è comune ad un gruppo di file. il tipo_file può essere:
 
 Elenchiamo di seguito le caratteristiche dei gruppi di file forniti, identificando un gruppo tramite il numero.
 
-    Numero      Contenuto del gruppo                                                                            Output atteso
+    Numero      Comportamento atteso        Contenuto del file
 
-    000         Gruppo funzionante di file che raccoglie un po' di utenti, relazioni e post realistici          OK
-    001         ID di due utenti duplicati                                                                      ERRORE
+    000         Ok                          Una raccolta di dati realistici
+    001         Errore                      ID di due account duplicati
+    002         Errore                      Caratteri non permessi in uno dei campi di un utente
