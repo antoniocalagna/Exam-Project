@@ -542,9 +542,9 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     Date tmp_sub, tmp_b;
     char tmp_g;
     cout << "Name:\n>";
-    getline(cin, tmp_s);
-    cout << "Surname:\n>";
     getline(cin, tmp_n);
+    cout << "Surname:\n>";
+    getline(cin, tmp_s);
     cout << "Id:\n>";
     getline(cin, tmp_id);
     cout << "Address:\n>";
