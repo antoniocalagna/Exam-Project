@@ -822,13 +822,15 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
     std::string post_owner;
     unsigned int post_num;
     command >> post_owner >> post_num;
+    post_num --;
+    
     std:vector<Post> posts = manager.getPosts(post_owner);
     if(posts.size() <= post_num) {
-      std::cout << post_owner << " does not have post " << post_num << std::endl;
+      std::cout << "Error! " << post_owner << " does not have post " << post_num + 1 << std::endl;
       return;
     }
     if(!manager.deletePost(post_owner, post_num)) {
-      cout << "Error! Post " << post_num << " from " << post_owner << " could not be deleted." << endl;
+      cout << "Error! Post " << post_num + 1 << " from " << post_owner << " could not be deleted." << endl;
       return;
     }
     data_to_delete << std::make_pair(post_owner, posts[post_num]);

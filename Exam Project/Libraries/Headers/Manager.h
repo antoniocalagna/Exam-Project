@@ -51,9 +51,11 @@ public:
   vector<string> getCompaniesIDs() const;
   vector<string> getGroupsIDs() const;
   char getAccountType(const std::string &ID) const;
-  vector<string> getRelated(const string &ID, const string &relation);
+  vector<string> getRelated(const string &ID, const string &relation) const;
   
   //Management Functions
+  bool accountExists(const std::string &ID) const;
+  
   bool addAccount(const User &account_to_add);
   bool addAccount(const Company &account_to_add);
   bool addAccount(const Group &account_to_add);
@@ -120,7 +122,7 @@ private:
   unordered_map<string, vector<Post>> _map_posts;
   
   void _setNodes();
-  bool _exist_as_node(const string &ID_to_check);
+  bool _exist_as_node(const string &ID_to_check) const;
   
   void _setKeys(const vector<User> &users);
   void _setKeys(const vector<Company> &companies);

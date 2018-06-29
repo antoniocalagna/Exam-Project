@@ -152,8 +152,12 @@ vector<string> Manager::getGroupsIDs() const
   return IDs;
 }
 
-vector<string> Manager::getRelated(const string &ID, const string &relation) {
+vector<string> Manager::getRelated(const string &ID, const string &relation) const {
   return _graph.branches(ID, relation);
+}
+
+bool Manager::accountExists(const std::string &ID) const {
+  return _exist_as_node(ID);
 }
 
 //addAccount polimorfica controlla che l'ID non sia già esistente e poi lo aggiunge ordinatamente nel vettore opportuno
@@ -511,7 +515,7 @@ void Manager::_setNodes()
   }
 }
 
-bool Manager::_exist_as_node(const string &ID_to_check)
+bool Manager::_exist_as_node(const string &ID_to_check) const
 {
   return _graph.find(ID_to_check) != _graph.nodesNumber();
 }
