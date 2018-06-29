@@ -156,6 +156,12 @@ vector<string> Manager::getRelated(const string &ID, const string &relation) con
   return _graph.branches(ID, relation);
 }
 
+vector<pair<pair<string, string>, string>> Manager::getAllRelationships(const string &ID) const {
+  vector<pair<pair<string, string>, string>> relations;
+  
+  return relations;
+}
+
 bool Manager::accountExists(const std::string &ID) const {
   return _exist_as_node(ID);
 }

@@ -47,6 +47,7 @@ public:
   Group getGroup (const string &ID) const;
   vector<Post> getPosts (const string &ID) const;
   string getRelationship (const string &starting_ID, const string &target_ID) const;
+  vector<pair<pair<string, string>, string>> getAllRelationships(const string& ID) const;
   vector<string> getUsersIDs() const;
   vector<string> getCompaniesIDs() const;
   vector<string> getGroupsIDs() const;
