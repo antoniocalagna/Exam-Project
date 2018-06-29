@@ -38,7 +38,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
   std::cout << "Checking accounts file..." << std::endl;
   FH::Error check_results = accounts_fh.checkFile(FH::accountsFile);
   if (check_results.code == 0) {
-    std::cout << "* Accounts file correctly formatted and ready to be read. "
+    std::cout << "\t*Accounts file correctly formatted and ready to be read. "
                  "(" << check_results.data << " lines analyzed)" << std::endl;
   }
   else {
@@ -52,7 +52,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
   //Controllo del file delle relazioni
   check_results = relations_fh.checkFile(FH::relationsFile);
   if (check_results.code == 0) {
-    std::cout << "* Relations file correctly formatted and ready to be read. "
+    std::cout << "\t*Relations file correctly formatted and ready to be read. "
                  "(" << check_results.data << " lines analyzed)" << std::endl;
   }
   else {
@@ -66,7 +66,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
   std::cout << "Checking posts file..." << std::endl;
   check_results = posts_fh.checkFile(FH::postsFile);
   if (check_results.code == 0) {
-    std::cout << "* Posts file correctly formatted and ready to be read. "
+    std::cout << "\t*Posts file correctly formatted and ready to be read. "
                  "(" << check_results.data << " lines analyzed)" << std::endl;
   }
   else {
@@ -113,7 +113,7 @@ int main_di_clara(/*int argc, char *argv[]*/) {
       return -2;
     }
   }
-  std::cout << "* Accounts correctly acquired." << std::endl;
+  std::cout << "\t*Accounts correctly acquired." << std::endl;
   
   std::cout << "Acquiring relations..." << std::endl;
   
@@ -129,32 +129,32 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     relationship = relation_tmp.second;
     int err = manager.addRelationship(id_start, id_target, relationship);
     if (err == -1) {
-      std::cerr << "Accounts file returned error code, the id " << id_start << " does not exist.\n"
+      std::cerr << "**Accounts file returned an error: the id " << id_start << " does not exist.\n"
                 << " File needs to be corrected before data can be acquiredd." << std::endl;
       return -3; //ritorno -3 quando l'id non esiste
       
     }
     else if (err == -2) {
-      std::cerr << "Accounts file returned error code, the id " << id_target << " does not exist.\n"
+      std::cerr << "**Accounts file returned an error: the id " << id_target << " does not exist.\n"
                 << " File needs to be corrected before data can be acquired." << std::endl;
       return -3;
       
     }
     else if (err == -3) {
-      std::cerr << "Accounts file returned error code, the relationship " << relationship << " does not exist.\n"
+      std::cerr << "**Accounts file returned an error: the relationship " << relationship << " does not exist.\n"
                 << " File needs to be corrected before data can be acquired." << std::endl;
       return -4; //ritorno -4 quando la relazione non esiste o non può esistere
       
     }
     else if (err == -4) {
-      std::cerr << "Accounts file returned error code, the relationship " << relationship
+      std::cerr << "**Accounts file returned an error: the relationship " << relationship
                 << " and the Users' ages are not compatible.\n"
                 << " File needs to be corrected before data can be acquired." << std::endl;
       return -4;
       
     }
   }
-  std::cout << "* Relations correctly acquired." << std::endl;
+  std::cout << "\t*Relations correctly acquired." << std::endl;
   
   std::cout << "Acquiring posts..." << std::endl;
   posts_fh.fetchData(FH::postsFile, new_data_buffer);
@@ -164,12 +164,13 @@ int main_di_clara(/*int argc, char *argv[]*/) {
     IOBuffer::m_Post post_tmp;
     new_data_buffer >> post_tmp;
     if (!manager.addPost(post_tmp.second, post_tmp.first)) {
-      std::cerr << "Accounts file returned error code, the id " << post_tmp.first << " does not exist.\n"
+      std::cerr << "Accounts file returned an error: the id " << post_tmp.first << " does not exist.\n"
                 << " File needs to be corrected before data can be acquired." << std::endl;
       return -3;
     }
   }
-  std::cout << "* Posts correctly acquired." << std::endl;
+  
+  std::cout << "\t*Posts correctly acquired." << std::endl;
   std::cout << "Acquisition completed.\n" << std::endl;
   ///////////////////////////////////       RIORGANIZZAZIONE DEI FILE     //////////////////////////////////////////////
   std::cout << "Beginning accounts file reorganization..." << std::endl;
@@ -185,7 +186,8 @@ int main_di_clara(/*int argc, char *argv[]*/) {
   std::cout << "Beginning posts file reorganization..." << std::endl;
   posts_fh.clear();
   posts_fh.putData(FH::postsFile, reorganizing_buffer);
-  std::cout << "\t*Posts file correctly reorganized." << std::endl;
+  std::cout << "\t*Posts file correctly reorganized.\n" << std::endl;
+  
   ///////////////////////////////////          INIZIO  PROGRAMMA          //////////////////////////////////////////////
   std::cout << "Welcome. This program is shell based, so commands should be typed in shell-style.\n"
                "Type \"help\" for a list of useful commands." << std::endl;
