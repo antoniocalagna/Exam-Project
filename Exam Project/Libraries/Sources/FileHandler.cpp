@@ -600,7 +600,7 @@ FH::Error FH::postsFile(std::stringstream &line, IOBuffer &buff) {
   std::getline(line, reactions);                                      //Acquisici il resto della riga
   std::stringstream likes_ss(readField("likes", reactions));          //Metti i likes in uno stringstream
   size_t ch_count = likes_ss.str().size();
-  while (likes_ss.good() /*&&likes_ss.gcount() != 0*/ && ch_count != 0) {
+  while (likes_ss.good() && ch_count != 0) {
     std::getline(likes_ss, like, ',');
     new_post.AddLike(like);
   }
