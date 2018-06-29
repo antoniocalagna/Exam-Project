@@ -781,8 +781,16 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
       return;
     }
     
-    char type = manager.getAccountType(ID_to_delete);
+    if(!manager.accountExists(ID_to_delete)) {
+      std::cout << "Account not valid" << std::endl;
+    }
     
+    std::vector<Post> posts;
+    std::vector<IOBuffer::Relation> relations;
+    
+    posts = manager.getPosts(ID_to_delete);
+    
+    char type = manager.getAccountType(ID_to_delete);
     if(type == Account::user_type) {
       User temp = manager.getUser(ID_to_delete);
       if (manager.deleteAccount(ID_to_delete)) {
