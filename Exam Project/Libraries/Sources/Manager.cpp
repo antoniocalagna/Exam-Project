@@ -128,6 +128,10 @@ vector<string> Manager::getUsersIDs() const
   return IDs;
 }
 
+vector<string> Manager::getRelated(const string &ID, const string &relation) {
+  return _graph.branches(ID, relation);
+}
+
 //addAccount polimorfica controlla che l'ID non sia già esistente e poi lo aggiunge ordinatamente nel vettore opportuno
 
 bool Manager::addAccount(const User &account_to_add)
@@ -167,29 +171,15 @@ bool Manager::deleteAccount (const string &ID)
 {
   size_t count=0;
   
-  count=_map_users.count(ID);
-  if (count!=0)
-  {
-    _map_users.erase(ID);
-  }
-  
-  count=_map_companies.count(ID);
-  if (count!=0)
-  {
-    _map_companies.erase(ID);
-  }
-  
-  count=_map_groups.count(ID);
-  if (count!=0)
-  {
-    _map_groups.erase(ID);
-  }
-  
-  if (count==0)
-  {
+  count=_map_users.count(ID) + _map_groups.count(ID) + _map_companies.count(ID);
+  if(count == 0) {
+    //L'account non esiste
     return false;
   }
   
+  _map_users.erase(ID);
+  _map_groups.erase(ID);
+  _map_companies.erase(ID);
   _graph.popNode(ID);
   _map_posts.erase(ID);
   return true;
@@ -466,7 +456,7 @@ bool Manager::setReaction(const bool &like_1_dislike_0, const bool &add1_remove_
       else
       {
         if (add1_remove_0)
-          it_post->AddLike(ID);
+          it_post->AddDislike(ID);
         else
           it_post->RemoveDislike(ID);
         return true;
@@ -576,8 +566,12 @@ size_t Manager::NumRelatives(const std::string &whose_ID) const
     return 0; //Controllo che sia un utente.
   
   size_t count=0;
-  count = _graph.outDegree_withEdge(whose_ID, relation::parent);
-  return count;
+  vector<vector<string>> gen_tree = GenealogicalTree(whose_ID);
+  for (auto it=gen_tree.begin(); it!=gen_tree.end(); it++)
+  {
+    count+=it->size();
+  }
+  return count-1;
 }
 
 size_t Manager::NumEmployees(const std::string &company_employer) const

@@ -49,6 +49,7 @@ public:
   string getRelationship (const string &starting_ID, const string &target_ID) const;
   vector<string> getUsersIDs() const;
   char getAccountType(const std::string &ID) const;
+  vector<string> getRelated(const string &ID, const string &relation);
   
   //Management Functions
   bool addAccount(const User &account_to_add);

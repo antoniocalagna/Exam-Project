@@ -135,27 +135,29 @@ FH::Error FH::FileHandler::fetchData(Error (*fetcher_func)(stringstream &, IOBuf
   return {0, current_line};
 }
 
-FH::Error FH::FileHandler::putData(std::string (*printer_func)(IOBuffer &), IOBuffer &to_add, IOBuffer &to_delete) {
-  std::string data_to_skip = printer_func(to_delete);   //Prepara una stringa contenente le righe del file da non copiare
+FH::Error FH::FileHandler::putData(std::set<std::string> (*printer_func)(IOBuffer &), IOBuffer &to_add, IOBuffer &to_delete) {
+  std::set<std::string> data_to_skip = printer_func(to_delete);   //Prepara una stringa contenente le righe del file da non copiare
   std::stringstream data_to_copy;
   _file.close();
   _file.open(_filename, std::ios::out | std::ios::app);
   
-  std::string data_to_add = printer_func(to_add);
-  _file << data_to_add << std::endl;
+  std::set<std::string> data_to_add = printer_func(to_add);
+  for(auto it = data_to_add.begin(); it != data_to_add.end(); it++) {
+    _file << *it << std::endl;
+  }
   
   _file.close();
-  _file.open(_filename, std::ios::in);                  //Apri il file in modalità lettura
+  _file.open(_filename, std::ios::in);                    //Apri il file in modalità lettura
   
-  //Fai una copia dell'intero file in memoria
+  //Fai una copia dell'intero file in memoria saltando le righe da cancellare
   while (_file.good()) {
     std::string line;
     std::getline(_file, line);
-    if (data_to_skip.find(line) == std::string::npos) {  //Copia solo le righe che non siano da saltare
+    if (data_to_skip.count(line) == 0 && !line.empty()) {  //Copia solo le righe che non siano da saltare
       data_to_copy << line << std::endl;
     }
   }
-  data_to_skip.clear();                                 //Libera la memoria
+  data_to_skip.clear();                                   //Libera la memoria
   
   _file.close();
   _file.open(_filename, std::ios::out | std::ios::trunc); //Riapri il file cancellando tutti i contenuti vecchi
@@ -164,7 +166,7 @@ FH::Error FH::FileHandler::putData(std::string (*printer_func)(IOBuffer &), IOBu
   return {0, 0};
 }
 
-FH::Error FH::FileHandler::putData(std::string (*printer_func)(IOBuffer &), IOBuffer &to_add) {
+FH::Error FH::FileHandler::putData(std::set<std::string> (*printer_func)(IOBuffer &), IOBuffer &to_add) {
   IOBuffer empty_buffer;
   return putData(printer_func, to_add, empty_buffer);
 }
@@ -271,15 +273,23 @@ std::string FH::formatOutput(const Company &company) {
       << ",{" << "name:{" << company.getName()
       << "},financial_loc:{" << company.getFinancialLocation()
       << "},operative_loc:{" << company.getOperativeLocation()
-      << "},inception:{" << company.getInception()
       << "},prod:{" << company.getTypeOfProduct()
+      << "},inception:{" << company.getInception()
       << "},sub:{" << company.getSubscription() << "}}";
   return out.str();
 }
 
 std::string FH::formatOutput(const IOBuffer::Relation &relation) {
   std::stringstream out;
-  out << relation.first.first << "," << relation.first.second << "," + relation.second;
+  std::string id1 = relation.first.first, id2 = relation.first.second;
+  if(relation.second == relation::friendship) {
+    if (id1 > id2) { //Ordinali alfabeticamente dato che friendship è simmetrica
+      std::string temp = id1;
+      id1 = id2;
+      id2 = temp;
+    }
+  }
+  out << id1 << "," << id2 << "," + relation.second;
   return out.str();
 }
 
@@ -589,13 +599,15 @@ FH::Error FH::postsFile(std::stringstream &line, IOBuffer &buff) {
   std::string reactions;
   std::getline(line, reactions);                                      //Acquisici il resto della riga
   std::stringstream likes_ss(readField("likes", reactions));          //Metti i likes in uno stringstream
-  while (likes_ss.good() && likes_ss.gcount() != 0) {
+  size_t ch_count = likes_ss.str().size();
+  while (likes_ss.good() /*&&likes_ss.gcount() != 0*/ && ch_count != 0) {
     std::getline(likes_ss, like, ',');
     new_post.AddLike(like);
   }
   
   std::stringstream dislikes_ss(readField("dislikes", reactions));   //Metti i dislikes in uno stringstream
-  while (dislikes_ss.good() && dislikes_ss.gcount() != 0) {
+  ch_count = dislikes_ss.str().size();
+  while (dislikes_ss.good() /*&& dislikes_ss.gcount() != 0*/&& ch_count != 0) {
     std::getline(dislikes_ss, dislike, ',');
     new_post.AddDislike(dislike);
   }
@@ -607,42 +619,42 @@ FH::Error FH::postsFile(std::stringstream &line, IOBuffer &buff) {
  * ## Printers ##
  * ##############
  */
-std::string FH::accountsFile(IOBuffer &buff) {
-  std::stringstream out;                      //Prepara uno stringstream per poi trasformarlo in stringa
+std::set<std::string> FH::accountsFile(IOBuffer &buff) {
+  std::set<std::string> out;               //Prepara uno stringstream per poi trasformarlo in stringa
   while (!buff.usersEmpty()) {
     User usr;
     buff >> usr;                              //Acquisisci l'utente dal buffer
-    out << formatOutput(usr) << std::endl;    //Aggiungilo all'output
+    out.insert(formatOutput(usr));            //Aggiungilo all'output
   }
   while (!buff.groupsEmpty()) {
     Group group;
     buff >> group;                            //Acquisisci il gruppo
-    out << formatOutput(group) << std::endl;
+    out.insert(formatOutput(group));
   }
   while (!buff.companiesEmpty()) {
     Company company;
     buff >> company;                          //Acquisisci la compagnia
-    out << formatOutput(company) << std::endl;
+    out.insert(formatOutput(company));
   }
-  return out.str();                           //Converti lo stringstream in string e ritorna
+  return out;                           //Converti lo stringstream in string e ritorna
 }
 
-std::string FH::relationsFile(IOBuffer &buff) {
-  std::stringstream out;
+std::set<std::string> FH::relationsFile(IOBuffer &buff) {
+  std::set<std::string> out;
   while (!buff.relationsEmpty()) {
     IOBuffer::Relation rel;
     buff >> rel;
-    out << formatOutput(rel);
+    out.insert(formatOutput(rel));
   }
-  return out.str();
+  return out;
 }
 
-std::string FH::postsFile(IOBuffer &buff) {
-  std::stringstream out;
+std::set<std::string> FH::postsFile(IOBuffer &buff) {
+  std::set<std::string> out;
   while (!buff.postsEmpty()) {
     IOBuffer::m_Post post;
     buff >> post;
-    out << formatOutput(post);
+    out.insert(formatOutput(post));
   }
-  return out.str();
+  return out;
 }
