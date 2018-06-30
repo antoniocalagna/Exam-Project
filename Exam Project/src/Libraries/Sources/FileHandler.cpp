@@ -143,40 +143,52 @@ FH::Error FH::FileHandler::fetchData(Error (*fetcher_func)(stringstream &, IOBuf
   return {0, current_line};
 }
 
-FH::Error FH::FileHandler::putData(std::set<std::string> (*printer_func)(IOBuffer &), IOBuffer &to_add, IOBuffer &to_delete) {
-  std::set<std::string> data_to_skip = printer_func(to_delete);   //Prepara una stringa contenente le righe del file da non copiare
-  std::stringstream data_to_copy;
+void FH::FileHandler::_putData(const std::unordered_set<std::string> &lines) {
   _file.close();
-  _file.open(_filename, std::ios::out | std::ios::app);
+  _file.open(_filename, std::ios::out | std::ios::app);                //Riapri il file senza cancellarne i contenuti
   
-  std::set<std::string> data_to_add = printer_func(to_add);
-  for(auto it = data_to_add.begin(); it != data_to_add.end(); it++) {
+  if (!_file.is_open()) {
+    return;
+  }
+  
+  for (auto it = lines.begin(); it != lines.end(); it++) {
     _file << *it << std::endl;
   }
-  
+}
+
+FH::Error
+FH::FileHandler::putData(std::unordered_set<std::string> (*printer_func)(IOBuffer &), IOBuffer &to_add, IOBuffer &to_delete) {
+  std::unordered_set<std::string> data_to_skip = printer_func(to_delete);   //Prepara un container contenente le righe del file da non copiare
+  std::unordered_set<std::string> data_to_print = printer_func(to_add);     //Questo container raccoglie tutte le righe del file
+  if (data_to_skip.empty()) {
+    _putData(data_to_print);
+    return {0, 0};
+  }
   _file.close();
-  _file.open(_filename, std::ios::in);                    //Apri il file in modalità lettura
+  _file.open(_filename, std::ios::in);
   
-  //Fai una copia dell'intero file in memoria saltando le righe da cancellare
   while (_file.good()) {
-    std::string line;
-    std::getline(_file, line);
-    if (data_to_skip.count(line) == 0 && !line.empty()) {  //Copia solo le righe che non siano da saltare
-      data_to_copy << line << std::endl;
+    std::string file_line;
+    std::getline(_file, file_line);
+    if (!file_line.empty())
+      data_to_print.insert(file_line);
+  }
+  for(auto it = data_to_skip.begin(); it != data_to_skip.end(); it++) {
+    if(data_to_print.find(*it) != data_to_print.end()) {
+      data_to_print.erase(*it);
     }
   }
-  data_to_skip.clear();                                   //Libera la memoria
-  
-  _file.close();
-  _file.open(_filename, std::ios::out | std::ios::trunc); //Riapri il file cancellando tutti i contenuti vecchi
-  _file << data_to_copy.str();
-  _file.flush();
+  data_to_skip.clear();
+  clear();
+  _putData(data_to_print);
   return {0, 0};
 }
 
-FH::Error FH::FileHandler::putData(std::set<std::string> (*printer_func)(IOBuffer &), IOBuffer &to_add) {
-  IOBuffer empty_buffer;
-  return putData(printer_func, to_add, empty_buffer);
+FH::Error FH::FileHandler::putData(std::unordered_set<std::string> (*printer_func)(IOBuffer &), IOBuffer &to_add) {
+  
+  std::unordered_set<std::string> data_to_print = printer_func(to_add);         //Prepara i dati da stampare
+  _putData(data_to_print);
+  return {0, 0};
 }
 ///////////////////////////////////////////////  NAMESPACE FH FUNCTIONS  ///////////////////////////////////////////////
 
@@ -291,12 +303,12 @@ std::string FH::formatOutput(const IOBuffer::Relation &relation) {
   std::stringstream out;
   std::string id1 = relation.first.first, id2 = relation.first.second,
           rel = relation.second;
-  if(relation::isSymmetrical(rel)) {
+  if (relation::isSymmetrical(rel)) {
     if (id1 > id2) { //Ordinali alfabeticamente dato che friendship è simmetrica
       std::swap(id1, id2);
     }
   }
-  else if(!relation::isDominant(rel)) {
+  else if (!relation::isDominant(rel)) {
     //In questo caso la relazione è indicata come non dominante. Scambia gli ID e inverti la relazione
     std::swap(id1, id2);
     rel = relation::getInverse(rel);
@@ -307,9 +319,9 @@ std::string FH::formatOutput(const IOBuffer::Relation &relation) {
 
 std::string FH::formatOutput(const IOBuffer::m_Post &post) {
   std::stringstream out;
-  out << post.first << "," << formatString(post.second.getNews()) << "," ;    //Formatta il messaggio
+  out << post.first << "," << formatString(post.second.getNews()) << ",";    //Formatta il messaggio
   
-  out << post.second.getDate() <<  ",";                        //Formatta la data
+  out << post.second.getDate() << ",";                        //Formatta la data
   
   out << "likes:{";                                                  //Elabora la lista dei likes
   std::vector<std::string> temp = post.second.getLikes();
@@ -343,13 +355,13 @@ FH::Error FH::accountsFile(std::stringstream &line) {
   //Acquisisci e controlla l'ID
   std::getline(line, id, ',');                                  //Acquisisci l'ID
   check_result = check_result = checkField(id, Account::IDValid, 0x1, 0x1);
-  if(check_result.code != 0)
+  if (check_result.code != 0)
     return check_result;                //Controllalo
   
   //Acquisisci e controlla il tipo di account
   std::getline(line, type_s, ',');                              //Acquisisci il tipo
   check_result = check_result = checkField(type_s, Account::typeValid, 0x2, 0x1);
-  if(check_result.code != 0)
+  if (check_result.code != 0)
     return check_result;
   char type = type_s[0];
   type_s.clear();                                               //Libera la stringa
@@ -365,27 +377,27 @@ FH::Error FH::accountsFile(std::stringstream &line) {
     
     name = readField("name", info);                             //Controllo nome
     check_result = checkField(name, Account::nameValid, 0x3, 0x1);
-    if(check_result.code != 0)
+    if (check_result.code != 0)
       return check_result;
     surname = readField("surname", info);                       //Controllo cognome
     check_result = checkField(surname, Account::nameValid, 0x3, 0x2);
-    if(check_result.code != 0)
+    if (check_result.code != 0)
       return check_result;
     gender = readField("gender", info);                         //Controllo genere
     check_result = checkField(gender, Account::nameValid, 0x3, 0x3);
-    if(check_result.code != 0)
+    if (check_result.code != 0)
       return check_result;
     address = readField("addr", info);                          //Controllo indirizzo
     check_result = checkField(address, Account::nameValid, 0x3, 0x4);
-    if(check_result.code != 0)
+    if (check_result.code != 0)
       return check_result;
     subscription = readField("sub", info);                      //Controllo data di iscrizione
     check_result = checkField(subscription, Date::CheckDate, 0x3, 0x5);
-    if(check_result.code != 0)
+    if (check_result.code != 0)
       return check_result;
     birth = readField("birth", info);                           //Controllo data di nascita
     check_result = checkField(birth, Date::CheckDate, 0x3, 0x6);
-    if(check_result.code != 0)
+    if (check_result.code != 0)
       return check_result;
   }
   else if (type == Account::group_type) {
@@ -395,23 +407,23 @@ FH::Error FH::accountsFile(std::stringstream &line) {
     
     name = readField("name", info);                             //Controllo nome
     check_result = checkField(name, Account::nameValid, 0x3, 0x1);
-    if(check_result.code != 0)
+    if (check_result.code != 0)
       return check_result;
     location = readField("location", info);                     //Controllo posizione legale
     check_result = checkField(location, Account::nameValid, 0x3, 0x4);
-    if(check_result.code != 0)
+    if (check_result.code != 0)
       return check_result;
     activity = readField("activity", info);                     //Controllo attività
     check_result = checkField(activity, Account::nameValid, 0x3, 0x7);
-    if(check_result.code != 0)
+    if (check_result.code != 0)
       return check_result;
     inception = readField("inception", info);                   //Controllo data di creazione del gruppo
     check_result = checkField(inception, Date::CheckDate, 0x3, 0x8);
-    if(check_result.code != 0)
+    if (check_result.code != 0)
       return check_result;
     subscription = readField("sub", info);                     //Controllo data di iscrizione
     check_result = checkField(subscription, Date::CheckDate, 0x3, 0x5);
-    if(check_result.code != 0)
+    if (check_result.code != 0)
       return check_result;
   }
   else if (type == Account::company_type) {
@@ -421,27 +433,27 @@ FH::Error FH::accountsFile(std::stringstream &line) {
     
     name = readField("name", info);                                     //Controllo nome
     check_result = checkField(name, Account::nameValid, 0x3, 0x1);
-    if(check_result.code != 0)
+    if (check_result.code != 0)
       return check_result;
     prod = readField("prod", info);                                     //Controllo prodotto
     check_result = checkField(prod, Account::nameValid, 0x3, 0xA);
-    if(check_result.code != 0)
+    if (check_result.code != 0)
       return check_result;
     f_location = readField("financial_loc", info);                      //Controllo della finantial location
     check_result = checkField(f_location, Account::nameValid, 0x3, 0x4);
-    if(check_result.code != 0)
+    if (check_result.code != 0)
       return check_result;
     op_location = readField("operative_loc", info);                     //Controllo della operative location
     check_result = checkField(f_location, Account::nameValid, 0x3, 0x4);
-    if(check_result.code != 0)
+    if (check_result.code != 0)
       return check_result;
     inception = readField("inception", info);              //Controllo data di creazione della compagnia
     check_result = checkField(inception, Date::CheckDate, 0x3, 0x8);
-    if(check_result.code != 0)
+    if (check_result.code != 0)
       return check_result;
     subscription = readField("sub", info);                 //Controllo data di iscrizione
     check_result = checkField(subscription, Date::CheckDate, 0x3, 0x5);
-    if(check_result.code != 0)
+    if (check_result.code != 0)
       return check_result;
   }
   return {0, 0};
@@ -471,7 +483,7 @@ FH::Error FH::postsFile(std::stringstream &line) {
   
   std::getline(line, id, ',');                                        //Acquisici l'ID
   check_result = checkField(id, Account::IDValid, 0x1, 0x1);
-  if(check_result.code != 0)
+  if (check_result.code != 0)
     return check_result;
   
   std::getline(line, message, ',');
@@ -484,7 +496,7 @@ FH::Error FH::postsFile(std::stringstream &line) {
   
   std::getline(line, date, ',');
   check_result = checkField(date, Date::CheckDate, 0x3, 0xB);
-  if(check_result.code != 0)
+  if (check_result.code != 0)
     return check_result;
   
   std::string reactions;
@@ -493,7 +505,7 @@ FH::Error FH::postsFile(std::stringstream &line) {
   while (likes_ss.good() && likes_ss.gcount() != 0) {
     std::getline(likes_ss, like, ',');
     check_result = checkField(like, Account::IDValid, 0x1, 0x1);
-    if(check_result.code != 0)
+    if (check_result.code != 0)
       return check_result;
   }
   
@@ -501,7 +513,7 @@ FH::Error FH::postsFile(std::stringstream &line) {
   while (dislikes_ss.good() && dislikes_ss.gcount() != 0) {
     std::getline(dislikes_ss, dislike);
     check_result = checkField(dislike, Account::IDValid, 0x1, 0x1);
-    if(check_result.code != 0)
+    if (check_result.code != 0)
       return check_result;
   }
   return {0, 0};
@@ -631,8 +643,8 @@ FH::Error FH::postsFile(std::stringstream &line, IOBuffer &buff) {
  * ## Printers ##
  * ##############
  */
-std::set<std::string> FH::accountsFile(IOBuffer &buff) {
-  std::set<std::string> out;               //Prepara uno stringstream per poi trasformarlo in stringa
+std::unordered_set<std::string> FH::accountsFile(IOBuffer &buff) {
+  std::unordered_set<std::string> out;               //Prepara uno stringstream per poi trasformarlo in stringa
   while (!buff.usersEmpty()) {
     User usr;
     buff >> usr;                              //Acquisisci l'utente dal buffer
@@ -651,8 +663,8 @@ std::set<std::string> FH::accountsFile(IOBuffer &buff) {
   return out;                           //Converti lo stringstream in string e ritorna
 }
 
-std::set<std::string> FH::relationsFile(IOBuffer &buff) {
-  std::set<std::string> out;
+std::unordered_set<std::string> FH::relationsFile(IOBuffer &buff) {
+  std::unordered_set<std::string> out;
   while (!buff.relationsEmpty()) {
     IOBuffer::Relation rel;
     buff >> rel;
@@ -661,8 +673,8 @@ std::set<std::string> FH::relationsFile(IOBuffer &buff) {
   return out;
 }
 
-std::set<std::string> FH::postsFile(IOBuffer &buff) {
-  std::set<std::string> out;
+std::unordered_set<std::string> FH::postsFile(IOBuffer &buff) {
+  std::unordered_set<std::string> out;
   while (!buff.postsEmpty()) {
     IOBuffer::m_Post post;
     buff >> post;

@@ -7,7 +7,7 @@
 
 #include <fstream>
 #include <sstream>
-#include <set>
+#include <unordered_set>
 #include "User.h"
 #include "Group.h"
 #include "Company.h"
@@ -36,6 +36,9 @@ private:
   static const std::string mac_relative_path;
   static const bool win_system;
   
+  /**Private functions*/
+  void _putData(const std::unordered_set<std::string> &lines);
+  
 public:
   /**Constructors & Destructor*/
   FileHandler() = default;
@@ -55,8 +58,8 @@ public:
   //Viene assunto che tutte le righe siano correttamente formattate. Qui vengono eseguiti controlli quali ripetizioni.
   Error fetchLineData(Error (*fetcher_func)(std::stringstream &, IOBuffer &), const std::string &line, IOBuffer &buff);
   Error fetchData(Error (*fetcher_func)(std::stringstream &, IOBuffer &), IOBuffer &buff);
-  Error putData(std::set<std::string>(*printer_func)(IOBuffer &), IOBuffer &to_add);
-  Error putData(std::set<std::string>(*printer_func)(IOBuffer &), IOBuffer &to_add, IOBuffer &to_delete);
+  Error putData(std::unordered_set<std::string>(*printer_func)(IOBuffer &), IOBuffer &to_add);
+  Error putData(std::unordered_set<std::string>(*printer_func)(IOBuffer &), IOBuffer &to_add, IOBuffer &to_delete);
   
 };  //Class FileHandler
 bool isFormatChar(const std::string &s, size_t pos);
@@ -83,9 +86,9 @@ Error relationsFile(std::stringstream &line, IOBuffer &buff);
 Error postsFile(std::stringstream &line, IOBuffer &buff);
 
 //Stampa su file
-std::set<std::string> accountsFile(IOBuffer &buff);
-std::set<std::string> relationsFile(IOBuffer &buff);
-std::set<std::string> postsFile(IOBuffer &buff);
+std::unordered_set<std::string> accountsFile(IOBuffer &buff);
+std::unordered_set<std::string> relationsFile(IOBuffer &buff);
+std::unordered_set<std::string> postsFile(IOBuffer &buff);
 
 std::string error(const Error &err);
 
