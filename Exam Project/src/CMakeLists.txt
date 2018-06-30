@@ -6,9 +6,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 #QUI le cartelle
-include_directories(Libraries
+include_directories(
+        ../src
         Libraries/Headers               #Qui vengono aggiunti i percorsi di ricerca per la #include
-         Libraries/Headers/Account\ Hierarchy        #Nota come si fa con lo spazio
+        Libraries/Headers/Account\ Hierarchy        #Nota come si fa con lo spazio
         )
 
 set(SRC Libraries/Sources)                          #Aliases (SRC -> Source, HDR -> Header)
