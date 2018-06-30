@@ -14,8 +14,8 @@ const bool FH::FileHandler::win_system = false;
  * ## Static Data ##
  * #################
  */
-const std::string FH::FileHandler::windows_relative_path = "../Files/";
-const std::string FH::FileHandler::mac_relative_path = "../../../Exam Project/Files/";
+const std::string FH::FileHandler::windows_relative_path = "../input/";
+const std::string FH::FileHandler::mac_relative_path = "../../../Exam Project/input/";
 const char FH::FileHandler::parser_char = '&';
 const char FH::FileHandler::format_chars[] = {'{', '}', '&', ','};
 

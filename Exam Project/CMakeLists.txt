@@ -6,12 +6,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 #QUI le cartelle
-include_directories(Libraries/Headers               #Qui vengono aggiunti i percorsi di ricerca per la #include
-        Libraries/Headers/Account\ Hierarchy        #Nota come si fa con lo spazio
+include_directories(src/Libraries/Headers               #Qui vengono aggiunti i percorsi di ricerca per la #include
+        src/Libraries/Headers/Account\ Hierarchy        #Nota come si fa con lo spazio
         )
 
-set(SRC Libraries/Sources)                          #Aliases (SRC -> Source, HDR -> Header)
-set(HDR Libraries/Headers)
+set(SRC src/Libraries/Sources)                          #Aliases (SRC -> Source, HDR -> Header)
+set(HDR src/Libraries/Headers)
 
 #QUI i .cpp
 set(                                                #Qui si fa una sorta di assegnazione: chiamando "${SOURCE_FILES}"
@@ -30,8 +30,7 @@ set(                                                #Qui si fa una sorta di asse
         ${HDR}/Account\ Hierarchy/Company.h     ${SRC}/Account\ Hierarchy/Company.cpp
         ${HDR}/Account\ Hierarchy/Group.h       ${SRC}/Account\ Hierarchy/Group.cpp
         ${HDR}/Account\ Hierarchy/User.h        ${SRC}/Account\ Hierarchy/User.cpp
-        main_di_clara.hpp
-        main_2.hpp
+        src/main_di_clara.hpp
         )
 
 
