@@ -202,6 +202,7 @@ int main_di_clara(int argc, const char *argv[]) {
           std::make_pair("delete", Shell::del),
           std::make_pair("stats", Shell::stats),
           std::make_pair("add", Shell::add),
+          std::make_pair("search", Shell::search)
   };
   
   bool exit = false;
