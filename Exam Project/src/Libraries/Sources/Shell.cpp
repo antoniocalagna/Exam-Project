@@ -6,21 +6,7 @@
 
 void Shell::help(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete) {
   //LISTA DEI POSSIBILI COMANDI
-  cout << "delete account <id>\n"
-       << endl;
-
-  cout << "add relationship\n"
-          "delete relationship\n"
-       << endl;
-  cout << "add post\n"
-          "delete post\n"
-       << endl;
-  cout << "add like\n"
-          "delete like\n"
-          "add dislike\n"
-          "delete dislike\n"
-       << endl;
-  cout << "stats number accounts\n" //DA UNIRE
+  /*cout << "stats number accounts\n" //DA UNIRE
           "stats number users\n"
           "stats number groups\n"
           "stats number companies\n"
@@ -48,7 +34,7 @@ void Shell::help(std::stringstream &command, Manager &manager, IOBuffer &new_dat
           "search tree\n"
           "search loner_people\n"
           "search friendly_companies\n"
-       << endl;
+       << endl;*/
 
   //Da qui l'help sistemato
   std::cout << "---------- DA CANCELLARE --------------" << std::endl;
@@ -77,7 +63,20 @@ void Shell::help(std::stringstream &command, Manager &manager, IOBuffer &new_dat
                "\taccount (ID_to_delete), relation (between two IDs), post (ID_of_owner), like, dislike.\n"
                "\tIn case of \"delete account\", the ID need to be inserted.\n"
                "\tIn case of \"delete relation\", the two ID's and the type of relation need to be inserted.\n"
-               "\tIn case of \"delete post\", the ID is the owner of the post and need to be inserted.\n"
+               "\tIn case of \"delete post\", the ID is the owner of the post and need to be inserted."
+            << std::endl;
+  std::cout << "stats <type_of_statistic> [<type_of_data>]"
+               "\n\tPrints statistic info.\n"
+               "\tPossible type of statistic:\n"
+               "\tnumber(<type_of_data>), most(<type_of_data>), average_age, best_post, worse_post.\n"
+               "\tIn case of \"number\", the possible types of data are:\n"
+               "\taccounts, users, groups, companies, friends, relatives, employees, subsidiaries, members, born_after.\n"
+               "\tIn case of \"most\", the possible types of data are:\n"
+               "\temploying_company, employing_partnership, user_friends, user_acquaintances, liked_post, liked_account,\n\tdisliked_post, disliked_account."
+            << std::endl;
+  std::cout << "search <data_to_search>"
+               "\n\tPossible data to search:\n"
+               "\ttree, tree, loner_people, friendly_companies.\n"
             << std::endl;
 }
 
