@@ -1142,7 +1142,7 @@ vector<vector<string>> Manager::GenealogicalTree(const string &whose_ID) const {
 vector<string> Manager::FormatTree (const vector<vector<string>> &tree_to_format) const
 {
   
-  if (tree_to_format.size() <= 3)
+  if (tree_to_format.size() < 3)
   {
     //L'albero non è lungo a sufficienza
     return vector<string>();
@@ -1201,7 +1201,7 @@ string Manager::PrintTree(const std::string &whose_ID) const
   vector<string> tree_to_print = FormatTree(GenealogicalTree(whose_ID)); //Invoco a cascata le funzioni di creazione dell'albero e la formattazione dello stesso
   stringstream ss;
   
-  if (tree_to_print==vector<string>())
+  if (tree_to_print.size() < 3)
   {
     //L'albero non è valido poiché non lungo a sufficienza
     return string();

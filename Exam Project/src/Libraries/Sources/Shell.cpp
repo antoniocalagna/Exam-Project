@@ -72,8 +72,8 @@ void Shell::help(std::stringstream &command, Manager &manager, IOBuffer &new_dat
           "stats best_post\n"
           "stats worse_post\n"
        << endl;
-  cout << "search genealogical_trees\n"
-          "search genealogical_tree\n"
+  cout << "search trees\n"
+          "search tree\n"
           "search loner_people\n"
           "search friendly_companies\n"
        << endl;
@@ -1054,7 +1054,7 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
 void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete) {
   string what_to_search;
   command >> what_to_search;
-  if (what_to_search == "genealogical_trees") {
+  if (what_to_search == "trees") {
     /*vector <string> trees_to_print = manager.PrintAllTrees();
     for (auto it = trees_to_print.begin(); it!=trees_to_print.end(); it++){
       new_data_buffer << *it;
@@ -1062,10 +1062,9 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
     // devo poterli stampare su files diversi
     
   }
-  else if (what_to_search == "genealogical_tree") {
+  else if (what_to_search == "tree") {
     string id;
-    cout << "Please insert the id of the User you want to build the genealogical tree:\n";
-    cin >> id;
+    command >> id;
     cout << manager.PrintTree(id); //dentro la funzione non c'è il controllo dell'esistenza dell'id
     //per ora ho messo cout anche se vanno stampati su file
     
