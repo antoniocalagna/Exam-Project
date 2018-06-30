@@ -165,7 +165,7 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
     command >> id1 >> id2;
     std::string relation = manager.getRelationship(id1, id2);
     if (relation.empty()) {                                               //Non è presente alcuna relazione
-      std::cout << "No relation found between " << id1 << " and  " << id2;
+      std::cout << "No relation found between " << id1 << " and " << id2;
       return;
     }
     std::cout << "Relation: " << relation << std::endl;
@@ -916,15 +916,15 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
       command >> id;
       num = manager.NumRelatives(id);
       if (num == 0) {
-        cout << "Error! " << id << " is not a User or it does not exist." << endl;
+        cout << id << " has no relatives." << endl;
         return;
       }
     }
-    else if (param2 == "employees") {
+    else if (param2 == "workers") {
       command >> id;
       num = manager.NumEmployees(id);
       if (num == 0) {
-        cout << "Error! " << id << "is not a Company or it does not exist." << endl;
+        cout << id << " has no workers." << endl;
         return;
       }
     }
@@ -932,7 +932,7 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
       command >> id;
       num = manager.NumSubsidiaries(id);
       if (num == 0) {
-        cout << "Error! " << id << " is not a Company or it does not exist." << endl;
+        cout << id << " has no subsidiaries." << endl;
         return;
       }
     }
@@ -940,7 +940,7 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
       command >> id;
       num = manager.NumMembers(id);
       if (num == 0) {
-        cout << "Error! " << id << " is not a Group or it does not exist." << endl;
+        cout << id << " has no members." << endl;
         return;
       }
     }
