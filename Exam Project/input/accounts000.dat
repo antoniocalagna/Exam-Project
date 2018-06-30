@@ -1,22 +1,22 @@
 sams,C,{name:{Samsung},financial_loc:{Bu Korea},operative_loc:{Sempre Korea},prod:{Tech},inception:{15/01/1933},sub:{18/10/2011}}
 stb,C,{name:{Stabilo},financial_loc:{Germany},operative_loc:{Germany},prod:{Cartoleria},inception:{15/01/1940},sub:{05/07/2012}}
-leo,U,{name:{Leo},surname:{Calagna},gender:{M},addr:{Via Streva 21},sub:{27/11/1998},birth:{10/05/1969}}
-appl,C,{name:{Apple},financial_loc:{Cupertino USA},operative_loc:{Cupertino USA},prod:{Tech},inception:{20/06/1970},sub:{29/06/2018}}
-MYSSKETA,U,{name:{Monica},surname:{Ketamina},gender:{F},addr:{Porta Venezia},sub:{30/08/1997},birth:{27/04/1983}}
-gelena,U,{name:{Gianna},surname:{Di Cicca},gender:{M},addr:{Via Streva 21},sub:{07/05/2016},birth:{29/05/1969}}
-claslavax,U,{name:{Clara},surname:{Salvalai},gender:{F},addr:{Via Galvani 11},sub:{12/02/2014},birth:{09/09/1997}}
 gianlusav,U,{name:{Gianluca},surname:{Savina},gender:{M},addr:{Via Einstein 11},sub:{12/03/2017},birth:{21/07/1997}}
 nonno_italo,U,{name:{Italo},surname:{Di Cicca},gender:{M},addr:{Paradiso},sub:{05/04/2003},birth:{22/12/1921}}
+claslavax,U,{name:{Clara},surname:{Salvalai},gender:{F},addr:{Via Galvani 11},sub:{12/02/2014},birth:{09/09/1997}}
+gelena,U,{name:{Gianna},surname:{Di Cicca},gender:{M},addr:{Via Streva 21},sub:{07/05/2016},birth:{29/05/1969}}
+appl,C,{name:{Apple},financial_loc:{Cupertino USA},operative_loc:{Cupertino USA},prod:{Tech},inception:{20/06/1970},sub:{29/06/2018}}
+MYSSKETA,U,{name:{Monica},surname:{Ketamina},gender:{F},addr:{Porta Venezia},sub:{30/08/1997},birth:{27/04/1983}}
+leo,U,{name:{Leo},surname:{Calagna},gender:{M},addr:{Via Streva 21},sub:{27/11/1998},birth:{10/05/1969}}
 prezzi27,U,{name:{Giovanni},surname:{Li Calsi},gender:{M},addr:{Villabate},sub:{11/02/2004},birth:{14/03/1997}}
 crushditotina,U,{name:{Nicola},surname:{Cantisani},gender:{N},addr:{Via delle buttane},sub:{10/06/2014},birth:{10/02/1996}}
 pao_bao,U,{name:{Barone},surname:{Paolino},gender:{m},addr:{Via Leopardi 3},sub:{26/06/2018},birth:{20/01/1998}}
 elecami,U,{name:{Elena},surname:{Caminita},gender:{F},addr:{Monreale},sub:{05/04/2014},birth:{23/12/1996}}
 caesar_salad,U,{name:{Cesare},surname:{Faiella},gender:{M},addr:{Via Amari 63},sub:{10/03/2010},birth:{19/02/1965}}
-CsanG,U,{name:{Claudio},surname:{Sangari},gender:{M},addr:{Via Libera Russia 10},sub:{07/01/2013},birth:{16/02/1997}}
-giuliagallo24,U,{name:{Giulia},surname:{Gallo},gender:{F},addr:{Largo Cristoforo Colombo},sub:{05/04/2014},birth:{24/12/1996}}
-salvich,U,{name:{Salvatore},surname:{Alvich},gender:{F},addr:{Via Principe di Paterno' 32},sub:{04/02/2012},birth:{23/03/2005}}
-faber_crax,U,{name:{Fabrizio},surname:{Crasci'},gender:{m},addr:{Via dei Nebrodi 23},sub:{29/06/2018},birth:{20/03/1998}}
 totina,U,{name:{Antonio},surname:{Calagna},gender:{N},addr:{Porta Venezia},sub:{22/10/2016},birth:{27/10/1998}}
+faber_crax,U,{name:{Fabrizio},surname:{Crasci'},gender:{m},addr:{Via dei Nebrodi 23},sub:{29/06/2018},birth:{20/03/1998}}
+CsanG,U,{name:{Claudio},surname:{Sangari},gender:{M},addr:{Via Libera Russia 10},sub:{07/01/2013},birth:{16/02/1997}}
+salvich,U,{name:{Salvatore},surname:{Alvich},gender:{F},addr:{Via Principe di Paterno' 32},sub:{04/02/2012},birth:{23/03/2005}}
+giuliagallo24,U,{name:{Giulia},surname:{Gallo},gender:{F},addr:{Largo Cristoforo Colombo},sub:{05/04/2014},birth:{24/12/1996}}
 PoliTO,G,{name:{Politecnico di Torino},location:{Torino},activity:{Mangiare anime},inception:{15/01/1885},sub:{18/07/2000}}
 domi_123,U,{name:{Domenico},surname:{Di Grusa},gender:{M},addr:{Viale Regione Siciliana 5300},sub:{20/07/2012},birth:{20/10/1997}}
 ros_rus,U,{name:{Rosanna},surname:{Russo},gender:{F},addr:{Via Principe di Paterno' 32},sub:{20/07/2004},birth:{06/06/1971}}

@@ -73,7 +73,10 @@ void Shell::help(std::stringstream &command, Manager &manager, IOBuffer &new_dat
                "\tuser, group, company, relation (between two IDs), post, like, dislike.\n"
                "\tIn case of \"add relation\", the two ID's and the type of relation need to be inserted.\n"
             << std::endl;
-  std::cout << "delete"
+  std::cout << "delete <data_to_delete> <id1> [<id2>]\n\tDeletes the data as required.\n\tPossible data to delete:\n"
+               "\taccount, relation (between two IDs), post, like, dislike.\n"
+               "\tIn case of \"delete relation\", the two ID's and the type of relation need to be inserted.\n"
+            << std::endl;
 }
 
 void Shell::list(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete) {
@@ -766,8 +769,14 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
     data_to_delete << std::make_pair(std::make_pair(id_start, id_target), relation);
   } else if (what_to_delete == "post") {
     std::string post_owner;
+    string post_num_str;
     unsigned int post_num;
-    command >> post_owner >> post_num;
+    command >> post_owner;
+    cout << "Please insert post number:" << endl;
+    cout << ">";
+    getline(cin, post_num_str);
+    post_num = stoi(post_num_str);
+
     post_num--;
 
     std::vector<Post> posts = manager.getPosts(post_owner);
@@ -780,47 +789,43 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
       return;
     }
     data_to_delete << std::make_pair(post_owner, posts[post_num]);
-  } else if (what_to_delete == "like") {
-    string who, tmp_news, d_t;
-    pair<string, vector<Post>> post;
+  } else if (what_to_delete == "like" || what_to_delete == "dislike") {
+    string post_owner, reaction_id, post_num_str;
+    unsigned int post_num;
+    vector<Post> posts;
 
-    cout << "Please insert the news of the target post:\n>";
-    getline(cin, tmp_news);
-    cout << "Please insert the date and the time (in format dd/mm/yyyy hh:mm) of the target post:\n>";
-    getline(cin, d_t);
-    cout << "Please insert the ID whose User did not like this post anymore:\n>";
-    getline(cin, who);
+    cout << "Please insert the post owner's ID:" << endl;
+    cout << ">";
+    getline(cin, post_owner);
+    cout << "Insert the account reacting to the post's ID:" << endl;
+    cout << ">";
+    getline(cin, reaction_id);
+    cout << "Please insert post number:" << endl;
+    cout << ">";
+    getline(cin, post_num_str);
+    post_num = stoi(post_num_str);
 
-    Post cmp_post(tmp_news, d_t);
-
-    if (!manager.setReaction(1, 0, cmp_post, who)) {
-      cout << "Error! Operation not successful." << endl; //1-NO ID, 2-NO AUTOLIKES, 3-NO POST
+    post_num--;
+    posts = manager.getPosts(post_owner);   //Acquisisci i post per passarli al manager
+    if (posts.size() <= post_num) {   //Controlla se il proprietario dell'account ha il post
+      cout << "Error! Could find post " << post_num + 1 << " from " << post_owner << "." << endl;
       return;
     }
 
-  } else if (what_to_delete == "dislike") {
-    string who, tmp_news, d_t;
-    pair<string, vector<Post>> post;
+    Post &old_post = posts[post_num];
 
-    cout << "Please insert the news of the target post:\n>";
-    cin.ignore();
-    getline(cin, tmp_news);
-    cout << "Please insert the date and the time (in format dd/mm/yyyy hh:mm) of the target post:\n>";
-    cin.ignore();
-    getline(cin, d_t);
-    cout << "Please insert the ID whose User did not dislike this post anymore:\n>";
-    cin >> who;
-
-    Post cmp_post(tmp_news, d_t);
-
-    if (!manager.setReaction(0, 0, cmp_post, who)) {
-      cout << "Error! I could not remove this dislike" << endl; //1-NO ID, 2-NO AUTOLIKES, 3-NO POST
+    bool like = what_to_delete == "like";      //Decidi se mettere like o dislike
+    if (!manager.setReaction(like, false, post_owner, post_num, reaction_id)) {
+      cout << "Error! Could find post " << post_num + 1 << " from " << post_owner << "." << endl;
       return;
     }
+    data_to_delete << std::make_pair(post_owner, old_post);
+    new_data << std::make_pair(post_owner, manager.getPosts(post_owner)[post_num]);
   } else {
     cout << "Cannot delete \"" << what_to_delete << "\"." << endl;
     return;
   }
+
   std::cout << "Done!" << std::endl;
 }
 
