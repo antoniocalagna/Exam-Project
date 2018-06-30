@@ -686,7 +686,7 @@ Company Manager::MostEmployingCompany() const
   size_t num_members=0;
   for (auto it=_map_companies.begin(); it!=_map_companies.end(); it++)
   {
-    if((_graph.outDegree_withEdge(it->second.getID(), relation::employee))>num_members)
+    if((_graph.outDegree_withEdge(it->second.getID(), relation::employer))>num_members)
     {
       best=it->second;
     }
@@ -703,12 +703,12 @@ vector<string> Manager::MostEmployingPartnership() const
   //Per ogni azienda calcolo il numero di impiegati della stessa e poi sommo ad esso il numero di impiegati delle consociate. Ritorno un vettore di ID contenente la partnership con più assunzioni.
   for (auto it=_map_companies.begin(); it!=_map_companies.end(); it++)
   {
-    num_members=_graph.outDegree_withEdge(it->second.getID(), relation::employee);
+    num_members=_graph.outDegree_withEdge(it->second.getID(), relation::employer);
     
     subs=_graph.branches(it->second.getID(), relation::partnership);
     for (auto it2=subs.begin(); it2!=subs.end(); it++)
     {
-      num_members=num_members+_graph.outDegree_withEdge(*it2, relation::employee);
+      num_members=num_members+_graph.outDegree_withEdge(*it2, relation::employer);
     }
     
     if (num_members>num_prev)

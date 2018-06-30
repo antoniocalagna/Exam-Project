@@ -206,6 +206,7 @@ int main_di_clara(int argc, const char *argv[]) {
   
   bool exit = false;
   bool save_data = false;
+  bool autosave = true;
   unsigned int cycles_without_saving = 0;
   do {
     string input;             //Input dell'utente
@@ -224,59 +225,20 @@ int main_di_clara(int argc, const char *argv[]) {
       //Il comando è stato trovato. Esegui la funzione ad esso associata
       commands.at(cmd)(command, manager, new_data_buffer, data_to_erase_buffer);
     }
-    else if (cmd == "search") {
-      string what_to_search;
-      command >> what_to_search;
-      if (what_to_search == "genealogical_trees") {
-        /*vector <string> trees_to_print = manager.PrintAllTrees();
-        for (auto it = trees_to_print.begin(); it!=trees_to_print.end(); it++){
-          new_data_buffer << *it;
-        }*/
-        // devo poterli stampare su files diversi
-        
+    else if (cmd == "autosave") {
+      std::string request;
+      command >> request;
+      if (request == "on") {
+        autosave = true;
+        std::cout << "Autosave turned on." << std::endl;
       }
-      else if (what_to_search == "genealogical_tree") {
-        string id;
-        cout << "Please insert the id of the User you want to build the genealogical tree:\n";
-        cin >> id;
-        cout << manager.PrintTree(id); //dentro la funzione non c'è il controllo dell'esistenza dell'id
-        //per ora ho messo cout anche se vanno stampati su file
-        
-      }
-      else if (what_to_search == "loner_people") {
-        unsigned int relations, memberships, reactions;
-        string ans; //answer
-        bool unemployed;
-        vector<string> lon_people;
-        
-        cout << "Please insert the parameters that define a loner person:\n"
-                "Minimum number of relation: ";
-        cin >> relations;
-        cout << "Minimum number of groups: ";
-        cin >> memberships;
-        cout
-                << "Does the user need to be unemployed? (yes/no): "; //non ho capito se logicamente sia giusto per come è fatta la funzione
-        cin >> ans;
-        if (ans == "yes") {
-          unemployed = true;
-        }
-        else {
-          unemployed = false;
-        }
-        cout << "Minimum number of added reactions: ";
-        cin >> reactions;
-        
-        lon_people = manager.LonerPeople(relations, memberships, unemployed, reactions);
-        for (auto it = lon_people.begin(); it != lon_people.end(); it++) {
-          cout << *it;
-        }
-        
-      }
-      else if (what_to_search == "friendliest_company") {
-        //function
+      else if (request == "off") {
+        autosave = false;
+        std::cout << "Autosave turned off." << std::endl;
       }
       else {
-        cout << "Error! I do not understand what type of enquiry you'd like to obtain." << endl;
+        std::cout << "Cannot set autosave " << request << ".\n"
+                  << "Correct format: autosave on/off" << std::endl;
       }
     }
     else if (cmd == "save") {
@@ -291,8 +253,9 @@ int main_di_clara(int argc, const char *argv[]) {
     }
     
     /**************************************    Salvataggio dati     ***************************************************/
-    if (new_data_buffer.size() + data_to_erase_buffer.size() >= BUFF_TOTAL_SIZE_MAX ||
-        cycles_without_saving >= CYCLES_WITHOUT_SAVING_MAX) {
+    if ((new_data_buffer.size() + data_to_erase_buffer.size() >= BUFF_TOTAL_SIZE_MAX ||
+         cycles_without_saving >= CYCLES_WITHOUT_SAVING_MAX) &&
+        autosave) {
       save_data = true;
     }
     

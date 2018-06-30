@@ -20,6 +20,7 @@ void set(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuf
 void add(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete);
 void del(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete);
 void stats(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete);
+void search(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete);
 }
 
 #endif //SOCIAL_NETWORK_SHELL_H

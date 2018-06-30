@@ -1050,3 +1050,59 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
     std::cout << "Cannot get satystics of " << param1 << std::endl;
   }
 }
+
+void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete) {
+  string what_to_search;
+  command >> what_to_search;
+  if (what_to_search == "genealogical_trees") {
+    /*vector <string> trees_to_print = manager.PrintAllTrees();
+    for (auto it = trees_to_print.begin(); it!=trees_to_print.end(); it++){
+      new_data_buffer << *it;
+    }*/
+    // devo poterli stampare su files diversi
+    
+  }
+  else if (what_to_search == "genealogical_tree") {
+    string id;
+    cout << "Please insert the id of the User you want to build the genealogical tree:\n";
+    cin >> id;
+    cout << manager.PrintTree(id); //dentro la funzione non c'è il controllo dell'esistenza dell'id
+    //per ora ho messo cout anche se vanno stampati su file
+    
+  }
+  else if (what_to_search == "loner_people") {
+    unsigned int relations, memberships, reactions;
+    string ans; //answer
+    bool unemployed;
+    vector<string> lon_people;
+    
+    cout << "Please insert the parameters that define a loner person:\n"
+            "Minimum number of relation: ";
+    cin >> relations;
+    cout << "Minimum number of groups: ";
+    cin >> memberships;
+    cout
+            << "Does the user need to be unemployed? (yes/no): "; //non ho capito se logicamente sia giusto per come è fatta la funzione
+    cin >> ans;
+    if (ans == "yes") {
+      unemployed = true;
+    }
+    else {
+      unemployed = false;
+    }
+    cout << "Minimum number of added reactions: ";
+    cin >> reactions;
+    
+    lon_people = manager.LonerPeople(relations, memberships, unemployed, reactions);
+    for (auto it = lon_people.begin(); it != lon_people.end(); it++) {
+      cout << *it << endl;
+    }
+    
+  }
+  else if (what_to_search == "friendliest_company") {
+    //function
+  }
+  else {
+    cout << "Error! Cannot search for" << what_to_search << "." << endl;
+  }
+}
