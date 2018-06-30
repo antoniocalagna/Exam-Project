@@ -198,7 +198,7 @@ bool Post::RemoveLike(const string &id) {
 }
 
 bool Post::RemoveDislike(const string &id) {
-  if (LikeExists(id)) {
+  if (DislikeExists(id)) {
     _dislikes.erase(id);
     return true;
   }

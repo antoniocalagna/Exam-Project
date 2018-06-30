@@ -76,6 +76,7 @@ void Shell::help(std::stringstream &command, Manager &manager, IOBuffer &new_dat
   std::cout << "delete <data_to_delete> <id1> [<id2>]\n\tDeletes the data as required.\n\tPossible data to delete:\n"
                "\taccount, relation (between two IDs), post, like, dislike.\n"
                "\tIn case of \"delete relation\", the two ID's and the type of relation need to be inserted.\n"
+               "\tIn case of \"delete like\" and \"delete dislike\" <id1> is the owner of the post.\n"
             << std::endl;
 }
 
@@ -793,10 +794,7 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
     string post_owner, reaction_id, post_num_str;
     unsigned int post_num;
     vector<Post> posts;
-
-    cout << "Please insert the post owner's ID:" << endl;
-    cout << ">";
-    getline(cin, post_owner);
+    command >> post_owner;
     cout << "Insert the account reacting to the post's ID:" << endl;
     cout << ">";
     getline(cin, reaction_id);
