@@ -123,7 +123,9 @@ bool relation::isValid(const std::string &r) {
 
 bool relation::isDominant(const string &r) {
   return r == relation::parent ||
-         r == relation::employee;
+         r == relation::employee ||
+         r == relation::knowings;
+  //Se non poniamo knowings tra le dominanti ai controlli questa relazione, non simmetrica, subirebbe l'inversione, ottenendo una stringa vuota che danneggierebbe il file!
 }
 
 bool relation::isSymmetrical(const string &r) {
