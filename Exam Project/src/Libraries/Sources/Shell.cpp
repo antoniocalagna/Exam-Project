@@ -1065,9 +1065,25 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
   else if (what_to_search == "tree") {
     string id;
     command >> id;
-    cout << manager.PrintTree(id); //dentro la funzione non c'è il controllo dell'esistenza dell'id
-    //per ora ho messo cout anche se vanno stampati su file
-    
+    std::string tree = manager.PrintTree(id);
+    cout << tree;
+    std::cout << "Save this tree? (yes/no)" << std::endl << ">";
+    std::string answer;
+    std::getline(std::cin, answer);
+    if(answer == "yes") {
+      std::cout << "Filename: " << std::endl << ">";
+      std::string filename;
+      std::getline(std::cin, filename);
+      std::ofstream file;
+      file.open(filename + ".txt", std::ios::out | std::ios::trunc);
+      file << tree;
+      file.flush();
+      file.close();
+      std::cout << "Done!" << std::endl;
+    }
+    else {
+      return;
+    }
   }
   else if (what_to_search == "loner_people") {
     unsigned int relations, memberships, reactions;
@@ -1076,7 +1092,7 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
     vector<string> lon_people;
     
     cout << "Please insert the parameters that define a loner person:\n"
-            "Minimum number of relation: ";
+            "Minimum number of relations: ";
     cin >> relations;
     cout << "Minimum number of groups: ";
     cin >> memberships;
@@ -1086,8 +1102,12 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
     if (ans == "yes") {
       unemployed = true;
     }
-    else {
+    else if (ans == "no"){
       unemployed = false;
+    }
+    else {
+      std::cout << "Invalid answer." << std::endl;
+      return;
     }
     cout << "Minimum number of added reactions: ";
     cin >> reactions;

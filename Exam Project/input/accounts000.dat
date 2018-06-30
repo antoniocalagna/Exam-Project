@@ -1,23 +1,23 @@
 sams,C,{name:{Samsung},financial_loc:{Bu Korea},operative_loc:{Sempre Korea},prod:{Tech},inception:{15/01/1933},sub:{18/10/2011}}
 stb,C,{name:{Stabilo},financial_loc:{Germany},operative_loc:{Germany},prod:{Cartoleria},inception:{15/01/1940},sub:{05/07/2012}}
+crushditotina,U,{name:{Nicola},surname:{Cantisani},gender:{N},addr:{Via delle buttane},sub:{10/06/2014},birth:{10/02/1996}}
 gianlusav,U,{name:{Gianluca},surname:{Savina},gender:{M},addr:{Via Einstein 11},sub:{12/03/2017},birth:{21/07/1997}}
 pao_bao,U,{name:{Barone},surname:{Paolino},gender:{m},addr:{Via Leopardi 3},sub:{26/06/2018},birth:{20/01/1998}}
 claslavax,U,{name:{Clara},surname:{Salvalai},gender:{F},addr:{Via Galvani 11},sub:{12/02/2014},birth:{09/09/1997}}
 ros_rus,U,{name:{Rosanna},surname:{Russo},gender:{F},addr:{Via Principe di Paterno' 32},sub:{20/07/2004},birth:{06/06/1971}}
-crushditotina,U,{name:{Nicola},surname:{Cantisani},gender:{N},addr:{Via delle buttane},sub:{10/06/2014},birth:{10/02/1996}}
 gelena,U,{name:{Gianna},surname:{Di Cicca},gender:{M},addr:{Via Streva 21},sub:{07/05/2016},birth:{29/05/1969}}
 giuliagallo24,U,{name:{Giulia},surname:{Gallo},gender:{F},addr:{Largo Cristoforo Colombo},sub:{05/04/2014},birth:{24/12/1996}}
 faber_crax,U,{name:{Fabrizio},surname:{Crasci'},gender:{m},addr:{Via dei Nebrodi 23},sub:{29/06/2018},birth:{20/03/1998}}
-elecami,U,{name:{Elena},surname:{Caminita},gender:{F},addr:{Monreale},sub:{05/04/2014},birth:{23/12/1996}}
-bal_spiagg,G,{name:{Balenottere Spiaggiate},location:{Spiaggia},activity:{Spiaggiarsi in spiaggia},inception:{15/01/1990},sub:{18/07/2011}}
 domi_123,U,{name:{Domenico},surname:{Di Grusa},gender:{M},addr:{Viale Regione Siciliana 5300},sub:{20/07/2012},birth:{20/10/1997}}
 appl,C,{name:{Apple},financial_loc:{Cupertino USA},operative_loc:{Cupertino USA},prod:{Tech},inception:{20/06/1970},sub:{29/06/2018}}
 caesar_salad,U,{name:{Cesare},surname:{Faiella},gender:{M},addr:{Via Amari 63},sub:{10/03/2010},birth:{19/02/1965}}
-leo,U,{name:{Leo},surname:{Calagna},gender:{M},addr:{Via Streva 21},sub:{27/11/1998},birth:{10/05/1969}}
-mario_db,U,{name:{Mario},surname:{Di Blasi},gender:{N},addr:{Cardillo},sub:{12/03/2005},birth:{11/02/1997}}
-nonno_italo,U,{name:{Italo},surname:{Di Cicca},gender:{M},addr:{Paradiso},sub:{05/04/2003},birth:{22/12/1921}}
-MYSSKETA,U,{name:{Monica},surname:{Ketamina},gender:{F},addr:{Porta Venezia},sub:{30/08/1997},birth:{27/04/1983}}
 CsanG,U,{name:{Claudio},surname:{Sangari},gender:{M},addr:{Via Libera Russia 10},sub:{07/01/2013},birth:{16/02/1997}}
+MYSSKETA,U,{name:{Monica},surname:{Ketamina},gender:{F},addr:{Porta Venezia},sub:{30/08/1997},birth:{27/04/1983}}
+nonno_italo,U,{name:{Italo},surname:{Di Cicca},gender:{M},addr:{Paradiso},sub:{05/04/2003},birth:{22/12/1921}}
+elecami,U,{name:{Elena},surname:{Caminita},gender:{F},addr:{Monreale},sub:{05/04/2014},birth:{23/12/1996}}
+bal_spiagg,G,{name:{Balenottere Spiaggiate},location:{Spiaggia},activity:{Spiaggiarsi in spiaggia},inception:{15/01/1990},sub:{18/07/2011}}
+mario_db,U,{name:{Mario},surname:{Di Blasi},gender:{N},addr:{Cardillo},sub:{12/03/2005},birth:{11/02/1997}}
+leo,U,{name:{Leo},surname:{Calagna},gender:{M},addr:{Via Streva 21},sub:{27/11/1998},birth:{10/05/1969}}
 frenz,U,{name:{Francesca},surname:{Calagna},gender:{F},addr:{Viale del Fante 11},sub:{22/01/2013},birth:{29/11/1966}}
 milvich,U,{name:{Michele},surname:{Alvich},gender:{M},addr:{Via Principe di Paterno' 32},sub:{20/09/2003},birth:{03/02/1969}}
 nan_cer,U,{name:{Nensi},surname:{Amato},gender:{F},addr:{Via Amari 63},sub:{11/02/2011},birth:{19/02/1970}}

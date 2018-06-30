@@ -132,7 +132,7 @@ int main_di_clara(int argc, const char *argv[]) {
     int err = manager.addRelationship(id_start, id_target, relationship);
     if (err == -1) {
       std::cerr << "**Accounts file returned an error: the id " << id_start << " does not exist.\n"
-                << " File needs to be corrected before data can be acquiredd." << std::endl;
+                << " File needs to be corrected before data can be acquired." << std::endl;
       return -3; //ritorno -3 quando l'id non esiste
       
     }
