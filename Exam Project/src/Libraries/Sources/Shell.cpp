@@ -1024,7 +1024,7 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
     string id;
     command >> id;
     if(id.empty() || manager.getAccountType(id) != Account::user_type) {
-      std::cout << "Pleasae insert some User's ID" << std::endl;
+      std::cout << "Please insert some User's ID" << std::endl;
       return;
     }
     
