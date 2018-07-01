@@ -44,7 +44,7 @@ void Shell::help(std::stringstream &command, Manager &manager, IOBuffer &new_dat
             << std::endl;
   std::cout << "search <data_to_search>"
                "\n\tPossible data to search:\n"
-               "\ttree, tree, loner_people, friendly_companies.\n"
+               "\ttrees (all trees), tree <id>, loner_people, friendly_companies.\n"
             << std::endl;
 }
 
