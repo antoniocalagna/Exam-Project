@@ -28,5 +28,11 @@ class PostsHandler : public FileHandler {
   std::unordered_set<std::string> _emptyBuffer(IOBuffer &buffer) const;
   void _fillBuffer(IOBuffer &buffer, const std::string data) const;
 };
+
+std::string formatOutput(const User &user);
+std::string formatOutput(const Group &group);
+std::string formatOutput(const Company &company);
+std::string formatOutput(const IOBuffer::Relation &relation);
+std::string formatOutput(const IOBuffer::m_Post &post);
 } //namespace FH
 #endif //SOCIAL_NETWORK_SOCIAL_HANDLERS_H

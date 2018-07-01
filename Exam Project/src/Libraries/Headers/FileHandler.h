@@ -73,29 +73,5 @@ std::string unformatString(std::string str);
 std::string readField(const std::string &field, const std::string &data);
 Error checkField(const std::string &field, bool (*validity_checker)(const std::string&), unsigned int field_code, unsigned int error_if_invalid);
 
-std::string formatOutput(const User &user);
-std::string formatOutput(const Group &group);
-std::string formatOutput(const Company &company);
-std::string formatOutput(const IOBuffer::Relation &relation);
-std::string formatOutput(const IOBuffer::m_Post &post);
-
-
-//Controllo dei file
-Error accountsFile(std::stringstream &line);
-Error relationsFile(std::stringstream &line);
-Error postsFile(std::stringstream &line);
-
-//Acquisizione dei file
-Error accountsFile(std::stringstream &line, IOBuffer &buff);
-Error relationsFile(std::stringstream &line, IOBuffer &buff);
-Error postsFile(std::stringstream &line, IOBuffer &buff);
-
-//Stampa su file
-std::unordered_set<std::string> accountsFile(IOBuffer &buff);
-std::unordered_set<std::string> relationsFile(IOBuffer &buff);
-std::unordered_set<std::string> postsFile(IOBuffer &buff);
-
-std::string error(const Error &err);
-
 };//Namespace FH
 #endif //SOCIAL_NETWORK_FILEHANDLER_H
