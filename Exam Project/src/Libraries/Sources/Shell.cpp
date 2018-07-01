@@ -975,6 +975,7 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
     }
     else {
       cout << "Error! I do not understand what statistic you'd like to retreive." << endl;
+      return;
     }
   }
   else if (param1 == "average_age") {
@@ -985,13 +986,13 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
     pair<string, Post> best_post;
     best_post = manager.RatioReactionPost(true);
     cout << "The Post with the best Like/Dislike ratio is:\n" << best_post.second << endl
-         << "Wrote by: " << best_post.first;
+         << "By: " << best_post.first;
   }
   else if (param1 == "worst_post") {
     pair<string, Post> worst_post;
     worst_post = manager.RatioReactionPost(false);
     cout << "The Post with the worst Like/Dislike ratio is:\n" << worst_post.second << endl
-         << "Wrote by: " << worst_post.first;
+         << "By: " << worst_post.first;
   }
   else {
     std::cout << "Cannot get statistics of " << param1 << std::endl;
@@ -1022,6 +1023,11 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
   else if (what_to_search == "tree") {
     string id;
     command >> id;
+    if(id.empty() || manager.getAccountType(id) != Account::user_type) {
+      std::cout << "Pleasae insert some User's ID" << std::endl;
+      return;
+    }
+    
     std::string tree = manager.PrintTree(id);
     cout << tree;
     std::cout << "Save this tree? (yes/no)" << std::endl << ">";
@@ -1074,7 +1080,32 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
     
   }
   else if (what_to_search == "friendliest_company") {
-    //function
+    float threshold;
+    bool with_partners;
+    std::string ans;
+    std::cout << "Please insert the minimum ratio of likes/total_reactions: " << std::endl;
+    std::cin >> threshold;
+    std::cout << "Should partners be considered? (yes/no)" << std::endl;
+    std::cin >> ans;
+    if (ans == "yes") {
+      with_partners = true;
+    }
+    else if (ans == "no") {
+      with_partners = false;
+    }
+    else {
+      std::cout << "Invalid answer." << std::endl;
+      return;
+    }
+    std::vector<std::pair<std::string, float>> companies = manager.SortedNewsRatioCompanies(with_partners, threshold);
+    if (companies.empty()) {
+      std::cout << "No company respected the threshold." << std::endl;
+      return;
+    }
+    std::cout << "List:" << std::endl;
+    for (int i = 0; i < companies.size(); i++) {
+      std::cout << companies[i].first << "\t\t" << companies[i].second << std::endl;
+    }
   }
   else {
     cout << "Error! Cannot search for" << what_to_search << "." << endl;
