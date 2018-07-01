@@ -1,6 +1,7 @@
 #include "Shell.h"
 #include "FileHandler.h"
 #include <vector>
+#include <Libraries/Headers/Social_Handlers.h>
 
 #define BUFF_TOTAL_SIZE_MAX 5
 #define CYCLES_WITHOUT_SAVING_MAX 10
@@ -11,9 +12,10 @@ void flushBuffers(FH::FileHandler &fh, IOBuffer &new_data, IOBuffer &data_to_del
 
 int main_di_clara(int argc, const char *argv[]) {
   Manager manager;
-  FH::FileHandler accounts_fh, //FileHandler per il controllo e l'acquisizione dei dati da file
-          relations_fh,
-          posts_fh;
+  FH::AccountsHandler accounts_fh;      //FileHandlers per il controllo e l'acquisizione dei dati da file
+  FH::RelationsHandler relations_fh;
+  FH::PostsHandler posts_fh;
+  
   IOBuffer new_data_buffer;                                 //Buffer necessario per l'acquisizione dei dati
   IOBuffer data_to_erase_buffer;                            //Buffer per i dati da cancellare
   
@@ -35,7 +37,7 @@ int main_di_clara(int argc, const char *argv[]) {
   std::cout << "" << "Beginning checks:" << "" << std::endl;
   //Controllo del file degli account
   std::cout << "Checking accounts file..." << std::endl;
-  FH::Error check_results = accounts_fh.checkFile(FH::accountsFile);
+  FH::Error check_results = accounts_fh.checkFile();
   if (check_results.code == 0) {
     std::cout << "\t*Accounts file correctly formatted and ready to be read. "
                  "(" << check_results.data << " lines analyzed)" << std::endl;
@@ -50,7 +52,7 @@ int main_di_clara(int argc, const char *argv[]) {
   
   std::cout << "Checking relations file..." << std::endl;
   //Controllo del file delle relazioni
-  check_results = relations_fh.checkFile(FH::relationsFile);
+  check_results = relations_fh.checkFile();
   if (check_results.code == 0) {
     std::cout << "\t*Relations file correctly formatted and ready to be read. "
                  "(" << check_results.data << " lines analyzed)" << std::endl;
@@ -65,7 +67,7 @@ int main_di_clara(int argc, const char *argv[]) {
   
   //Controllo del file dei post
   std::cout << "Checking posts file..." << std::endl;
-  check_results = posts_fh.checkFile(FH::postsFile);
+  check_results = posts_fh.checkFile();
   if (check_results.code == 0) {
     std::cout << "\t*Posts file correctly formatted and ready to be read. "
                  "(" << check_results.data << " lines analyzed)" << std::endl;
@@ -85,7 +87,7 @@ int main_di_clara(int argc, const char *argv[]) {
   
   IOBuffer reorganizing_buffer;
   std::cout << "Acquiring accounts..." << std::endl;
-  accounts_fh.fetchData(FH::accountsFile, new_data_buffer);         //Leggi i dati dal file degli account
+  accounts_fh.fetchData(new_data_buffer);                           //Leggi i dati dal file degli account
   
   reorganizing_buffer.append(new_data_buffer);                      //Prepara il buffer per la riorganizzazione dei file
   while (!new_data_buffer.usersEmpty()) {                           //Svuota il buffer degli utenti
@@ -119,7 +121,7 @@ int main_di_clara(int argc, const char *argv[]) {
   
   std::cout << "Acquiring relations..." << std::endl;
   
-  relations_fh.fetchData(FH::relationsFile, new_data_buffer);
+  relations_fh.fetchData(new_data_buffer);
   reorganizing_buffer.append(new_data_buffer);                        //Prepara il buffer per la riorganizzazione
   
   while (!new_data_buffer.relationsEmpty()) {
@@ -159,7 +161,7 @@ int main_di_clara(int argc, const char *argv[]) {
   std::cout << "\t*Relations correctly acquired." << std::endl;
   
   std::cout << "Acquiring posts..." << std::endl;
-  posts_fh.fetchData(FH::postsFile, new_data_buffer);
+  posts_fh.fetchData(new_data_buffer);
   reorganizing_buffer.append(new_data_buffer);
   
   while (!new_data_buffer.postsEmpty()) {
@@ -177,17 +179,17 @@ int main_di_clara(int argc, const char *argv[]) {
   ///////////////////////////////////       RIORGANIZZAZIONE DEI FILE     //////////////////////////////////////////////
   std::cout << "Beginning accounts file reorganization..." << std::endl;
   accounts_fh.clear();
-  accounts_fh.putData(FH::accountsFile, reorganizing_buffer);
+  accounts_fh.putData(reorganizing_buffer);
   std::cout << "\t*Accounts file correctly reorganized." << std::endl;
   
   std::cout << "Beginning relations file reorganization..." << std::endl;
   relations_fh.clear();
-  relations_fh.putData(FH::relationsFile, reorganizing_buffer);
+  relations_fh.putData(reorganizing_buffer);
   std::cout << "\t*Relations file correctly reorganized." << std::endl;
   
   std::cout << "Beginning posts file reorganization..." << std::endl;
   posts_fh.clear();
-  posts_fh.putData(FH::postsFile, reorganizing_buffer);
+  posts_fh.putData(reorganizing_buffer);
   std::cout << "\t*Posts file correctly reorganized.\n" << std::endl;
   
   ///////////////////////////////////          INIZIO  PROGRAMMA          //////////////////////////////////////////////
@@ -262,9 +264,9 @@ int main_di_clara(int argc, const char *argv[]) {
     
     if (save_data) {
       std::cout << "Saving data..." << std::endl;
-      accounts_fh.putData(FH::accountsFile, new_data_buffer, data_to_erase_buffer);
-      relations_fh.putData(FH::relationsFile, new_data_buffer, data_to_erase_buffer);
-      posts_fh.putData(FH::postsFile, new_data_buffer, data_to_erase_buffer);
+      accounts_fh.putData(new_data_buffer, data_to_erase_buffer);
+      relations_fh.putData(new_data_buffer, data_to_erase_buffer);
+      posts_fh.putData(new_data_buffer, data_to_erase_buffer);
       std::cout << "Data saved." << std::endl;
       cycles_without_saving = 0;
       save_data = false;
