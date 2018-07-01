@@ -49,6 +49,8 @@ public:
   bool RemoveDislike(const string &id);
   bool LikeExists(const string &ID) const;
   bool DislikeExists(const string &ID) const;
+  bool ReactionExists(const string &ID) const;
+  bool RemoveReaction(const string &ID);
   int NumLikes() const; //numero likes
   int NumDislikes() const;
   float RatioReaction() const; //rapporto LIKE/(DISLIKE+LIKE) così da poter studiare i post più 'popolari'

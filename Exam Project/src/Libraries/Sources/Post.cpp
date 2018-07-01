@@ -150,6 +150,24 @@ bool Post::DislikeExists(const string &ID) const {
   
 }
 
+bool Post::ReactionExists(const string &ID) const
+{
+  if (LikeExists(ID)||DislikeExists(ID))
+    return true;
+  else
+    return false;
+}
+
+bool Post::RemoveReaction(const string &ID)
+{
+  bool likes = RemoveLike(ID);
+  bool dislikes = RemoveDislike(ID);
+  if (likes||dislikes)
+    return true;
+  else
+    return false;
+}
+
 int Post::NumLikes() const {
   return (int) _likes.size();
 }

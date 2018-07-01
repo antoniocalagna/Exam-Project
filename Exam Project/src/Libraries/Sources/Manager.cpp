@@ -117,6 +117,47 @@ vector<Post> Manager::getPosts(const std::string &ID) const
   return output;
 }
 
+vector<Post> Manager::getAllPosts() const
+{
+  vector<Post> all_posts;
+  for (auto it_map=_map_posts.begin(); it_map!=_map_posts.end(); it_map++)
+  {
+    for (auto it_vect=it_map->second.begin(); it_vect!=it_map->second.end(); it_vect++)
+    {
+      all_posts.push_back(*it_vect);
+    }
+  }
+  return all_posts;
+}
+
+vector<Post> Manager::getPostsReactedBy (const string &ID) const
+{
+  vector<Post> reacted_posts;
+  vector<Post> all_posts = getAllPosts();
+  
+  for (auto it_vect=all_posts.begin(); it_vect!=all_posts.end(); it_vect++)
+  {
+    if (it_vect->ReactionExists(ID))
+    {
+      reacted_posts.push_back(*it_vect);
+    }
+  }
+  
+  return reacted_posts;
+}
+
+vector<Post> Manager::getPostsWithoutReactionsOf (const string &ID) const
+{
+  vector<Post> reacted_posts=getPostsReactedBy(ID);
+  
+  for (auto it=reacted_posts.begin(); it!=reacted_posts.end(); it++)
+  {
+    it->RemoveReaction(ID);
+  }
+  
+  return reacted_posts;
+}
+
 string Manager::getRelationship(const std::string &starting_ID, const std::string &target_ID) const
 {
   return _graph.edge(starting_ID, target_ID);
@@ -421,7 +462,7 @@ bool Manager::addPost(const Post &post_to_add, const std::string &whose_ID)
   for (int i = 0; i < dislikes.size(); i++)
   {
     //Controllo che ogni dislike corrisponda ad un ID utente esistente.
-    if (_map_users.count(likes[i])==0)
+    if (_map_users.count(dislikes[i])==0)
       return false;
   }
   

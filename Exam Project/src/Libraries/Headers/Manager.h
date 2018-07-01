@@ -46,6 +46,9 @@ public:
   Company getCompany (const string &ID) const;
   Group getGroup (const string &ID) const;
   vector<Post> getPosts (const string &ID) const;
+  vector<Post> getAllPosts () const;
+  vector<Post> getPostsReactedBy (const string &ID) const;
+  vector<Post> getPostsWithoutReactionsOf (const string &ID) const;
   string getRelationship (const string &starting_ID, const string &target_ID) const;
   vector<pair<pair<string, string>, string>> getAllRelationships(const string& ID) const;
   vector<string> getUsersIDs() const;
