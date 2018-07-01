@@ -36,7 +36,13 @@ void Manager::setGroups(const vector<Group> &groups_to_set)
 
 void Manager::setPosts(const vector<Post> &all_posts_of_account, const std::string &whose_ID)
 {
-  _map_posts[whose_ID]=all_posts_of_account;
+  if (!_exist_as_node(whose_ID))
+    return;
+  
+  for (auto it=all_posts_of_account.begin(); it!=all_posts_of_account.end(); it++)
+  {
+    addPost(*it, whose_ID);
+  }
 }
 
 vector<User> Manager::getAllUsers() const
