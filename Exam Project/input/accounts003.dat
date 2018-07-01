@@ -1,14 +1,26 @@
-ludo_b,U,{name:{Ludovica},surname:{Bianchi},gender:{F},addr:{Via Marche 12},sub:{12/04/2014},birth:{12/04/1940}}
-vale_rossi,U,{name:{Valentino},surname:{Rossi},gender:{M},addr:{Via Tavullia 46},sub:{14/04/2014},birth:{12/06/1965}}
-m_ros,U,{name:{Mario},surname:{Rossi},gender:{M},addr:{Via Leopardi 9},sub:{12/07/2007},birth:{09/11/1935}}
-marghe,U,{name:{Margherita},surname:{D'Amato},gender:{F},addr:{Via Venere 12},sub:{12/06/2013},birth:{11/05/1960}}
-martaeffe,U,{name:{Marta},surname:{Fiore},gender:{F},addr:{Corso Francia 34},sub:{03/08/2013},birth:{12/04/1976}}
 giovi_g,U,{name:{Giovanni},surname:{Guidoni},gender:{M},addr:{Corso Francia 34},sub:{04/05/2011},birth:{20/12/1970}}
-leo_pol,U,{name:{Leonardo},surname:{Polidori},gender:{M},addr:{Via Gropello 15},sub:{09/05/2018},birth:{12/11/2016}}
-mark,U,{name:{Marco},surname:{Rossi},gender:{N},addr:{Via Roma 9},sub:{12/11/2014},birth:{01/01/1980}}
-brendina,U,{name:{Brendan},surname:{Polidori},gender:{M},addr:{Via Po 11},sub:{17/03/2015},birth:{14/07/1995}}
-marietto,U,{name:{Mario},surname:{Fiore},gender:{M},addr:{Via Veneto 21},sub:{03/04/2011},birth:{12/09/1945}}
-grety,U,{name:{Greta},surname:{Guidoni},gender:{F},addr:{Via Gropello 15},sub:{12/05/2014},birth:{12/11/1996}}
+marghe,U,{name:{Margherita},surname:{D'Amato},gender:{F},addr:{Via Venere 12},sub:{12/06/2013},birth:{11/05/1960}}
+fratello_simp,U,{name:{Herb},surname:{Simpson},gender:{M},addr:{Via dei Ricchi 11},sub:{13/03/2012},birth:{09/07/1955}}
 frapetti,U,{name:{Francesca},surname:{Pettinari},gender:{F},addr:{Via dei Gerani 11},sub:{12/07/2011},birth:{23/10/1956}}
-ales_giom,U,{name:{Alessandro},surname:{Giommini},gender:{M},addr:{Via ZeroIdee 1},sub:{14/03/2011},birth:{17/02/2010}}
+nonna_simp,U,{name:{Mona},surname:{Olsen},gender:{F},addr:{In Giro Per Il Mondo},sub:{16/05/2010},birth:{07/03/1935}}
+nonno_simp,U,{name:{Abraham},surname:{Simpson},gender:{M},addr:{Via CasadiRiposo 1},sub:{14/05/2011},birth:{05/08/1930}}
+grety,U,{name:{Greta},surname:{Guidoni},gender:{F},addr:{Via Gropello 15},sub:{12/05/2014},birth:{12/11/1996}}
+marietto,U,{name:{Mario},surname:{Fiore},gender:{M},addr:{Via Veneto 21},sub:{03/04/2011},birth:{12/09/1945}}
+mark,U,{name:{Marco},surname:{Rossi},gender:{N},addr:{Via Roma 9},sub:{12/11/2014},birth:{01/01/1980}}
+leo_pol,U,{name:{Leonardo},surname:{Polidori},gender:{M},addr:{Via Gropello 15},sub:{09/05/2018},birth:{12/11/2016}}
+vale_rossi,U,{name:{Valentino},surname:{Rossi},gender:{M},addr:{Via Tavullia 46},sub:{14/04/2014},birth:{12/06/1965}}
+ludo_b,U,{name:{Ludovica},surname:{Bianchi},gender:{F},addr:{Via Marche 12},sub:{12/04/2014},birth:{12/04/1940}}
+m_ros,U,{name:{Mario},surname:{Rossi},gender:{M},addr:{Via Leopardi 9},sub:{12/07/2007},birth:{09/11/1935}}
 xiommi,U,{name:{Federico},surname:{Giommini},gender:{N},addr:{Via Avogadro 37},sub:{13/08/2011},birth:{05/05/1985}}
+brendina,U,{name:{Brendan},surname:{Polidori},gender:{M},addr:{Via Po 11},sub:{17/03/2015},birth:{14/07/1995}}
+ales_giom,U,{name:{Alessandro},surname:{Giommini},gender:{M},addr:{Via ZeroIdee 1},sub:{14/03/2011},birth:{17/02/2010}}
+martaeffe,U,{name:{Marta},surname:{Fiore},gender:{F},addr:{Corso Francia 34},sub:{03/08/2013},birth:{12/04/1976}}
+maggie_S,U,{name:{Maggie},surname:{Simpson},gender:{F},addr:{Via Evergreen Terrace 1094},sub:{05/08/2016},birth:{01/01/2002}}
+lisa_S,U,{name:{Lisa},surname:{Simpson},gender:{F},addr:{Via Evergreen Terrace 1094},sub:{15/08/2009},birth:{01/01/1997}}
+homer_S,U,{name:{Homer},surname:{Simpson},gender:{M},addr:{Via Evergreen Terrace 1094},sub:{08/07/2011},birth:{06/06/1956}}
+bart_S,U,{name:{Bart},surname:{Simpson},gender:{M},addr:{Via Evergreen Terrace 1094},sub:{15/08/2009},birth:{01/01/1996}}
+marge_S,U,{name:{Marge},surname:{Bouvier},gender:{F},addr:{Via Evergreen Terrace 1094},sub:{07/07/2010},birth:{15/06/1960}}
+selma_B,U,{name:{Selma},surname:{Bouvier},gender:{N},addr:{Via delle Zitelle},sub:{08/08/2008},birth:{09/09/1956}}
+patty_B,U,{name:{Patricia},surname:{Buovier},gender:{F},addr:{Via delle Zitelle},sub:{08/08/2008},birth:{09/09/1956}}
+clancy_B,U,{name:{Clancy},surname:{Bouvier},gender:{M},addr:{Via Sconosciuta},sub:{02/04/2004},birth:{17/02/1935}}
+mamma_marge,U,{name:{Jackie },surname:{Bouvier},gender:{F},addr:{Via Sconosciuta},sub:{17/02/2009},birth:{06/06/1935}}
