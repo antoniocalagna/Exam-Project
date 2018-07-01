@@ -1083,10 +1083,11 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
     float threshold;
     bool with_partners;
     std::string ans;
-    std::cout << "Please insert the minimum ratio of likes/total_reactions: " << std::endl;
+    std::cout << "Please insert the minimum ratio of likes/total_reactions: " << std::endl << ">";
     std::cin >> threshold;
-    std::cout << "Should partners be considered? (yes/no)" << std::endl;
+    std::cout << "Should partners be considered? (yes/no)" << std::endl << ">";
     std::cin >> ans;
+    std::cin.ignore();
     if (ans == "yes") {
       with_partners = true;
     }
