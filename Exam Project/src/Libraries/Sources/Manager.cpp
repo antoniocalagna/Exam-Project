@@ -224,6 +224,20 @@ bool Manager::deleteAccount (const string &ID)
   _map_companies.erase(ID);
   _graph.popNode(ID);
   _map_posts.erase(ID);
+  
+  if (getAccountType(ID)==Account::user_type)
+  {
+    //Elimino da tutti i post eventuali interazioni effettuate dall'account da cancellare
+    for (auto it_map=_map_posts.begin(); it_map!=_map_posts.end(); it_map++)
+    {
+      for (auto it_vect=it_map->second.begin(); it_vect!=it_map->second.end(); it_vect++)
+      {
+        it_vect->RemoveLike(ID);
+        it_vect->RemoveDislike(ID);
+      }
+    }
+  }
+  
   return true;
 }
 
@@ -423,9 +437,7 @@ bool Manager::deletePost(const std::string &whose_ID, int post_num)
 
 bool Manager::setReaction(const bool &like_1_dislike_0, const bool &add1_remove_0, const Post &post_liked, const std::string &reacting_ID)
 {
-  //Controllo l'esistenza dell'ID nella mappa dei vettori di Post.
-  
-  if (_map_posts.count(reacting_ID)==0)
+  if (_map_users.count(reacting_ID)==0) //L'interazione è possibile solo per utenti semplici. Ne verifico l'esistenza e mi assicuro che sia un user
     return false;
   
   //Non essendo fornito l'ID del proprietario del post devo scorrere tutta la mappa e ogni vettore alla ricerca di quel post.
@@ -468,9 +480,9 @@ bool Manager::setReaction(const bool &like_1_dislike_0, const bool &add1_remove_
   //Per l'univocità degli ID questo controllo si riflette anche sull'esistenza dell'ID stesso in generale.
   if (_map_posts.count(post_liked.first)==0) //Esiste il proprietario del post
     return false;
-  if (_map_posts.count(reacting_ID)==0) //Esiste l'account che ha messo like
-    return false;
   if (reacting_ID==post_liked.first) //Non sono ammessi autolikes.
+    return false;
+  if (_map_users.count(reacting_ID)==0) //L'interazione è possibile solo per utenti semplici. Ne verifico l'esistenza e mi assicuro che sia un user
     return false;
   
   //Cerco nella mappa il vettore di post associato al proprietario
@@ -508,9 +520,9 @@ bool Manager::setReaction (const bool &like_1_dislike_0, const bool &add1_remove
   //Per l'univocità degli ID questo controllo si riflette anche sull'esistenza dell'ID stesso in generale.
   if (_map_posts.count(owner_ID)==0) //Esiste il proprietario del post
     return false;
-  if (_map_posts.count(reacting_ID)==0) //Esiste l'account che ha messo like
-    return false;
   if (reacting_ID==owner_ID) //Non sono ammessi autolikes.
+    return false;
+  if (_map_users.count(reacting_ID)==0) //L'interazione è possibile solo per utenti semplici. Ne verifico l'esistenza e mi assicuro che sia un user
     return false;
   
   //Cerco nella mappa il vettore di post associato al proprietario
