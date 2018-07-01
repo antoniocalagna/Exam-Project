@@ -1240,7 +1240,7 @@ vector<string> Manager::PrintAllTrees() const
   {
     vector<vector<string>> tree = GenealogicalTree(*IDs.begin()); //Ricavo l'albero così da estrapolare gli ID già trattati e rimuoverli dalla coda
     
-    if (tree.size() > 3)
+    if (tree.size() >= 3)
     {
       ss.str(string());
       ss<<"##### Tree no. "<<count<<" #####"<<endl; //Formatto

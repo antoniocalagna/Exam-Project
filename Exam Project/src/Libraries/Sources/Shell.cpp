@@ -994,7 +994,7 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
          << "Wrote by: " << worst_post.first;
   }
   else {
-    std::cout << "Cannot get satystics of " << param1 << std::endl;
+    std::cout << "Cannot get statistics of " << param1 << std::endl;
   }
 }
 
@@ -1002,12 +1002,22 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
   string what_to_search;
   command >> what_to_search;
   if (what_to_search == "trees") {
-    /*vector <string> trees_to_print = manager.PrintAllTrees();
-    for (auto it = trees_to_print.begin(); it!=trees_to_print.end(); it++){
-      new_data_buffer << *it;
-    }*/
-    // devo poterli stampare su files diversi
-    
+    std::cout << "Searching trees..." << std::endl;
+    vector<string> trees = manager.PrintAllTrees();               //Genera il vettore degli alberi
+    if (trees.empty()) {                                          //Controlla che siano stati trovati degli alberi
+      std::cout << "No trees found." << std::endl;
+      return;
+    }
+    std::cout << "Saving trees..." << std::endl;
+    std::ofstream f;
+    for (int i = 0;
+         i < trees.size(); i++) {                      //Per ogni elemento del vettore stampa in un file diverso
+      std::string name = "tree" + std::to_string(i + 1) + ".txt";
+      f.open(name, std::ios::out | std::ios::trunc);
+      f << trees[i];
+      f.flush();
+      f.close();
+    }
   }
   else if (what_to_search == "tree") {
     string id;
@@ -1026,7 +1036,6 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
       file << tree;
       file.flush();
       file.close();
-      std::cout << "Done!" << std::endl;
     }
     else {
       return;
@@ -1043,8 +1052,7 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
     cin >> relations;
     cout << "Minimum number of groups: ";
     cin >> memberships;
-    cout
-            << "Does the user need to be unemployed? (yes/no): "; //non ho capito se logicamente sia giusto per come è fatta la funzione
+    cout << "Does the user need to be unemployed? (yes/no): ";
     cin >> ans;
     if (ans == "yes") {
       unemployed = true;
@@ -1070,5 +1078,7 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
   }
   else {
     cout << "Error! Cannot search for" << what_to_search << "." << endl;
+    return;
   }
+  std::cout << "Done!" << std::endl;
 }
