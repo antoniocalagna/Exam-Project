@@ -8,10 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <unordered_set>
-#include "User.h"
-#include "Group.h"
-#include "Company.h"
-#include "Post.h"
+#include <deque>
 #include "IOBuffer.h"
 
 namespace FH {
@@ -35,6 +32,7 @@ protected:
   static const std::string windows_relative_path;
   static const std::string mac_relative_path;
   static const bool win_system;
+  static std::deque<std::string> common_actions;
   
   /**Private functions*/
   void _flushData(const std::unordered_set<std::string> &lines);
@@ -44,7 +42,7 @@ protected:
   /**Virtual private functions*/
   virtual Error _checkLine(const std::string &line) const = 0;
   virtual std::unordered_set<std::string> _emptyBuffer(IOBuffer &buffer) const = 0;
-  virtual void _fillBuffer(IOBuffer &buffer, const std::string data) const = 0;
+  virtual void _fillBuffer(IOBuffer &buffer, const std::string &data) const = 0;
   
 public:
   /**Constructors & Destructor*/

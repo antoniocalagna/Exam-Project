@@ -5,7 +5,7 @@
 #include "Social_Handlers.h"
 
 /////////////////////////////////////                ACCOUNTS                     //////////////////////////////////////
-FH::Error FH::AccountsHandler::_checkLine(const std::string &line) const {
+FH::Error FH::AccountsHandler::_checkLine(const std::string &line) const {            //Controllo del file
   std::string id, type_s;
   std::stringstream line_ss(line);
   FH::Error check_result {0,0};
@@ -136,7 +136,7 @@ std::unordered_set<std::string> FH::AccountsHandler::_emptyBuffer(IOBuffer &buff
   return out;                                   //Converti lo stringstream in string e ritorna
 }
 
-void FH::AccountsHandler::_fillBuffer(IOBuffer &buffer, const std::string data) const {
+void FH::AccountsHandler::_fillBuffer(IOBuffer &buffer, const std::string &data) const {
   std::string id;
   std::stringstream line(data);
   char type;
@@ -234,7 +234,7 @@ std::unordered_set<std::string> FH::RelationsHandler::_emptyBuffer(IOBuffer &buf
   return out;
 }
 
-void FH::RelationsHandler::_fillBuffer(IOBuffer &buffer, const std::string data) const {
+void FH::RelationsHandler::_fillBuffer(IOBuffer &buffer, const std::string &data) const {
   std::string id1, id2, relation;
   std::stringstream line(data);
   
@@ -302,7 +302,7 @@ std::unordered_set<std::string> FH::PostsHandler::_emptyBuffer(IOBuffer &buffer)
   return out;
 }
 
-void FH::PostsHandler::_fillBuffer(IOBuffer &buffer, const std::string data) const {
+void FH::PostsHandler::_fillBuffer(IOBuffer &buffer, const std::string &data) const {
   std::stringstream line(data);
   std::string id, message;
   std::string like, dislike;

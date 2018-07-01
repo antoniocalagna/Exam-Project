@@ -6,27 +6,31 @@
 #define SOCIAL_NETWORK_SOCIAL_HANDLERS_H
 
 #include "FileHandler.h"
+#include "User.h"
+#include "Group.h"
+#include "Company.h"
+#include "Post.h"
 
 //Specializzazioni del FileHandler
 namespace FH {
 
 class AccountsHandler : public FileHandler {
 private:
-  Error _checkLine(const std::string &line) const;
-  std::unordered_set<std::string> _emptyBuffer(IOBuffer &buffer) const;
-  void _fillBuffer(IOBuffer &buffer, const std::string data) const;
+  Error _checkLine(const std::string &line) const override;
+  std::unordered_set<std::string> _emptyBuffer(IOBuffer &buffer) const override;
+  void _fillBuffer(IOBuffer &buffer, const std::string &data) const override;
 };
 
 class RelationsHandler : public FileHandler {
-  Error _checkLine(const std::string &line) const;
-  std::unordered_set<std::string> _emptyBuffer(IOBuffer &buffer) const;
-  void _fillBuffer(IOBuffer &buffer, const std::string data) const;
+  Error _checkLine(const std::string &line) const override;
+  std::unordered_set<std::string> _emptyBuffer(IOBuffer &buffer) const override;
+  void _fillBuffer(IOBuffer &buffer, const std::string &data) const override;
 };
 
 class PostsHandler : public FileHandler {
-  Error _checkLine(const std::string &line) const;
-  std::unordered_set<std::string> _emptyBuffer(IOBuffer &buffer) const;
-  void _fillBuffer(IOBuffer &buffer, const std::string data) const;
+  Error _checkLine(const std::string &line) const override;
+  std::unordered_set<std::string> _emptyBuffer(IOBuffer &buffer) const override;
+  void _fillBuffer(IOBuffer &buffer, const std::string &data) const override;
 };
 
 std::string formatOutput(const User &user);
