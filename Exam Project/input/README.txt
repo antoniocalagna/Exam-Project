@@ -15,3 +15,4 @@ Elenchiamo di seguito le caratteristiche dei gruppi di file forniti, identifican
     000         Ok                          Una raccolta di dati realistici
     001         Errore                      ID di due account duplicati
     002         Errore                      Caratteri non permessi in uno dei campi di un utente
+    003         Ok                          Qualche albero genealogico
