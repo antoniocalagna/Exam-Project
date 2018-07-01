@@ -22,14 +22,14 @@ public:
   using Posts = std::deque<m_Post>;
   using Relation = std::pair<std::pair<std::string, std::string>, std::string>;
   using Relations = std::deque<Relation>;
-
+  
 private:
-  Users _users;
-  Groups _groups;
-  Companies _companies;
-  Posts _posts;
-  Relations _relations;
-
+  Users _users;                     //Utenti
+  Groups _groups;                   //Gruppi
+  Companies _companies;             //Compagnie
+  Posts _posts;                     //Post
+  Relations _relations;             //Relazioni
+  
 public:
   /**Constructors & Destructor*/
   IOBuffer() = default;
@@ -37,8 +37,6 @@ public:
   ~IOBuffer() = default;
   
   /**Getters*/
-  bool replicatedID(const std::string &ID) const;
-  bool overwritingRelation(const Relation &rel);
   bool usersEmpty() const;
   bool groupsEmpty() const;
   bool companiesEmpty() const;
@@ -47,8 +45,8 @@ public:
   size_t size() const;
   
   /**General*/
-  void clear();
-  void append(const IOBuffer &buff);
+  void clear();                                     //Cancella il contenuto del buffer
+  void append(const IOBuffer &buff);                //Attacca in coda al buffer corrente il buffer buff
   
   /**Operators*/
   IOBuffer &operator<<(const User &to_get);

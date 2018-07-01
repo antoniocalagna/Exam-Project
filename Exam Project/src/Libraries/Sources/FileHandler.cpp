@@ -148,6 +148,11 @@ void FH::FileHandler::clear() {
   _file.flush();
 }
 
+void FH::FileHandler::deleteData(IOBuffer &data_to_delete) {
+  IOBuffer empty_buffer;
+  putData(empty_buffer, data_to_delete);
+}
+
 void FH::FileHandler::fetchData(IOBuffer &buff) {
   _file.close();
   _file.open(_filename, std::ios::in);

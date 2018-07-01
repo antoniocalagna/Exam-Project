@@ -196,7 +196,6 @@ void FH::AccountsHandler::_fillBuffer(IOBuffer &buffer, const std::string &data)
   }
 }
 
-
 /////////////////////////////////////               RELATIONS                    //////////////////////////////////////
 FH::Error FH::RelationsHandler::_checkLine(const std::string &line) const {
   std::stringstream line_ss(line);
@@ -340,7 +339,6 @@ void FH::PostsHandler::_fillBuffer(IOBuffer &buffer, const std::string &data) co
   }
   buffer << std::pair<std::string, Post>(id, new_post);
 }
-
 
 /////////////////////////////////////            LIBRARY FUNCTIONS                //////////////////////////////////////
 

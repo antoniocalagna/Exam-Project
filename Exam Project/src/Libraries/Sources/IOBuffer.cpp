@@ -8,23 +8,6 @@ IOBuffer::IOBuffer(const IOBuffer &to_copy) {
   *this = to_copy;
 }
 
-bool IOBuffer::replicatedID(const std::string &ID) const {
-  if (std::find(_users.begin(), _users.end(), ID) != _users.end() ||
-      std::find(_groups.begin(), _groups.end(), ID) != _groups.end() ||
-      std::find(_companies.begin(), _companies.end(), ID) != _companies.end())
-    return true;
-  
-  return false;
-}
-
-bool IOBuffer::overwritingRelation(const Relation &rel) {
-  for (auto it = _relations.begin(); it != _relations.end(); it++) {
-    if (it->first == rel.first)                                      //Coppia di ID ripetuta
-      return true;
-  }
-  return false;
-}
-
 bool IOBuffer::usersEmpty() const { return _users.empty(); }
 
 bool IOBuffer::groupsEmpty() const { return _groups.empty(); }

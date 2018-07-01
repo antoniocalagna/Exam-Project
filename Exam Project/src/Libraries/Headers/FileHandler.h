@@ -39,14 +39,14 @@ protected:
   static bool
   _lineHasData(const std::string &line);                //Controlla che una linea non sia vuota o di commento
   
-  /**Virtual protectede functions*/
+  /**Virtual protected functions*/
   virtual Error
   _checkLine(const std::string &line) const = 0;                        //Controlla la correttezza formale di una riga
   virtual std::unordered_set<std::string>
   _emptyBuffer(IOBuffer &buffer) const = 0;   //Trasforma un buffer in un set di stringhe
   virtual void
   _fillBuffer(IOBuffer &buffer, const std::string &data) const = 0;      //Trasforma una stringa nel dato corrispondente
-
+  
 public:
   /**Constructors & Destructor*/
   FileHandler() = default;
@@ -64,10 +64,11 @@ public:
   //Viene assunto che tutte le righe siano correttamente formattate. Qui vengono eseguiti controlli quali ripetizioni.
   Error checkFile();                                            //Controlla la correttezza formale del file
   void fetchData(IOBuffer &buffer);                             //Acquisisci i dati e mettili in un buffer
+  void deleteData(IOBuffer &data_to_delete);
   void putData(IOBuffer &new_data);                             //Stampa i dati contenuti in un buffer
   void putData(IOBuffer &new_data, IOBuffer &data_to_delete);   //Stampa i dati saltandone alcuni
-  
 };  //Class FileHandler
+
 bool isFormatChar(const std::string &s, size_t pos);  //Controlla che il carattere in posizione pos sia di formato
 std::string formatString(std::string str);            //Aggiunge i parser_char per proteggere i caratteri di formato
 std::string unformatString(std::string str);          //Rimuove i parser_cher per rendere una stringa leggibile
