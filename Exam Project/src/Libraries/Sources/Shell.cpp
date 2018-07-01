@@ -1072,12 +1072,12 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
     }
     cout << "Minimum number of added reactions: ";
     cin >> reactions;
+    cin.ignore();
     
     lon_people = manager.LonerPeople(relations, memberships, unemployed, reactions);
     for (auto it = lon_people.begin(); it != lon_people.end(); it++) {
       cout << *it << endl;
     }
-    
   }
   else if (what_to_search == "friendliest_company") {
     float threshold;
