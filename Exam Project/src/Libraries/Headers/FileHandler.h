@@ -27,7 +27,7 @@ public:
   static const char parser_char;
   static const char format_chars[];
 
-private:
+protected:
   std::fstream _file;        //File
   std::string _filename;     //Nome del file
   
@@ -37,7 +37,14 @@ private:
   static const bool win_system;
   
   /**Private functions*/
-  void _putData(const std::unordered_set<std::string> &lines);
+  void _flushData(const std::unordered_set<std::string> &lines);
+  std::unordered_set<std::string> _getContent();
+  static bool _lineHasData(const std::string &line);
+  
+  /**Virtual private functions*/
+  virtual Error _checkLine(const std::string &line) const = 0;
+  virtual std::unordered_set<std::string> _emptyBuffer(IOBuffer &buffer) const = 0;
+  virtual void _fillBuffer(IOBuffer &buffer, const std::string data) const = 0;
   
 public:
   /**Constructors & Destructor*/
@@ -50,16 +57,14 @@ public:
   bool open(std::string filename, bool relative_path = true);
   bool is_open() const;
   void close();
-  Error checkLineFormat(Error (*checker_func)(std::stringstream &), const std::string &line) const;
-  Error checkFile(Error (*checker_func)(std::stringstream &));
   void clear();
   
   /**File data exchange*/
   //Viene assunto che tutte le righe siano correttamente formattate. Qui vengono eseguiti controlli quali ripetizioni.
-  Error fetchLineData(Error (*fetcher_func)(std::stringstream &, IOBuffer &), const std::string &line, IOBuffer &buff);
-  Error fetchData(Error (*fetcher_func)(std::stringstream &, IOBuffer &), IOBuffer &buff);
-  Error putData(std::unordered_set<std::string>(*printer_func)(IOBuffer &), IOBuffer &to_add);
-  Error putData(std::unordered_set<std::string>(*printer_func)(IOBuffer &), IOBuffer &to_add, IOBuffer &to_delete);
+  Error checkFile();
+  void fetchData(IOBuffer &buffer);
+  void putData(IOBuffer &new_data);
+  void putData(IOBuffer &new_data, IOBuffer &data_to_delete);
   
 };  //Class FileHandler
 bool isFormatChar(const std::string &s, size_t pos);
