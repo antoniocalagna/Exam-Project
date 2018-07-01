@@ -194,6 +194,7 @@ void FH::FileHandler::putData(IOBuffer &to_add, IOBuffer &to_delete) {
   clear();                                                                //Cancella tutto il contenuto del file
   _flushData(data_to_print);                                              //Stampa on_file + to_print - to_skip
 }
+
 ///////////////////////////////////////////////  NAMESPACE FH FUNCTIONS  ///////////////////////////////////////////////
 
 std::string FH::formatString(std::string str) {
