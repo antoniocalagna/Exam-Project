@@ -133,25 +133,25 @@ int main_di_clara(int argc, const char *argv[]) {
     relationship = relation_tmp.second;
     int err = manager.addRelationship(id_start, id_target, relationship);
     if (err == -1) {
-      std::cerr << "**Accounts file returned an error: the id " << id_start << " does not exist.\n"
+      std::cerr << "**Relations file returned an error: the id " << id_start << " does not exist.\n"
                 << " File needs to be corrected before data can be acquired." << std::endl;
       return -3; //ritorno -3 quando l'id non esiste
       
     }
     else if (err == -2) {
-      std::cerr << "**Accounts file returned an error: the id " << id_target << " does not exist.\n"
+      std::cerr << "**Relations file returned an error: the id " << id_target << " does not exist.\n"
                 << " File needs to be corrected before data can be acquired." << std::endl;
       return -3;
       
     }
     else if (err == -3) {
-      std::cerr << "**Accounts file returned an error: the relationship " << relationship << " does not exist.\n"
+      std::cerr << "**Relations file returned an error: the relationship " << relationship << " does not exist.\n"
                 << " File needs to be corrected before data can be acquired." << std::endl;
       return -4; //ritorno -4 quando la relazione non esiste o non può esistere
       
     }
     else if (err == -4) {
-      std::cerr << "**Accounts file returned an error: the relationship " << relationship
+      std::cerr << "**Relations file returned an error: the relationship " << relationship
                 << " and the Users' ages are not compatible.\n"
                 << " File needs to be corrected before data can be acquired." << std::endl;
       return -4;
@@ -168,7 +168,7 @@ int main_di_clara(int argc, const char *argv[]) {
     IOBuffer::m_Post post_tmp;
     new_data_buffer >> post_tmp;
     if (!manager.addPost(post_tmp.second, post_tmp.first)) {
-      std::cerr << "Accounts file returned an error: the id " << post_tmp.first << " does not exist.\n"
+      std::cerr << "Posts file returned an error: the id " << post_tmp.first << " does not exist or an interaction does not belong to a user.\n"
                 << " File needs to be corrected before data can be acquired." << std::endl;
       return -3;
     }

@@ -406,16 +406,16 @@ bool Manager::addPost(const Post &post_to_add, const std::string &whose_ID)
   vector<string> likes = post_to_add.getLikes();
   for (int i = 0; i < likes.size(); i++)
   {
-    //Controllo che ogni like corrisponda ad un ID esistente.
-    if (!_exist_as_node(likes[i]))
+    //Controllo che ogni like corrisponda ad un ID utente esistente.
+    if (_map_users.count(likes[i])==0)
       return false;
   }
   
   vector<string> dislikes = post_to_add.getDislikes();
   for (int i = 0; i < dislikes.size(); i++)
   {
-    //Controllo che ogni dislike corrisponda ad un ID esistente.
-    if (!_exist_as_node(dislikes[i]))
+    //Controllo che ogni dislike corrisponda ad un ID utente esistente.
+    if (_map_users.count(likes[i])==0)
       return false;
   }
   
