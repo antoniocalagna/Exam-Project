@@ -705,7 +705,7 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
     std::vector<Post> posts;
     std::vector<IOBuffer::Relation> relations;
     std::vector<pair<pair<string, string>, string>> all_relationships;
-    std::vector<Post> post_without_react, post_with_react;
+    std::vector<pair<string,vector<Post>>> post_without_react, post_with_react;
 
     posts = manager.getPosts(ID_to_delete);
     for (auto it = posts.begin(); it != posts.end(); it++) {
@@ -718,13 +718,22 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
     }
 
     post_with_react = manager.getPostsReactedBy(ID_to_delete); //vettore di post con reazioni id morto
-    post_without_react = manager.getPostsWithoutReactionsOf(
-            ID_to_delete); //vettore di post senza reazioni dell'id morto
+    post_without_react = manager.getPostsWithoutReactionsOf(ID_to_delete); //vettore di post senza reazioni dell'id morto
 
-    for (int i = 0; i != post_with_react.size(); i++) { //il numero dei post con e senza reazione è uguale
-     // new_data << post_without_react[i];
 
+    for(auto it_new1 = post_without_react.begin(); it_new1 != post_without_react.end(); it_new1++){ //vettore esterno
+      for(auto it_new2 = it_new1->second.begin(); it_new2 != it_new1->second.end(); it_new2++){ //vettore interno secondo elemento
+        new_data << make_pair(it_new1->first,*it_new2);
+      }
     }
+
+    for(auto it_del1 = post_with_react.begin(); it_del1 != post_with_react.end(); it_del1++){ //vettore esterno
+      for(auto it_del2 = it_del1->second.begin(); it_del2 != it_del1->second.end(); it_del2++){ //vettore interno secondo elemento
+        data_to_delete << make_pair(it_del1->first,*it_del2);
+      }
+    }
+
+
 
 
     char type = manager.getAccountType(ID_to_delete);
