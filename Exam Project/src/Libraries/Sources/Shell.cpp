@@ -46,6 +46,8 @@ void Shell::help(std::stringstream &command, Manager &manager, IOBuffer &new_dat
                "\n\tPossible data to search:\n"
                "\ttrees (all trees), tree <id>, loner_people, friendly_companies.\n"
             << std::endl;
+  std::cout << "save\n\tSaves current status on file." << std::endl;
+  std::cout << "autosave on/off\n\tTurns autosave on/off." << std::endl;
 }
 
 void Shell::list(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete) {
