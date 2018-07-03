@@ -1,4 +1,3 @@
-#include <vector>
 #include "Social_Handlers.h"
 #include "Shell.h"
 #include "FileHandler.h"

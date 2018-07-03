@@ -25,7 +25,7 @@ void Shell::help(std::stringstream &command, Manager &manager, IOBuffer &new_dat
                "\tPossible data to add:\n"
                "\tuser, group, company,\n"
                "\trelation (in format \"add relation <id1> <relation> <id2>\"),\n"
-               "\t post, like, dislike."
+               "\tpost, like, dislike."
             << std::endl;
   std::cout << "delete <data_to_delete>\n\tDeletes the data as required.\n\tPossible data to delete:\n"
                "\taccount <ID_to_delete>,\n"
@@ -40,11 +40,11 @@ void Shell::help(std::stringstream &command, Manager &manager, IOBuffer &new_dat
                "\tIn case of \"number\", the possible types of data are:\n"
                "\taccounts, users, groups, companies, friends, relatives, employees, subsidiaries, members, born_after.\n"
                "\tIn case of \"most\", the possible types of data are:\n"
-               "\temploying_company, employing_partnership, user_friends, user_acquaintances, liked_post, liked_account,\n\tdisliked_post, disliked_account."
+               "\temploying_company, employing_partnership, user_friends, user_acquaintances, liked_post, disliked_post, liked_account, disliked_account."
             << std::endl;
   std::cout << "search <data_to_search>"
                "\n\tPossible data to search:\n"
-               "\ttrees (all trees), tree <id>, loner_people, friendly_companies.\n"
+               "\ttrees (all trees), tree <id>, loner_people, friendliest_companies.\n"
             << std::endl;
   std::cout << "save\n\tSaves current status on file." << std::endl;
   std::cout << "autosave on/off\n\tTurns autosave on/off." << std::endl;
@@ -52,7 +52,7 @@ void Shell::help(std::stringstream &command, Manager &manager, IOBuffer &new_dat
 
 void Shell::list(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete) {
   //Stampa una lista di account
-  std::vector<Account> accounts(manager.getAllAccounts());
+  std::vector<Account> accounts(manager.getAllAccountsSorted());
   if (accounts.empty()) {
     std::cout << "No accounts found." << std::endl;
     return;
@@ -624,20 +624,15 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     string news, d_t, whose_ID;
     std::string input;
     std::set<std::string> likes, dislikes;
-    bool isValid = false;
     Post post_tmp;
     
     cout << "News:\n>";
     getline(cin, news);
     post_tmp.setNews(news);
     
-    do {
-      cout << "Date and time:\n>"; //a me sta cosa non funziona, sto impazzendo, non esce dal ciclo
-      cin.ignore();
-      getline(cin, d_t);
-      isValid = post_tmp.setDate_Time(d_t);
-      
-    } while (!isValid);
+    cout << "Date and time:\n>";
+    getline(cin, d_t);
+    post_tmp.setDate_Time(d_t);
     
     cout << "Likes (insert '-' at the end of the list):\n";
     while (input != "-") {
@@ -657,23 +652,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
         dislikes.insert(input);
     }
     post_tmp.setDislikes(dislikes);
-    
-    /*cout << news << " " << d_t << endl;
-    
-    if (!likes.empty()) {
-      cout << "\nLikes:" << endl;
-      
-      for (auto it = likes.begin(); it != likes.end(); it++) {
-        cout << *it << endl;
-      }
-    }
-    
-    if (!dislikes.empty()) {
-      cout << "\nDislikes:" << endl;
-      for (auto it = dislikes.begin(); it != dislikes.end(); it++) {
-        cout << *it << endl;
-      }
-    }*/
+   
     cout << "Who wrote the post?:\n>";
     getline(cin, whose_ID);
     if (!manager.addPost(post_tmp, whose_ID)) {
@@ -685,7 +664,6 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
   else if (what_to_add == "like" || what_to_add == "dislike") {
     string post_owner, reaction_id, post_num_str;
     unsigned int post_num;
-    vector<Post> posts;
     
     cout << "Please insert the post owner's ID:" << endl;
     cout << ">";
@@ -699,7 +677,8 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     post_num = stoi(post_num_str);
     
     post_num--;
-    posts = manager.getPosts(post_owner);   //Acquisisci i post per passarli al manager
+    
+    vector<Post> posts = manager.getPosts(post_owner);
     if (posts.size() <= post_num) {   //Controlla se il proprietario dell'account ha il post
       cout << "Error! Could find post " << post_num + 1 << " from " << post_owner << "." << endl;
       return;
@@ -857,7 +836,7 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
     
     bool like = what_to_delete == "like";      //Decidi se mettere like o dislike
     if (!manager.setReaction(like, false, post_owner, post_num, reaction_id)) {
-      cout << "Error! Could find post " << post_num + 1 << " from " << post_owner << "." << endl;
+      cout << "Error! Could find this reaction in post " << post_num + 1 << " from " << post_owner << "." << endl;
       return;
     }
     data_to_delete << std::make_pair(post_owner, old_post);
@@ -1112,7 +1091,7 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
       cout << *it << endl;
     }
   }
-  else if (what_to_search == "friendliest_company") {
+  else if (what_to_search == "friendliest_companies") {
     float threshold;
     bool with_partners;
     std::string ans;
@@ -1142,7 +1121,7 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
     }
   }
   else {
-    cout << "Error! Cannot search for" << what_to_search << "." << endl;
+    cout << "Error! Cannot search for " << what_to_search << "." << endl;
     return;
   }
   std::cout << "Done!" << std::endl;

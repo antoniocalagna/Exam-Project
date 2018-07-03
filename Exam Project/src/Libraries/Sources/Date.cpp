@@ -135,6 +135,7 @@ void Date::scanDateByStr(const string &s) {
   
   if(s == "now") {
     setCurrentDate();
+    return;
   }
   
   std::stringstream ss(s);

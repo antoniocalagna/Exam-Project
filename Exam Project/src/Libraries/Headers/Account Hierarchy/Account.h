@@ -9,7 +9,6 @@
 #ifndef Account_h
 #define Account_h
 
-#include <vector>
 #include "Date.h"
 #include "Clock.h"
 

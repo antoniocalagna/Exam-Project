@@ -19,7 +19,6 @@ set(HDR Libraries/Headers)
 set(                                                #Qui si fa una sorta di assegnazione: chiamando "${SOURCE_FILES}"
         SOURCE_FILES                                #è come se scrivessi tutta questa roba
         ${HDR}/Graph.hpp
-        ${HDR}/TemplateFunctions.hpp
 
         ${HDR}/Clock.h              ${SRC}/Clock.cpp
         ${HDR}/Date.h               ${SRC}/Date.cpp

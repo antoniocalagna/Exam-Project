@@ -11,9 +11,6 @@
 #include "Date.h"
 #include "Clock.h"
 
-using namespace std;
-
-
 class Post {
 public:
   //Constructors & Destructor

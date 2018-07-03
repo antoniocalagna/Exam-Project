@@ -11,16 +11,12 @@
 
 #include <unordered_map>
 #include <unordered_set>
-#include <set>
-#include <list>
 #include <deque>
-#include <queue>
 #include "User.h"
 #include "Company.h"
 #include "Group.h"
-#include "Graph.hpp"
 #include "Post.h"
-#include "TemplateFunctions.hpp"
+#include "Graph.hpp"
 
 class Manager
 {
@@ -70,7 +66,7 @@ public:
   bool replaceAccount (const string &ID_to_replace, const Company &new_account);
   bool replaceAccount (const string &ID_to_replace, const Group &new_account);
   
-  vector<Account> getAllAccounts() const;
+  vector<Account> getAllAccountsSorted() const;
   
   int addRelationship (const string &ID_start, const string &ID_target, const string &relationship);
   bool deleteRelationship (const string &ID_start, const string &ID_target);

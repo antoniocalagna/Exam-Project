@@ -118,7 +118,7 @@ void Clock::CorrectValues()
   }
 }
 
-void Clock::SetCurrentTime()
+void Clock::setCurrentTime()
 {
   time_t raw;
   struct tm * timeinfo;
@@ -135,14 +135,20 @@ void Clock::SetCurrentTime()
 
 void Clock::scanTimeByStr(std::string s)
 {
+  if(s == "now") {
+    setCurrentTime();
+    return;
+  }
+  
   stringstream sstream (s);
   sstream>>_hours;
   sstream.ignore(1);
   sstream>>_minutes;
   sstream.ignore(1);
-  if(!sstream.good()){
+  if(!sstream.good()) {
     _seconds = 0;
-  }else {
+  }
+  else {
     sstream >> _seconds;
   }
 }

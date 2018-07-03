@@ -40,7 +40,7 @@ public:
   string getShortTime() const;
   
   void CorrectValues();
-  void SetCurrentTime();
+  void setCurrentTime();
   void scanTimeByStr (string s);
   
   static bool CheckTime (const string &time_to_check);

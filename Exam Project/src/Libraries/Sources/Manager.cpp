@@ -312,19 +312,19 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const Group &new_
     return false;
 }
 
-vector<Account> Manager::getAllAccounts() const {
+vector<Account> Manager::getAllAccountsSorted() const {
   vector<Account> all;
 
   for (auto it_u = _map_users.begin(); it_u != _map_users.end(); it_u++) {
-    insert_sorted(all, it_u->second);
+    all.insert (upper_bound(all.begin(), all.end(), it_u->second), it_u->second);
   }
 
   for (auto it_c = _map_companies.begin(); it_c != _map_companies.end(); it_c++) {
-    insert_sorted(all, it_c->second);
+    all.insert (upper_bound(all.begin(), all.end(), it_c->second), it_c->second);
   }
 
   for (auto it_g = _map_groups.begin(); it_g != _map_groups.end(); it_g++) {
-    insert_sorted(all, it_g->second);
+    all.insert (upper_bound(all.begin(), all.end(), it_g->second), it_g->second);
   }
 
   return all; //vettore binary-sorted
@@ -666,7 +666,7 @@ vector<string> Manager::MostEmployingPartnership() const {
     num_members = _graph.outDegree_withEdge(it->second.getID(), relation::employer);
 
     subs = _graph.branches(it->second.getID(), relation::partnership);
-    for (auto it2 = subs.begin(); it2 != subs.end(); it++) {
+    for (auto it2 = subs.begin(); it2 != subs.end(); it2++) {
       num_members = num_members + _graph.outDegree_withEdge(*it2, relation::employer);
     }
 
@@ -746,17 +746,20 @@ pair<string, Post> Manager::MostDislikedPost() const {
   string id_best;
   for (auto it = all_ids.begin(); it != all_ids.end(); it++) {
     tmp = _map_posts.at(*it);
-    vector<Post>::iterator it2 = tmp.begin();
-    Post best = *it2;
+    if (tmp.size()!=0)
+    {
+      vector<Post>::iterator it2 = tmp.begin();
+      Post best = *it2;
 
-    for (; it2 != tmp.end(); it2++) {
-      if (it2->NumDislikes() > best.NumDislikes())
-        best = *it2;
-    }
+      for (; it2 != tmp.end(); it2++) {
+        if (it2->NumDislikes() > best.NumDislikes())
+          best = *it2;
+      }
 
-    if (best > ext_best) {
-      ext_best = best;
-      id_best = *it;
+      if (best.NumDislikes() > ext_best.NumDislikes()) {
+        ext_best = best;
+        id_best = *it;
+      }
     }
   }
   return pair<string, Post>(id_best, ext_best);
@@ -764,15 +767,18 @@ pair<string, Post> Manager::MostDislikedPost() const {
 
 string Manager::MostLiked_DislikedAccount(const bool &like_1_dislike_0) const {
   int best_sum = 0;
-  std::string best_id = _map_posts.begin()->first;
+  std::string best_id;
 
   for (auto it = _map_posts.begin(); it != _map_posts.end(); it++) { //Scorri tutta la mappa dei post
     int sum = 0;
-    for (int i = 0;
-         i < it->second.size(); it++) {                   //Somma tutti i likes di tutti i post dell'account attuale
-      if (like_1_dislike_0) {
+    for (int i = 0; i < it->second.size(); i++)
+    {                                                       //Somma tutti i likes di tutti i post dell'account attuale
+      if (like_1_dislike_0)
+      {
         sum += it->second[i].NumLikes();
-      } else {                                                        //Somma tutti i dislike dell'account attuale
+      }
+      else
+      {                                                        //Somma tutti i dislike dell'account attuale
         sum += it->second[i].NumDislikes();
       }
     }
@@ -853,9 +859,7 @@ string Manager::RatioReactionAccount(const bool &best_1_worst_0) const {
   return best_ID;
 }
 
-vector<string>
-Manager::LonerPeople(const unsigned int &relations, const unsigned int &memberships, const bool &not_employed,
-                     const unsigned int &newsreactions) const {
+vector<string> Manager::LonerPeople(const unsigned int &relations, const unsigned int &memberships, const bool &not_employed, const unsigned int &newsreactions) const {
   unordered_set<string> set; //Lavoro con i set per la buona complessità delle operazioni e poi infine ritornerò un vettore.
   bool isLoner = true; //Controllo sul lupo solitario
   bool isValid = false; //Controllo validità dei parametri
@@ -993,8 +997,6 @@ vector<pair<string, float>> Manager::SortedNewsRatioCompanies(const bool &with_p
   return companies_ratio;
 }
 
-
-//DA COMPLETARE
 vector<vector<string>> Manager::GenealogicalTree(const string &whose_ID) const {
   //Rappresenta le varie generazioni della famiglia di whose_ID
   //Controlla che l'ID richiesto esista

@@ -28,6 +28,13 @@ void Post::setNews(const string &news) {
 }
 
 bool Post::setDate_Time(const string &date_time) {
+  
+  if(date_time == "now") {
+    _date.scanDateByStr(date_time);
+    _time.scanTimeByStr(date_time);
+    return true;
+  }
+  
   string date = date_time.substr(0, 10);
   if (date_time.size() < 11)
     _time = Clock();
@@ -104,7 +111,7 @@ bool Post::operator<(const Post &is_greater) {
 ostream &operator<<(ostream &stream, const Post &p) {
   stream << p._news << ", " << p._date;
   if (Clock() != p._time)
-    stream << p._time;
+    stream << " @ " << p._time << endl;
   else
     stream << endl;
   stream << "likes: {";
