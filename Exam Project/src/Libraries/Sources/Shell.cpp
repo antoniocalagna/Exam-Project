@@ -189,23 +189,23 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
 
 void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete) {
   
-  string what_to_set, ID_to_set; //non so se questi nomi sono messi per scherzo, a me sembrano carini
-  command >> what_to_set >> ID_to_set;
+  string what_to_set, ID_to_set;
+  command >> what_to_set >> ID_to_set;      //Acquisisci i parametri dalla linea di comando
   
-  if (what_to_set.empty() || ID_to_set.empty()) {
+  if (what_to_set.empty() || ID_to_set.empty()) {   //Controlla che i parametri siano stati effettivamente inseriti
     cout << "Error! I do not understand what information you'd like to set." << endl;
     return;
   }
   
-  char type = manager.getAccountType(ID_to_set);
+  char type = manager.getAccountType(ID_to_set);    //Reperisci il tipo di account
   if (type == Account::user_type) {
-    User user_old;                         //User a cui cambiare le info
-    User user_new;                         //Utente modificato
+    User user_old;                                  //User a cui cambiare le info
+    User user_new;                                  //Utente modificato
     
-    user_old = manager.getUser(ID_to_set); //se l'id non esiste, user_old è un default constructor
-    user_new = user_old;
+    user_old = manager.getUser(ID_to_set);          //Se l'id non esiste, user_old è un default constructor
+    user_new = user_old;                            //Fai momentaneamente una copia
     
-    if (user_old == User()) {
+    if (user_old == User()) {                       //Controlla che l'ID esista
       cout << "Error! This ID is not valid." << endl;
       return;
     }
@@ -213,9 +213,11 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
     if (what_to_set == "name") {
       string new_name;
       cout << "Please insert the new " << what_to_set << "." << endl;
-      //cin.ignore();                           //Salta il carattere \n rimasto dall'input precedente
       getline(cin, new_name);
-      user_new.setName(new_name);             //Modifica il dato nel nuovo utente
+      if (!Account::nameValid(new_name)) {           //Controlla che sia valido
+        cout << "Error! This name does not respect the rules." << endl;
+      }
+      user_new.setName(new_name);                   //Modifica il dato nel nuovo utente
       
       if (!manager.replaceAccount(ID_to_set, user_new)) { //Il manager non è riuscuto a rimpiazzare l'account
         cout << "Error! " << what_to_set << " could not be modified." << endl;
@@ -225,9 +227,11 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
     else if (what_to_set == "surname") {
       string new_surname;
       cout << "Please insert the new" << what_to_set << "." << endl;
-      //cin.ignore();
       getline(cin, new_surname);
-      user_new.setSurname(new_surname);
+      user_new.setSurname(new_surname);                 //Acquisisci il nuovo cognome
+      if (!Account::nameValid(new_surname)) {           //Controlla che sia valido
+        cout << "Error! This surname does not respect the rules." << endl;
+      }
       if (!manager.replaceAccount(ID_to_set, user_new)) {
         cout << "Error! " << what_to_set << " could not be modified." << endl;
         return;
@@ -237,6 +241,10 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
       char new_gender;
       cout << "Please insert the new gender." << endl;
       cin >> new_gender;
+      new_gender = char(toupper(new_gender));         //Converti sempre il genere in maiuscolo
+      if (!gender::isValid(new_gender)) {              //Controlla che sia valido
+        cout << "Error! Gender not valid." << endl;
+      }
       user_new.setGender(new_gender);
       if (!manager.replaceAccount(ID_to_set, user_new)) {
         cout << "Error! " << what_to_set << " could not be modified." << endl;
@@ -247,11 +255,10 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
       string new_birth;
       Date birth;
       cout << "Please insert the new" << what_to_set << "." << endl;
-      //cin.ignore();
       getline(cin, new_birth);
-      if (birth.CheckDate(new_birth)) {
-        birth.scanDateByStr(new_birth);
-        user_new.setBirth(birth);
+      if (Date::CheckDate(new_birth)) {                       //Controlla che la data inserita sia valida
+        birth.scanDateByStr(new_birth);                       //In quel caso assegnala
+        user_new.setBirth(birth);                             //E impostala come data di nascita dell'utente
         if (!manager.replaceAccount(ID_to_set, user_new)) {
           cout << "Error! " << what_to_set << " could not be modified." << endl;
           return;
@@ -265,8 +272,10 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
     else if (what_to_set == "address") {
       string new_addr;
       cout << "Please insert the new address." << endl;
-      //cin.ignore();
-      getline(cin, new_addr);
+      getline(cin, new_addr);                         //Acquisisci l'indirizzo
+      if (!Account::nameValid(new_addr)) {            //Controlla che sia valido
+        cout << "Error! This address does not respect the rules." << endl;
+      }
       user_new.setAddress(new_addr);
       if (!manager.replaceAccount(ID_to_set, user_new)) {
         cout << "Error! " << what_to_set << " could not be modified." << endl;
@@ -277,9 +286,8 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
       string new_sub;
       Date sub;
       cout << "Please insert the new date of subscription (in format dd/mm/yyyy)." << endl;
-      //cin.ignore();
       getline(cin, new_sub);
-      if (sub.CheckDate(new_sub)) {   //Controlla che la data sia valida
+      if (Date::CheckDate(new_sub)) {   //Controlla che la data sia valida
         sub.scanDateByStr(new_sub);
         user_new.setSubscription(new_sub);
         if (!manager.replaceAccount(ID_to_set, user_new)) {
@@ -295,27 +303,30 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
     else {
       std::cout << "Cannot set \"" << what_to_set << "\" on a User." << std::endl;
     }
-    data_to_delete << user_old;
-    new_data << user_new;
+    data_to_delete << user_old;         //Carica la versione vecchia dell'utente nel buffer dei dati da eliminare
+    new_data << user_new;               //Carica invece la versione nuova tra i dati da aggiungere
     cout << "Done!" << endl;
   }
   else if (type == Account::group_type) {
     Group group_old;
     Group group_new;
     group_old = manager.getGroup(ID_to_set);
-    group_new = group_old;
+    group_new = group_old;              //Fai momentaneamente una copia che verrà modificata in seguito
     
-    if (group_new == Group()) {                                  //Il manager non ha trovato il gruppo
+    if (group_new == Group()) {         //Il manager non ha trovato il gruppo
       cout << "Error! This ID is not valid." << endl;
       return;
     }
+    
     if (what_to_set == "name") {
       string new_name;
       cout << "Please insert the new name." << endl;
-      //cin.ignore();
       getline(cin, new_name);
+      if (!Account::nameValid(new_name)) {           //Controlla che sia valido
+        cout << "Error! This name does not respect the rules." << endl;
+      }
       group_new.setName(new_name);
-      if (!manager.replaceAccount(ID_to_set, group_new)) { //da provare
+      if (!manager.replaceAccount(ID_to_set, group_new)) {
         cout << "Error! " << what_to_set << " could not be modified." << endl;
         return;
       }
@@ -324,9 +335,8 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
       string new_sub;
       Date sub;
       cout << "Please insert the new date of subscription (in format dd/mm/yyyy)." << endl;
-      //cin.ignore();
       getline(cin, new_sub);
-      if (sub.CheckDate(new_sub)) {
+      if (Date::CheckDate(new_sub)) {
         sub.scanDateByStr(new_sub);
         group_new.setSubscription(new_sub);
         if (!manager.replaceAccount(ID_to_set, group_new)) {
@@ -368,7 +378,7 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
       cout << "Please insert the new date of inception (in format dd/mm/yyyy)." << endl;
       //cin.ignore(); da provare se ci vada o no
       getline(cin, new_inc);
-      if (inc.CheckDate(new_inc)) {
+      if (Date::CheckDate(new_inc)) {
         inc.scanDateByStr(new_inc);
         group_new.setInception(inc);
         if (!manager.replaceAccount(ID_to_set, group_new)) { //da provare
@@ -417,7 +427,7 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
       cout << "Please insert the new date of subscription (in format dd/mm/yyyy)." << endl;
       ////cin.ignore();
       getline(cin, new_sub);
-      if (sub.CheckDate(new_sub)) {
+      if (Date::CheckDate(new_sub)) {
         sub.scanDateByStr(new_sub);
         company_new.setSubscription(new_sub);
         if (!manager.replaceAccount(ID_to_set, company_new)) {
@@ -436,7 +446,7 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
       cout << "Please insert the new date of inception (in format dd/mm/yyyy)." << endl;
       ////cin.ignore(); da provare se ci vada o no
       getline(cin, new_inc);
-      if (inc.CheckDate(new_inc)) {
+      if (Date::CheckDate(new_inc)) {
         inc.scanDateByStr(new_inc);
         company_new.setInception(inc);
         if (!manager.replaceAccount(ID_to_set, company_new)) {
@@ -674,7 +684,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     cout << "Please insert post number:" << endl;
     cout << ">";
     getline(cin, post_num_str);
-    post_num = stoi(post_num_str);
+    post_num = unsigned(stoi(post_num_str));
     
     post_num--;
     
@@ -823,7 +833,7 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
     cout << "Please insert post number:" << endl;
     cout << ">";
     getline(cin, post_num_str);
-    post_num = stoi(post_num_str);
+    post_num = unsigned(stoi(post_num_str));
     
     post_num--;
     posts = manager.getPosts(post_owner);   //Acquisisci i post per passarli al manager
@@ -980,10 +990,10 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
            << "From: " << d_post.first;
     }
     else if (param2 == "liked_account") {
-      cout << "The Most Liked Account is:\n" << manager.MostLiked_DislikedAccount(1);
+      cout << "The Most Liked Account is:\n" << manager.MostLiked_DislikedAccount(true);
     }
     else if (param2 == "disliked_account") {
-      cout << "The Most Disliked Account is:\n" << manager.MostLiked_DislikedAccount(0);
+      cout << "The Most Disliked Account is:\n" << manager.MostLiked_DislikedAccount(false);
     }
     else {
       cout << "Error! I do not understand what statistic you'd like to retreive." << endl;
