@@ -8,7 +8,7 @@
 FH::Error FH::AccountsHandler::_checkLine(const std::string &line) const {            //Controllo del file
   std::string id, type_s;
   std::stringstream line_ss(line);
-  FH::Error check_result {0,0};
+  FH::Error check_result{0, 0};
   //Acquisisci e controlla l'ID
   std::getline(line_ss, id, ',');                                  //Acquisisci l'ID
   check_result = check_result = checkField(id, Account::IDValid, 0x1, 0x1);
@@ -204,19 +204,19 @@ FH::Error FH::RelationsHandler::_checkLine(const std::string &line) const {
   
   std::getline(line_ss, id1, ',');                                         //Controllo del primo ID
   status = checkField(id1, Account::IDValid, 0x1, 0x0);
-  if(status.code != 0) {
+  if (status.code != 0) {
     return status;
   }
   
   std::getline(line_ss, id2, ',');                                         //Controllo del secondo ID
   status = checkField(id2, Account::IDValid, 0x1, 0x0);
-  if(status.code != 0) {
+  if (status.code != 0) {
     return status;
   }
   
   std::getline(line_ss, relation);                                         //Controllo della relazione
   status = checkField(relation, relation::isValid, 0x4, 0x0);
-  if(status.code != 0) {
+  if (status.code != 0) {
     return status;
   }
   
@@ -251,10 +251,10 @@ FH::Error FH::PostsHandler::_checkLine(const std::string &line) const {
   std::string id, message;
   std::string like, dislike;
   std::string date;
-  FH::Error check_result {0, 0};
+  FH::Error check_result{0, 0};
   
-  std::getline(line_ss, id, ',');                                        //Acquisici l'ID
-  check_result = checkField(id, Account::IDValid, 0x1, 0x1);
+  std::getline(line_ss, id, ',');                                       //Acquisici l'ID
+  check_result = checkField(id, Account::IDValid, 0x1, 0x1);            //Controllalo
   if (check_result.code != 0)
     return check_result;
   
@@ -264,7 +264,7 @@ FH::Error FH::PostsHandler::_checkLine(const std::string &line) const {
     std::getline(line_ss, temp, ',');
     message += "," + temp;
   }
-  if (!line_ss.good()) { return {0x13000009, 0}; }                       //Errore di formattazione del messaggio
+  if (!line_ss.good()) { return {0x13000009, 0}; }                     //Errore di formattazione del messaggio
   
   std::getline(line_ss, date, ',');
   check_result = checkField(date, Date::CheckDate, 0x3, 0xB);
@@ -272,10 +272,10 @@ FH::Error FH::PostsHandler::_checkLine(const std::string &line) const {
     return check_result;
   
   std::string reactions;
-  std::getline(line_ss, reactions);                                      //Acquisici il resto della riga
+  std::getline(line_ss, reactions);                                   //Acquisici il resto della riga
   std::stringstream likes_ss(readField("likes", reactions));          //Metti i likes in uno stringstream
   while (likes_ss.good() && likes_ss.gcount() != 0) {
-    std::getline(likes_ss, like, ',');
+    std::getline(likes_ss, like, ',');                                //Estraili uno per uno (sono separati dalla ,)
     check_result = checkField(like, Account::IDValid, 0x1, 0x1);
     if (check_result.code != 0)
       return check_result;
@@ -399,19 +399,18 @@ std::string FH::formatOutput(const IOBuffer::m_Post &post) {
   std::stringstream out;
   out << post.first << "," << formatString(post.second.getNews()) << ",";    //Formatta il messaggio
   
-  out << post.second.getDate() << ",";                        //Formatta la data
+  out << post.second.getDate() << " " << post.second.getTime() << ",";              //Formatta la data
   
-  out << "likes:{";                                                  //Elabora la lista dei likes
+  out << "likes:{";                                                          //Elabora la lista dei likes
   std::vector<std::string> temp = post.second.getLikes();
   for (int i = 0; i < temp.size(); i++) {
     out << temp[i];
-    if (i !=
-        temp.size() - 1)                                         //Metti la virgola soltanto se non sei all'ultimo like
+    if (i != temp.size() - 1)          //Metti la virgola soltanto se non sei all'ultimo like
       out << ",";
   }
   temp.clear();
   
-  out << "},dislikes:{";                                              //Elabora la lista dei dislikes
+  out << "},dislikes:{";                          //Elabora la lista dei dislikes
   temp = post.second.getDislikes();
   for (int i = 0; i < temp.size(); i++) {
     out << temp[i];

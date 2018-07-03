@@ -155,8 +155,6 @@ bool Clock::CheckTime (const string &time_to_check)
 
 ostream &operator<< (ostream &stream, const Clock& c)
 {
-  stream << " @ ";
-  
   if (c._hours<10)
     stream << "0";
   stream << c._hours <<":";
@@ -173,7 +171,6 @@ ostream &operator<< (ostream &stream, const Clock& c)
     stream<<c._seconds;
   }
   
-  stream<< endl;
   return stream;
 }
 
