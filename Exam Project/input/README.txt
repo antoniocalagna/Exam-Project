@@ -16,3 +16,5 @@ Elenchiamo di seguito le caratteristiche dei gruppi di file forniti, identifican
     001         Errore                      ID di due account duplicati
     002         Errore                      Caratteri non permessi in uno dei campi di un utente
     003         Ok                          Qualche albero genealogico
+    004         Errore                      Errore di formattazione nei campi della compagnia
+    005         Ok                          Elasticità dei controlli nei campi di un account
