@@ -4,7 +4,7 @@ silvich,U,{name:{Silvia},surname:{Alvich},gender:{F},addr:{Via Principe di Pater
 triX,U,{name:{Beatrice},surname:{Moscoloni},gender:{F},addr:{Via Cavour 5},sub:{20/01/2012},birth:{27/07/1998}}
 totina,U,{name:{Antonio},surname:{Calagna},gender:{N},addr:{Porta Venezia},sub:{22/10/2016},birth:{27/10/1998}}
 gianlusav,U,{name:{Gianluca},surname:{Savina},gender:{M},addr:{Via Einstein 11},sub:{12/03/2017},birth:{21/07/1997}}
-pao_bao,U,{name:{Barone},surname:{Paolino},gender:{m},addr:{Via Leopardi 3},sub:{26/06/2018},birth:{20/01/1998}}
+pao_bao,U,{name:{Barone},surname:{Paolino},gender:{M},addr:{Via Leopardi 3},sub:{26/06/2018},birth:{20/01/1998}}
 claslavax,U,{name:{Clara},surname:{Salvalai},gender:{F},addr:{Via Galvani 11},sub:{12/02/2014},birth:{09/09/1997}}
 ros_rus,U,{name:{Rosanna},surname:{Russo},gender:{F},addr:{Via Principe di Paterno' 32},sub:{20/07/2004},birth:{06/06/1971}}
 rilvich,U,{name:{Nonna Rita},surname:{Alvich},gender:{f},addr:{Via Principe di Paterno'},sub:{10/02/1997},birth:{05/08/1940}}
@@ -12,7 +12,7 @@ PoliTO,G,{name:{Politecnico di Torino},location:{Torino},activity:{Mangiare anim
 ettorre,U,{name:{Ettore},surname:{Principe di Troia},gender:{M},addr:{Troia},sub:{01/01/1900},birth:{01/01/2000}}
 mario_db,U,{name:{Mario},surname:{Di Blasi},gender:{N},addr:{Cardillo},sub:{12/03/2005},birth:{11/02/1997}}
 nonna_teta,U,{name:{Teresa},surname:{Passannanti},gender:{F},addr:{Via Fermi 10},sub:{07/05/2016},birth:{29/05/1929}}
-vlad,U,{name:{Vladimir},surname:{Putin},gender:{m},addr:{Secret},sub:{05/02/2009},birth:{07/10/1952}}
+vlad,U,{name:{Vladimir},surname:{Putin},gender:{M},addr:{Secret},sub:{05/02/2009},birth:{07/10/1952}}
 MYSSKETA,U,{name:{Monica},surname:{Ketamina},gender:{F},addr:{Porta Venezia},sub:{30/08/1997},birth:{27/04/1983}}
 nonno_italo,U,{name:{Italo},surname:{Di Cicca},gender:{M},addr:{Paradiso},sub:{05/04/2003},birth:{22/12/1921}}
 elecami,U,{name:{Elena},surname:{Caminita},gender:{F},addr:{Monreale},sub:{05/04/2014},birth:{23/12/1996}}
@@ -34,7 +34,7 @@ frenz,U,{name:{Francesca},surname:{Calagna},gender:{F},addr:{Viale del Fante 11}
 milvich,U,{name:{Michele},surname:{Alvich},gender:{M},addr:{Via Principe di Paterno' 32},sub:{20/09/2003},birth:{03/02/1969}}
 salvich,U,{name:{Salvatore},surname:{Alvich},gender:{F},addr:{Via Principe di Paterno' 32},sub:{04/02/2012},birth:{23/03/2005}}
 giuliagallo24,U,{name:{Giulia},surname:{Gallo},gender:{F},addr:{Largo Cristoforo Colombo},sub:{05/04/2014},birth:{24/12/1996}}
-faber_crax,U,{name:{Fabrizio},surname:{Crasci'},gender:{m},addr:{Via dei Nebrodi 23},sub:{29/06/2018},birth:{20/03/1998}}
+faber_crax,U,{name:{Fabrizio},surname:{Crasci'},gender:{M},addr:{Via dei Nebrodi 23},sub:{29/06/2018},birth:{20/03/1998}}
 nonna_nina,U,{name:{Antonina},surname:{Addamo},gender:{F},addr:{Via Roma 9},sub:{11/02/2015},birth:{20/06/1939}}
 crushditotina,U,{name:{Nicola},surname:{Cantisani},gender:{N},addr:{Via delle buttane},sub:{10/06/2014},birth:{10/02/1996}}
 bocce_squad,G,{name:{Giocatori di Bocce},location:{Turin},activity:{Svago},inception:{17/10/1888},sub:{07/09/2013}}
