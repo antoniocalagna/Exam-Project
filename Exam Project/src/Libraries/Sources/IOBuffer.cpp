@@ -30,6 +30,7 @@ void IOBuffer::clear() {
 }
 
 void IOBuffer::append(const IOBuffer &buff) {
+  //Copia (SENZA SCARICARE) il contenuto del buffer buff in *this.
   for(auto it = buff._users.begin(); it != buff._users.end(); it++) {
     _users.push_back(*it);
   }
@@ -48,7 +49,7 @@ void IOBuffer::append(const IOBuffer &buff) {
 }
 
 IOBuffer &IOBuffer::operator<<(const User &to_get) {
-  _users.push_back(to_get);
+  _users.push_back(to_get);     //Inserisci i nuovi elementi al fondo...
   return *this;
 }
 
@@ -73,8 +74,8 @@ IOBuffer &IOBuffer::operator<<(const IOBuffer::Relation &to_get) {
 }
 
 IOBuffer &IOBuffer::operator>>(User &to_return) {
-  User temp = _users.front();
-  _users.pop_front();
+  User temp = _users.front();     //E pesca quelli nuovi dalla testa
+  _users.pop_front();             //Scaricandoli dal buffer
   to_return = temp;
   return *this;
 }
