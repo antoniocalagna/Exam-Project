@@ -17,4 +17,5 @@ Elenchiamo di seguito le caratteristiche dei gruppi di file forniti, identifican
     002         Errore                      Caratteri non permessi in uno dei campi di un utente
     003         Ok                          Qualche albero genealogico
     004         Errore                      Errore di formattazione nei campi della compagnia
-    005         Ok                          Elasticità dei controlli nei campi di un account
+    005         Ok                          Elasticità dei controlli nei campi di un account (Dimostra anche il sistema di auto-correzione)
+    006         Ok                          Possibilità di lettura di un Post in cui non è specificata la data
