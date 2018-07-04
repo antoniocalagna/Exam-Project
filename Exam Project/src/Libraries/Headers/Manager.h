@@ -44,19 +44,21 @@ public:
   
   vector<Post> getPosts (const string &ID) const;
   vector<Post> getAllPosts () const;
-  
   vector<pair<string,vector<Post>>> getPostsReactedBy (const string &ID) const; //Post in cui un certo ID appare nelle interazioni
   vector<pair<string,vector<Post>>> getPostsWithoutReactionsOf (const string &ID) const; //Ritorna i suddetti post ma privati di quell'ID
+  
   string getRelationship (const string &starting_ID, const string &target_ID) const; //Relazione tra due ID
+  vector<string> getRelated(const string &ID, const string &relation) const; //Tutti gli ID relazionati ad uno tramite una certa relazione
   vector<pair<pair<string, string>, string>> getAllRelationships(const string& ID) const; //Tutte le relazioni che coinvolgono un certo ID
+  
   vector<string> getUsersIDs() const;
   vector<string> getCompaniesIDs() const;
   vector<string> getGroupsIDs() const;
+  
   char getAccountType(const std::string &ID) const;
-  vector<string> getRelated(const string &ID, const string &relation) const; //ID relazi
   
   //Management Functions
-  bool accountExists(const std::string &ID) const;
+  bool accountExists(const std::string &ID) const; //Controlla l'esistenza di un ID
   
   bool addAccount(const User &account_to_add);
   bool addAccount(const Company &account_to_add);
