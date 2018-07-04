@@ -146,8 +146,6 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
         likes = posts[i].getLikes();
         dislikes = posts[i].getDislikes();
         
-        posts.clear();                                                  //Il vettore non serve più
-        
         if (!likes.empty()) {                                           //Stampa i like (se ce ne sono)
           std::cout << "Likes: ";
           for (int j = 0; j < likes.size(); j++) {
