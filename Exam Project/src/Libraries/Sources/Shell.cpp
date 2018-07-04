@@ -686,10 +686,12 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     if (error == -1) {
       cout << "Error! The first ID does not exist!" << endl;
       return;
-    } else if (error == -2) {
+    }
+    else if (error == -2) {
       cout << "Error! The second ID does not exist!" << endl;
       return;
-    } else if (error == -3) {
+    }
+    else if (error == -3) {
       cout << "Error! This relationship does not exist!" << endl;
       cout << "Possible relations:\n"
               "\tfriend (U - U)\n"
@@ -702,11 +704,18 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
               "\tworker (U -> C)\n"
               "\temployer (C -> U)\n" << endl;
       return;
-    } else if (error == -4) {
+    }
+    else if (error == -4) {
       cout << "Error! The relationship and the Users' ages are not compatible!" << endl;
       return;
     }
+    else if (error == -5) {
+      cout << "Error! The relationship is incoherent with the Accounts' types!" << endl;
+    }
+    else {
     new_data << std::make_pair(std::make_pair(who1, who2), type_rel);   //In caso di successo
+    cout << "Done!" << endl;
+    }
   }
                                               //Aggiungi un nuovo Post
   else if (what_to_add == "post") {
@@ -753,6 +762,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
       cout << "Could not create post." << endl;
       return;
     }
+    cout << "Done!" << endl;
     new_data << std::make_pair(whose_ID, post_tmp);
   }                                          //Aggiungi una nuova interazione ad un certo post
   else if (what_to_add == "like" || what_to_add == "dislike") {
@@ -787,11 +797,11 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     }
     data_to_delete << std::make_pair(post_owner, old_post);
     new_data << std::make_pair(post_owner, manager.getPosts(post_owner)[post_num]);
+    cout << "Done!" << endl;
   } else {
     cout << "Could not add \"" << what_to_add << "\"." << endl;
     return;
   }
-  cout << "Done!" << endl;
 }
 
 void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete) {

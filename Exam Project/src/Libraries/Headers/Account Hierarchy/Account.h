@@ -47,10 +47,10 @@ public:
   
   //Static functions
   static bool IDValid(const std::string &ID);       //Controlla la validità di un ID
-  static bool typeValid(const std::string &tipe);
+  static bool typeValid(const std::string &type);
   static bool typeValid(char type);                 //Controlla la validità di un tipo
   static bool nameValid(const std::string &name);   //Controlla la validità di un nome (o cognome)
-
+  
 protected:
   
   string _name;
@@ -61,24 +61,25 @@ protected:
 };
 
 namespace relation {
-const string friendship = "friend";         //Amicizia tra utenti
-
-const string knowings = "acquaintance";     //Conoscenza tra utenti
-
-const string parent = "parent";             //Paternità tra utenti
-const string born = "son";                  //Paternità inversa
-const string partner = "partner";           //Coppie di utenti
-
-const string partnership = "working_with";      //Partnership tra aziende
-
-const string employee = "worker";           //L'utente lavora per la compagnia
-const string employer = "employer";         //La compagnia da lavoro all'utente
-
-const string membership = "member";         //L'utente è membro del gruppo
-
-bool isValid(const string &r);
-bool isDominant(const string &r);
-bool isSymmetrical(const string &r);
-string getInverse(const string &r);
+  const string friendship = "friend";         //Amicizia tra utenti
+  
+  const string knowings = "acquaintance";     //Conoscenza tra utenti
+  
+  const string parent = "parent";             //Paternità tra utenti
+  const string born = "son";                  //Paternità inversa
+  const string partner = "partner";           //Coppie di utenti
+  
+  const string partnership = "working_with";      //Partnership tra aziende
+  
+  const string employee = "worker";           //L'utente lavora per la compagnia
+  const string employer = "employer";         //La compagnia da lavoro all'utente
+  
+  const string membership = "member";         //L'utente è membro del gruppo
+  
+  bool isValid(const string &r);
+  bool isCoherent(const string &r, const char &type_start, const char &type_target);
+  bool isDominant(const string &r);
+  bool isSymmetrical(const string &r);
+  string getInverse(const string &r);
 }
 #endif /* Account_h */

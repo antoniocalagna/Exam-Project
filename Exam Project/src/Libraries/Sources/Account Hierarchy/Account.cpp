@@ -121,6 +121,48 @@ bool relation::isValid(const std::string &r) {
           (r == relation::membership));
 }
 
+bool relation::isCoherent(const string &r, const char &type_start, const char &type_target)
+{
+  if (!isValid(r))
+    return false;
+  if (!Account::typeValid(type_start)||!Account::typeValid(type_target))
+    return false;
+  
+  if ((r==relation::friendship)||
+      (r == relation::knowings)||
+      (r == relation::parent)||
+      (r == relation::born)||
+      (r == relation::partner))
+  {
+    if ((type_start!=Account::user_type)||(type_target!=Account::user_type))
+      return false;
+  }
+  else if (r == relation::partnership)
+  {
+    if ((type_start!=Account::company_type)||(type_target!=Account::company_type))
+      return false;
+  }
+  else if (r == relation::employee)
+  {
+    if ((type_start!=Account::user_type)||(type_target!=Account::company_type))
+      return false;
+  }
+  else if (r == relation::employer)
+  {
+    if ((type_start!=Account::company_type)||(type_target!=Account::user_type))
+      return false;
+  }
+  else if (r == relation::membership)
+  {
+    if ((type_start==Account::group_type)&&(type_target!=Account::user_type))
+      return false;
+    if ((type_start==Account::user_type)&&(type_target!=Account::group_type))
+      return false;
+  }
+  
+  return true;
+}
+
 bool relation::isDominant(const string &r) {
   return r == relation::parent ||
          r == relation::employee ||

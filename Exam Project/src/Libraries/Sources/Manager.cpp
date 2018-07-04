@@ -367,7 +367,12 @@ int Manager::addRelationship(const string &ID_start, const string &ID_target, co
     return -4;
   if ((relationship == relation::born) && (!_checkAge(ID_target, ID_start)))
     return -4;
-
+  
+  //Controllo che la relazione avvenga tra tipologie di account appropriate
+  
+  if (!relation::isCoherent(relationship, getAccountType(ID_start), getAccountType(ID_target)))
+    return -5;
+  
   //Le relazioni mutue richiedono un arco bi-direzionato
   if ((relationship == relation::friendship) || (relationship == relation::partner) ||
       (relationship == relation::membership) || (relationship == relation::partnership))
