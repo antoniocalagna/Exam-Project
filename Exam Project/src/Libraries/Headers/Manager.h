@@ -37,6 +37,7 @@ public:
   vector<User> getAllUsers() const;
   vector<Company> getAllCompanies() const;
   vector<Group> getAllGroups() const;
+  vector<Account> getAllAccountsSorted() const;
   
   User getUser (const string &ID) const;
   Company getCompany (const string &ID) const;
@@ -66,19 +67,19 @@ public:
   
   bool deleteAccount (const string &ID);
   
+  //Elimina un ID e inserisce il nuovo account. Se i due ID coincidono viene sostituito solo l'account, mantenendo i post e le relazioni.
   bool replaceAccount (const string &ID_to_replace, const User &new_account);
   bool replaceAccount (const string &ID_to_replace, const Company &new_account);
   bool replaceAccount (const string &ID_to_replace, const Group &new_account);
   
-  vector<Account> getAllAccountsSorted() const;
-  
   int addRelationship (const string &ID_start, const string &ID_target, const string &relationship);
   bool deleteRelationship (const string &ID_start, const string &ID_target);
   
-  vector<string> getListConnection (const string &starting_ID, const string &relationship);
-  
   bool addPost (const Post &post_to_add, const string &whose_ID);
   bool deletePost (const string &whose_ID, int post_num);
+  
+  //Imposta/Elimina una interazione ad un post da parte di un certo ID.
+  //Per polimorfismo è possibile fornire il Post, coppia Post-ID(autore), ID(autore) e posizione nel suo vettore dei post.
   bool setReaction (const bool &like_1_dislike_0, const bool &add1_remove_0, const Post &post_liked, const string &reacting_ID);
   bool setReaction (const bool &like_1_dislike_0, const bool &add1_remove_0, const pair<string,Post> &post_liked, const string &reacting_ID);
   bool setReaction (const bool &like_1_dislike_0, const bool &add1_remove_0, const string &owner_ID, const unsigned int &pos, const string &reacting_ID);
@@ -106,14 +107,15 @@ public:
   
   pair<string, Post> MostLikedPost() const;
   pair<string, Post> MostDislikedPost() const;
-  string MostLiked_DislikedAccount(const bool &like_1_dislike_0) const;
-  pair<string, Post> RatioReactionPost(const bool &best_1_worst_0) const;
-  string RatioReactionAccount(const bool &best_1_worst_0) const;
+  string MostLiked_DislikedAccount(const bool &like_1_dislike_0) const; //Account con più likes/dislikes
+  pair<string, Post> RatioReactionPost(const bool &best_1_worst_0) const; //Post con miglior rapporto
+  string RatioReactionAccount(const bool &best_1_worst_0) const; //Account con miglior rapporto
   
-  vector<string> LonerPeople(const unsigned int &relations, const unsigned int &memberships, const bool &employed, const unsigned int &newsreactions) const;
+  vector<string> LonerPeople(const unsigned int &relations, const unsigned int &memberships, const bool &employed, const unsigned int &newsreactions) const; //Lupi solitari
   
-  vector<pair<string, float>> SortedNewsRatioCompanies(const bool &with_partners, const float &min_ratio) const;
+  vector<pair<string, float>> SortedNewsRatioCompanies(const bool &with_partners, const float &min_ratio) const; //Ricerca simpatia delle aziende
   
+  //Alberi Genealogici
   vector<vector<string>> GenealogicalTree(const string &whose_ID) const;
   vector<string> FormatTree (const vector<vector<string>> &tree_to_format) const;
   string PrintTree (const string &whose_ID) const;
@@ -123,16 +125,16 @@ private:
   unordered_map<string, User> _map_users;
   unordered_map<string, Company> _map_companies;
   unordered_map<string, Group> _map_groups;
-  Graph<string, string> _graph;
   unordered_map<string, vector<Post>> _map_posts;
+  Graph<string, string> _graph;
   
-  void _setNodes();
-  bool _exist_as_node(const string &ID_to_check) const;
-  
+  //Imposta opportunamente le chiavi delle mappe e i nodi del grafo
   void _setKeys(const vector<User> &users);
   void _setKeys(const vector<Company> &companies);
   void _setKeys(const vector<Group> &groups);
+  void _setNodes();
   
+  bool _exist_as_node(const string &ID_to_check) const; //Controlla l'esistenza di un ID ricorrendo al grafo
   bool _checkAge(const string &ID_old, const string &ID_young) const;   //Controlla che ID_old sia più vecchio di ID_young
   
 };

@@ -63,6 +63,24 @@ vector<Group> Manager::getAllGroups() const {
   return groups;
 }
 
+vector<Account> Manager::getAllAccountsSorted() const {
+  vector<Account> all;
+  
+  for (auto it_u = _map_users.begin(); it_u != _map_users.end(); it_u++) {
+    all.insert (upper_bound(all.begin(), all.end(), it_u->second), it_u->second);
+  }
+  
+  for (auto it_c = _map_companies.begin(); it_c != _map_companies.end(); it_c++) {
+    all.insert (upper_bound(all.begin(), all.end(), it_c->second), it_c->second);
+  }
+  
+  for (auto it_g = _map_groups.begin(); it_g != _map_groups.end(); it_g++) {
+    all.insert (upper_bound(all.begin(), all.end(), it_g->second), it_g->second);
+  }
+  
+  return all; //vettore binary-sorted
+}
+
 User Manager::getUser(const std::string &ID) const {
   size_t count = _map_users.count(ID);
   if (count != 0) {
@@ -108,21 +126,20 @@ vector<Post> Manager::getAllPosts() const {
 vector<pair<string, vector<Post>>> Manager::getPostsReactedBy(const string &ID) const {
   vector<pair<string, vector<Post>>> reacted_posts;
   pair<string, vector<Post>> tmp_post;
-  //vector<Post> all_posts = getAllPosts();
 
   for (auto it_map = _map_posts.begin(); it_map != _map_posts.end(); it_map++) {
     for (auto it_vect = it_map->second.begin(); it_vect != it_map->second.end(); it_vect++) {
 
       if (it_vect->ReactionExists(ID)) {
-        tmp_post.second.push_back(*it_vect); //prendo un post di un determnato id e lo metto dentro al vettore
-        tmp_post.first = it_map->first; //non so se è lecito
-        reacted_posts.push_back(tmp_post); //metto dentro la map
-        tmp_post.second.clear();
+        tmp_post.first = it_map->first; //Definisco la coppia: ID del proprietario
+        tmp_post.second.push_back(*it_vect); //Inserisco il post individuato nel vettore della coppia
+        
+        reacted_posts.push_back(tmp_post); //Inserisco la coppia nel vettore di coppie da ritornare
+        
+        tmp_post.second.clear(); //Pulisco la coppia prima di controllare i post di un nuovo account
         tmp_post.first.clear();
       }
-
     }
-    tmp_post.second.clear();              //Pulisci il vettore prima di controllare i post di un nuovo account
   }
 
   return reacted_posts;
@@ -142,6 +159,24 @@ vector<pair<string, vector<Post>>> Manager::getPostsWithoutReactionsOf(const str
 
 string Manager::getRelationship(const std::string &starting_ID, const std::string &target_ID) const {
   return _graph.edge(starting_ID, target_ID);
+}
+
+vector<string> Manager::getRelated(const string &ID, const string &relation) const {
+  if (!relation::isValid(relation))
+    return vector<string>();
+  
+  return _graph.branches(ID, relation);
+}
+
+vector<pair<pair<string, string>, string>> Manager::getAllRelationships(const string &ID) const {
+  vector<pair<pair<string, string>, string>> relations;
+  vector<pair<string, string>> outwardsBranches = _graph.outwardsBranches(ID);
+  
+  for (auto it_in = outwardsBranches.begin(); it_in != outwardsBranches.end(); it_in++) {
+    relations.push_back(make_pair(make_pair(ID, it_in->first), it_in->second));
+  }
+  
+  return relations;
 }
 
 vector<string> Manager::getUsersIDs() const {
@@ -174,19 +209,14 @@ vector<string> Manager::getGroupsIDs() const {
   return IDs;
 }
 
-vector<string> Manager::getRelated(const string &ID, const string &relation) const {
-  return _graph.branches(ID, relation);
-}
-
-vector<pair<pair<string, string>, string>> Manager::getAllRelationships(const string &ID) const {
-  vector<pair<pair<string, string>, string>> relations;
-  vector<pair<string, string>> outwardsBranches = _graph.outwardsBranches(ID);
-
-  for (auto it_in = outwardsBranches.begin(); it_in != outwardsBranches.end(); it_in++) {
-    relations.push_back(make_pair(make_pair(ID, it_in->first), it_in->second));
-  }
-
-  return relations;
+char Manager::getAccountType(const std::string &ID) const {
+  if (_map_users.count(ID) == 1) //L'ID è un utente
+    return Account::user_type;
+  else if (_map_groups.count(ID) == 1)
+    return Account::group_type;
+  else if (_map_companies.count(ID) == 1)
+    return Account::company_type;
+  return 0;
 }
 
 bool Manager::accountExists(const std::string &ID) const {
@@ -323,33 +353,6 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const Group &new_
     return false;
 }
 
-vector<Account> Manager::getAllAccountsSorted() const {
-  vector<Account> all;
-
-  for (auto it_u = _map_users.begin(); it_u != _map_users.end(); it_u++) {
-    all.insert (upper_bound(all.begin(), all.end(), it_u->second), it_u->second);
-  }
-
-  for (auto it_c = _map_companies.begin(); it_c != _map_companies.end(); it_c++) {
-    all.insert (upper_bound(all.begin(), all.end(), it_c->second), it_c->second);
-  }
-
-  for (auto it_g = _map_groups.begin(); it_g != _map_groups.end(); it_g++) {
-    all.insert (upper_bound(all.begin(), all.end(), it_g->second), it_g->second);
-  }
-
-  return all; //vettore binary-sorted
-}
-
-char Manager::getAccountType(const std::string &ID) const {
-  if (_map_users.count(ID) == 1) //L'ID è un utente
-    return Account::user_type;
-  else if (_map_groups.count(ID) == 1)
-    return Account::group_type;
-  else if (_map_companies.count(ID) == 1)
-    return Account::company_type;
-  return 0;
-}
 
 int Manager::addRelationship(const string &ID_start, const string &ID_target, const string &relationship) {
   if (!_exist_as_node(ID_start)) //Controllo che gli ID esistano.
@@ -392,12 +395,6 @@ bool Manager::deleteRelationship(const std::string &ID_start, const std::string 
 
   _graph.bsetEdge(ID_start, ID_target, Graph<string, string>::no_edge);
   return true;
-}
-
-vector<string> Manager::getListConnection(const std::string &starting_ID, const std::string &relationship) {
-  if (!relation::isValid(relationship))
-    return vector<string>();
-  return _graph.branches(starting_ID, relationship);
 }
 
 bool Manager::addPost(const Post &post_to_add, const std::string &whose_ID) {
@@ -533,57 +530,6 @@ bool Manager::setReaction(const bool &like_1_dislike_0, const bool &add1_remove_
     else
       return it_map->second[pos].RemoveDislike(reacting_ID);
   }
-}
-
-//PRIVATE METHODS
-
-void Manager::_setNodes() {
-  for (auto it_u = _map_users.begin(); it_u != _map_users.end(); it_u++) {
-    _graph.addNode(it_u->second.getID());
-  }
-
-  for (auto it_c = _map_companies.begin(); it_c != _map_companies.end(); it_c++) {
-    _graph.addNode(it_c->second.getID());
-  }
-
-  for (auto it_g = _map_groups.begin(); it_g != _map_groups.end(); it_g++) {
-    _graph.addNode(it_g->second.getID());
-  }
-}
-
-bool Manager::_exist_as_node(const string &ID_to_check) const {
-  return _graph.find(ID_to_check) != _graph.nodesNumber();
-}
-
-void Manager::_setKeys(const vector<User> &users) {
-  for (auto it = users.begin(); it != users.end(); it++) {
-    _map_users[it->getID()] = *it;
-    if (_map_posts.count(it->getID()) == 0)
-      _map_posts[it->getID()] = vector<Post>();
-  }
-}
-
-void Manager::_setKeys(const vector<Company> &companies) {
-  for (auto it = companies.begin(); it != companies.end(); it++) {
-    _map_companies[it->getID()] = *it;
-    if (_map_posts.count(it->getID()) == 0)
-      _map_posts[it->getID()] = vector<Post>();
-  }
-}
-
-void Manager::_setKeys(const vector<Group> &groups) {
-  for (auto it = groups.begin(); it != groups.end(); it++) {
-    _map_groups[it->getID()] = *it;
-    if (_map_posts.count(it->getID()) == 0)
-      _map_posts[it->getID()] = vector<Post>();
-  }
-}
-
-bool Manager::_checkAge(const std::string &ID_old, const std::string &ID_young) const {
-  //Funzione chiamata a controlli già effettuati
-  Date old_birth = _map_users.at(ID_old).getBirth();
-  Date young_birth = _map_users.at(ID_young).getBirth();
-  return old_birth < young_birth;
 }
 
 //STATISTICS
@@ -1192,4 +1138,55 @@ vector<string> Manager::PrintAllTrees() const {
   }
 
   return trees_to_print;
+}
+
+//PRIVATE METHODS
+
+void Manager::_setKeys(const vector<User> &users) {
+  for (auto it = users.begin(); it != users.end(); it++) {
+    _map_users[it->getID()] = *it;
+    if (_map_posts.count(it->getID()) == 0)
+      _map_posts[it->getID()] = vector<Post>();
+  }
+}
+
+void Manager::_setKeys(const vector<Company> &companies) {
+  for (auto it = companies.begin(); it != companies.end(); it++) {
+    _map_companies[it->getID()] = *it;
+    if (_map_posts.count(it->getID()) == 0)
+      _map_posts[it->getID()] = vector<Post>();
+  }
+}
+
+void Manager::_setKeys(const vector<Group> &groups) {
+  for (auto it = groups.begin(); it != groups.end(); it++) {
+    _map_groups[it->getID()] = *it;
+    if (_map_posts.count(it->getID()) == 0)
+      _map_posts[it->getID()] = vector<Post>();
+  }
+}
+
+void Manager::_setNodes() {
+  for (auto it_u = _map_users.begin(); it_u != _map_users.end(); it_u++) {
+    _graph.addNode(it_u->second.getID());
+  }
+  
+  for (auto it_c = _map_companies.begin(); it_c != _map_companies.end(); it_c++) {
+    _graph.addNode(it_c->second.getID());
+  }
+  
+  for (auto it_g = _map_groups.begin(); it_g != _map_groups.end(); it_g++) {
+    _graph.addNode(it_g->second.getID());
+  }
+}
+
+bool Manager::_exist_as_node(const string &ID_to_check) const {
+  return _graph.find(ID_to_check) != _graph.nodesNumber();
+}
+
+bool Manager::_checkAge(const std::string &ID_old, const std::string &ID_young) const {
+  //Funzione chiamata a controlli già effettuati
+  Date old_birth = _map_users.at(ID_old).getBirth();
+  Date young_birth = _map_users.at(ID_young).getBirth();
+  return old_birth < young_birth;
 }
