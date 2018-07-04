@@ -78,7 +78,7 @@ Clock Post::getTime() const {
 vector<string> Post::getLikes() const {
   vector<string> out(_likes.size());
   int i = 0;
-  for(auto it = _likes.begin(); it != _likes.end(); it++, i++)
+  for(auto it = _likes.begin(); it != _likes.end(); it++, i++) //trasferisco i likes da un set ad un vettore
     out[i] = *it;
   return out;
 }
@@ -86,7 +86,7 @@ vector<string> Post::getLikes() const {
 vector<string> Post::getDislikes() const {
   vector<string> out(_dislikes.size());
   int i = 0;
-  for(auto it = _dislikes.begin(); it != _dislikes.end(); it++, i++)
+  for(auto it = _dislikes.begin(); it != _dislikes.end(); it++, i++) //trasferisco i dislikes da un set ad un vettore
     out[i] = *it;
   return out;
 }
@@ -101,7 +101,7 @@ bool Post::operator!=(const Post &to_be_compared) {
 }
 
 bool Post::operator>(const Post &is_smaller) {
-  return (_likes.size() > is_smaller._likes.size()); //si farà con tutti sti punti, bho
+  return (_likes.size() > is_smaller._likes.size());
 }
 
 bool Post::operator<(const Post &is_greater) {
