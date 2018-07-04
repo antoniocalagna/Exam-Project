@@ -117,6 +117,8 @@ vector<pair<string, vector<Post>>> Manager::getPostsReactedBy(const string &ID) 
         tmp_post.second.push_back(*it_vect); //prendo un post di un determnato id e lo metto dentro al vettore
         tmp_post.first = it_map->first; //non so se è lecito
         reacted_posts.push_back(tmp_post); //metto dentro la map
+        tmp_post.second.clear();
+        tmp_post.first.clear();
       }
 
     }
