@@ -231,13 +231,18 @@ bool Manager::deleteAccount(const string &ID) {
     return false;
   }
 
-  _map_users.erase(ID);
-  _map_groups.erase(ID);
-  _map_companies.erase(ID);
+  char type = getAccountType(ID);
+  if (type==Account::user_type)
+    _map_users.erase(ID);
+  if (type==Account::company_type)
+    _map_companies.erase(ID);
+  if (type==Account::group_type)
+    _map_groups.erase(ID);
+  
   _graph.popNode(ID);
   _map_posts.erase(ID);
 
-  if (getAccountType(ID) == Account::user_type) {
+  if (type == Account::user_type) {
     //Elimino da tutti i post eventuali interazioni effettuate dall'account da cancellare
     for (auto it_map = _map_posts.begin(); it_map != _map_posts.end(); it_map++) {
       for (auto it_vect = it_map->second.begin(); it_vect != it_map->second.end(); it_vect++) {
@@ -263,12 +268,13 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const User &new_a
 
   size_t count = _map_users.count(ID_to_replace);
   if (count != 0) {
-    _map_users[ID_to_replace] = new_account;
-    _graph.editNode(ID_to_replace, new_account.getID());
-    _map_posts.erase(ID_to_replace);
+    deleteAccount(ID_to_replace);
+    _map_users[new_account.getID()] = new_account;
+    _graph.addNode(new_account.getID());
     _map_posts[new_account.getID()] = vector<Post>();
     return true;
-  } else
+  }
+  else
     return false;
 }
 
@@ -283,12 +289,13 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const Company &ne
 
   size_t count = _map_companies.count(ID_to_replace);
   if (count != 0) {
-    _map_companies[ID_to_replace] = new_account;
-    _graph.editNode(ID_to_replace, new_account.getID());
-    _map_posts.erase(ID_to_replace);
+    deleteAccount(ID_to_replace);
+    _map_companies[new_account.getID()] = new_account;
+    _graph.addNode(new_account.getID());
     _map_posts[new_account.getID()] = vector<Post>();
     return true;
-  } else
+  }
+  else
     return false;
 }
 
@@ -303,12 +310,13 @@ bool Manager::replaceAccount(const std::string &ID_to_replace, const Group &new_
 
   size_t count = _map_users.count(ID_to_replace);
   if (count != 0) {
-    _map_groups[ID_to_replace] = new_account;
-    _graph.editNode(ID_to_replace, new_account.getID());
-    _map_posts.erase(ID_to_replace);
+    deleteAccount(ID_to_replace);
+    _map_groups[new_account.getID()] = new_account;
+    _graph.addNode(new_account.getID());
     _map_posts[new_account.getID()] = vector<Post>();
     return true;
-  } else
+  }
+  else
     return false;
 }
 
