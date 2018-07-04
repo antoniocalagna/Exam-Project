@@ -32,7 +32,6 @@ set(                                                #Qui si fa una sorta di asse
         ${HDR}/Account\ Hierarchy/Company.h     ${SRC}/Account\ Hierarchy/Company.cpp
         ${HDR}/Account\ Hierarchy/Group.h       ${SRC}/Account\ Hierarchy/Group.cpp
         ${HDR}/Account\ Hierarchy/User.h        ${SRC}/Account\ Hierarchy/User.cpp
-        main_di_clara.hpp
         )
 
 
