@@ -603,13 +603,13 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     cout << "Legal location:\n>";
     getline(cin, tmp_loc);
     if (!Account::nameValid(tmp_loc)) {
-      std::cout << "Loaction not valid." << std::endl;
+      std::cout << "Location not valid." << std::endl;
       return;
     }
     cout << "Type of activity:\n>";
     getline(cin, tmp_act);
     if (!Account::nameValid(tmp_act)) {
-      std::cout << "Activitty not valid." << std::endl;
+      std::cout << "Activity not valid." << std::endl;
       return;
     }
     cout << "Subscription:\n>";
@@ -632,7 +632,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
       cout << "Error! This ID already exists!";
       return;
     }
-    new_data << new_g;
+    new_data << new_g;                                                  //aggiungi il nuovo gruppo al buffer
   }
   else if (what_to_add == "company") {
     string tmp_n, tmp_id, tmp_finloc, tmp_oploc, tmp_p, d1, d2;
@@ -687,7 +687,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
       cout << "Error! This ID already exists." << endl;
       return;
     }
-    new_data << new_c;  //Metti la nuova compagnia nel buffer
+    new_data << new_c;                                                  //aggiungi la nuova compagnia nel buffer
   }
   else if (what_to_add == "relation") {
     int error;
@@ -750,7 +750,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     }
     post_tmp.setLikes(likes);
     
-    input.clear(); //Altrimenti non entra nel ciclo dei dislike
+    input.clear(); //Altrimenti non entra nel ciclo dei dislikes
     cout << "Dislikes (insert '-' at the end of the list):\n";
     while (input != "-") {
       cout << ">";
