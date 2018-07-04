@@ -721,13 +721,10 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
 
     cout << "Date and time:\n>";
     getline(cin, d_t);
-    while (!post_tmp.setDate_Time(d_t)) {            //mi accerto che i dati inseriti siano validi
-      cout << "\nError! Date or Time are not valid!";//continuo a richiederli finchè almeno la data non sia inserita bene
-      cout << "Date and time:\n>";
-      getline(cin, d_t);
-
+    if (!post_tmp.setDate_Time(d_t)) {            //mi accerto che i dati inseriti siano validi
+      cout << "\nError! Date or Time are not valid!";
+      return;
     }
-
 
     cout << "Likes (insert '-' at the end of the list):\n";
     while (input != "-") {
