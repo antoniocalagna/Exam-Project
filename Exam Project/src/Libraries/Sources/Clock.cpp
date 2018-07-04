@@ -15,7 +15,7 @@ Clock::Clock()
   _seconds=0;
 }
 
-Clock::Clock(const int &hours, const int &minutes, const int &seconds)
+Clock::Clock(const unsigned int &hours, const unsigned int &minutes, const unsigned int &seconds)
 {
   _hours=hours;
   _minutes=minutes;
@@ -23,7 +23,7 @@ Clock::Clock(const int &hours, const int &minutes, const int &seconds)
   CorrectValues();
 }
 
-Clock::Clock(const int &hours, const int &minutes)
+Clock::Clock(const unsigned int &hours, const unsigned int &minutes)
 {
   _hours=hours;
   _minutes=minutes;
@@ -43,17 +43,17 @@ Clock::Clock(const string &time)
   scanTimeByStr(time);
 }
 
-void Clock::setHours(const int &hours)
+void Clock::setHours(const unsigned int &hours)
 {
   _hours=hours;
 }
 
-void Clock::setMinutes(const int &minutes)
+void Clock::setMinutes(const unsigned int &minutes)
 {
   _minutes=minutes;
 }
 
-void Clock::setSeconds(const int &seconds)
+void Clock::setSeconds(const unsigned int &seconds)
 {
   _seconds=seconds;
 }
@@ -190,13 +190,6 @@ Clock Clock::operator+(const Clock &to_be_added)
   output.CorrectValues();
   
   return output;
-}
-
-void Clock::operator=(const Clock &to_be_assigned)
-{
-  this -> _hours = to_be_assigned._hours;
-  this -> _minutes = to_be_assigned._minutes;
-  this -> _seconds = to_be_assigned._seconds;
 }
 
 const Clock& Clock::operator++()

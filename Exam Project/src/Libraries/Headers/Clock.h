@@ -23,15 +23,15 @@ public:
   Clock();
   ~Clock()=default;
   
-  Clock (const int &hours, const int &minutes, const int &seconds);
-  Clock (const int &hours, const int &minutes);
-  Clock (const string &time);
+  Clock(const unsigned int &hours, const unsigned int &minutes, const unsigned int &seconds);
+  Clock(const unsigned int &hours, const unsigned int &minutes);
+  explicit Clock (const string &time);
   
   Clock (const Clock &to_copy);
   
-  void setHours(const int &hours);
-  void setMinutes(const int &minutes);
-  void setSeconds(const int &seconds);
+  void setHours(const unsigned int &hours);
+  void setMinutes(const unsigned int &minutes);
+  void setSeconds(const unsigned int &seconds);
   
   int getHours() const;
   int getMinutes() const;
@@ -49,7 +49,7 @@ public:
   
   friend ostream& operator<< (ostream& stream, const Clock& d);
   Clock operator+ (const Clock &to_be_added);
-  void operator=(const Clock &to_be_assigned);
+  Clock &operator=(const Clock &to_be_assigned) = default;  //Operatore di uguaglianza triviale
   const Clock& operator++();
   const Clock operator++(int);
   bool operator==(const Clock &to_be_compared);
