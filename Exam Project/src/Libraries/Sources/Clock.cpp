@@ -142,9 +142,9 @@ void Clock::scanTimeByStr(std::string s)
   
   stringstream sstream (s);
   sstream>>_hours;
-  sstream.ignore(1);
+  sstream.ignore(1);  //Ignora i :
   sstream>>_minutes;
-  sstream.ignore(1);
+  sstream.ignore(1);  //Ignora i :
   if(!sstream.good()) {
     _seconds = 0;
   }

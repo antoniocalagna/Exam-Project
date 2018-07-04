@@ -193,7 +193,7 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
   command >> what_to_set >> ID_to_set;      //Acquisisci i parametri dalla linea di comando
   
   if (what_to_set.empty() || ID_to_set.empty()) {   //Controlla che i parametri siano stati effettivamente inseriti
-    cout << "Error! I do not understand what information you'd like to set." << endl;
+    cout << "Error! Please specify what field to set." << endl;
     return;
   }
   
@@ -596,7 +596,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     string who1, who2, type_rel;
     command >> who1 >> type_rel >> who2;
     if (who1.empty() || who2.empty() || type_rel.empty()) {
-      cout << "Error! Your data were not inserted properly, I got some of them empty. Please retry!" << endl;
+      cout << "Error! Please insert the relation in form <id1> <relation_to> <id2>." << endl;
       return;
     }
     error = manager.addRelationship(who1, who2, type_rel);
@@ -926,7 +926,7 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
       }
       born_d.scanDateByStr(date);
       num = manager.NumBornAfter(born_d);
-      cout << "The number of people born after your date is: " << num << endl;
+      cout << "The number of people born after this date is: " << num << endl;
       return;
     }
     else {
@@ -996,7 +996,7 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
       cout << "The Most Disliked Account is:\n" << manager.MostLiked_DislikedAccount(false);
     }
     else {
-      cout << "Error! I do not understand what statistic you'd like to retreive." << endl;
+      cout << "Error! Cannot get statistscs of \"" << param2 <<"\"." << endl;
       return;
     }
   }
