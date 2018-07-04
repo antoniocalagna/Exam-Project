@@ -2,7 +2,7 @@
 // Created by Alex on 06/06/2018.
 //
 
-#include "FileHandler.h"
+#include "FileHandler.hpp"
 
 #ifdef _WIN32
 const bool FH::FileHandler::win_system = true;

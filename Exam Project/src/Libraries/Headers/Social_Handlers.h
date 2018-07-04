@@ -5,7 +5,7 @@
 #ifndef SOCIAL_NETWORK_SOCIAL_HANDLERS_H
 #define SOCIAL_NETWORK_SOCIAL_HANDLERS_H
 
-#include "FileHandler.h"
+#include "FileHandler.hpp"
 #include "User.h"
 #include "Group.h"
 #include "Company.h"

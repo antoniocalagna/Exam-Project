@@ -22,7 +22,7 @@ set(                                                #Qui si fa una sorta di asse
 
         ${HDR}/Clock.h              ${SRC}/Clock.cpp
         ${HDR}/Date.h               ${SRC}/Date.cpp
-        ${HDR}/FileHandler.h        ${SRC}/FileHandler.cpp
+        ${HDR}/FileHandler.hpp      ${SRC}/FileHandler.cpp
         ${HDR}/Social_Handlers.h    ${SRC}/Social_Handlers.cpp
         ${HDR}/Manager.h            ${SRC}/Manager.cpp
         ${HDR}/Post.h               ${SRC}/Post.cpp
