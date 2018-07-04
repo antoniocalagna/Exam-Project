@@ -48,6 +48,7 @@ void Shell::help(std::stringstream &command, Manager &manager, IOBuffer &new_dat
             << std::endl;
   std::cout << "save\n\tSaves current status on file." << std::endl;
   std::cout << "autosave on/off\n\tTurns autosave on/off." << std::endl;
+  std::cout << "exit\n\tSaves and quits the program." << std::endl;
 }
 
 void Shell::list(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete) {
