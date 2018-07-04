@@ -129,7 +129,7 @@ private:
   void _setKeys(const vector<Company> &companies);
   void _setKeys(const vector<Group> &groups);
   
-  bool _checkAge(const string &ID_old, const string &ID_young) const;
+  bool _checkAge(const string &ID_old, const string &ID_young) const;   //Controlla che ID_old sia più vecchio di ID_young
   
 };
 #endif /* Manager_h */ 
