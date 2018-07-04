@@ -1194,6 +1194,12 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
       std::cout << "No trees found." << std::endl;
       return;
     }
+    
+    for (auto it=trees.begin(); it!=trees.end(); it++)
+    {
+      cout << *it << endl;
+    }
+    
     std::cout << "Saving trees..." << std::endl;
     std::ofstream f;
     for (int i = 0;
