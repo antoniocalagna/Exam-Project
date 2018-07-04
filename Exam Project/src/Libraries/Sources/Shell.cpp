@@ -58,7 +58,7 @@ void Shell::list(std::stringstream &command, Manager &manager, IOBuffer &new_dat
     std::cout << "No accounts found." << std::endl;
     return;
   }
-  
+
   //Ordina il vettore per stampare gli account in base al loro tipo
   std::sort(accounts.begin(),
             accounts.end(),
@@ -78,21 +78,23 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
   if (what_to_get == "info") {
     std::string requested_id;
     command >> requested_id;
-    char account_type = manager.getAccountType(requested_id);   //Controlla il tipo di account di cui sono richieste le informazioni
+    char account_type = manager.getAccountType(
+            requested_id);   //Controlla il tipo di account di cui sono richieste le informazioni
     if (account_type == 0) {                                    //Account non trovato
       std::cout << "Requested ID not found" << std::endl;
       return;
     }
 
     else if (account_type == Account::user_type) {
-      User user = manager.getUser(requested_id);                //Prendi una copia dell'utente e stampane le informazioni
+      User user = manager.getUser(
+              requested_id);                //Prendi una copia dell'utente e stampane le informazioni
       std::cout << "Name: " << user.getName() << "\n"
                 << "Surname: " << user.getSurname() << "\n"
                 << "Gender: " << user.getGender() << "\n"
                 << "Address: " << user.getAddress() << "\n"
                 << "Birth Date: " << user.getBirth() << "\n"
                 << "Subscription Date: " << user.getSubscription() << std::endl;
-      
+
     }
 
     else if (account_type == Account::group_type) {
@@ -105,7 +107,8 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
     }
 
     else if (account_type == Account::company_type) {
-      Company company = manager.getCompany(requested_id);       //Prendi una copia della compagnia e stampane le informazioni
+      Company company = manager.getCompany(
+              requested_id);       //Prendi una copia della compagnia e stampane le informazioni
       std::cout << "Name: " << company.getName() << "\n"
                 << "Financial location: " << company.getFinancialLocation() << "\n"
                 << "Operative location: " << company.getOperativeLocation() << "\n"
@@ -134,8 +137,7 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
     if (posts.empty()) {
       std::cout << "No posts from " << id << " found" << std::endl;
       return;
-    }
-    else {
+    } else {
       for (int i = 0; i < posts.size(); i++) {                            //Stampa tutti i post
         std::cout << "\n" << i + 1 << ":" << std::endl                    //i = Indice del post
                   << "\n" << posts[i].getNews() << "\n" << std::endl
@@ -146,7 +148,7 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
         std::vector<std::string> likes, dislikes;                       //Preparati a leggere i like e i dislike
         likes = posts[i].getLikes();
         dislikes = posts[i].getDislikes();
-        
+
         if (!likes.empty()) {                                           //Stampa i like (se ce ne sono)
           std::cout << "Likes: ";
           for (int j = 0; j < likes.size(); j++) {
@@ -156,9 +158,9 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
           }
           std::cout << std::endl;
         }
-        
+
         likes.clear();                              //Il vettore non serve più
-        
+
         if (!dislikes.empty()) {                    //Stampa i dislike se ce ne sono
           std::cout << "Dislikes: ";
           for (int j = 0; j < dislikes.size(); j++) {
@@ -175,16 +177,17 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
   else if (relation::isValid(what_to_get)) {
     std::string id;
     command >> id;
-    std::vector<std::string> relations = manager.getRelated(id, what_to_get); //Prendi una lista di tutte le relzioni del tipo richiesto
+    std::vector<std::string> relations = manager.getRelated(id,
+                                                            what_to_get); //Prendi una lista di tutte le relzioni del tipo richiesto
     if (relations.empty()) {
-      if (what_to_get==relation::parent || what_to_get==relation::born)
+      if (what_to_get == relation::parent || what_to_get == relation::born)
         std::cout << id << " is " << what_to_get << " of no one." << std::endl;
       else
         std::cout << id << " has no " << what_to_get << "." << std::endl;
       return;
     }
-    
-    if (what_to_get==relation::born)
+
+    if (what_to_get == relation::born)
       std::cout << id << "'s parents are: " << std::endl;
     for (int i = 0; i < relations.size(); i++) {                              //Stampale
       std::cout << relations[i] << std::endl;
@@ -200,28 +203,28 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
 }
                                             //Imposta dati specifici
 void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete) {
-  
+
   string what_to_set, ID_to_set;
   command >> what_to_set >> ID_to_set;      //Acquisisci i parametri dalla linea di comando
-  
+
   if (what_to_set.empty() || ID_to_set.empty()) {   //Controlla che i parametri siano stati effettivamente inseriti
     cout << "Error! Please specify what field to set." << endl;
     return;
   }
-  
+
   char type = manager.getAccountType(ID_to_set);    //Reperisci il tipo di account
   if (type == Account::user_type) {
     User user_old;                                  //User a cui cambiare le info
     User user_new;                                  //Utente modificato
-    
+
     user_old = manager.getUser(ID_to_set);          //Se l'id non esiste, user_old è un default constructor
     user_new = user_old;                            //Fai momentaneamente una copia
-    
+
     if (user_old == User()) {                       //Controlla che l'ID esista
       cout << "Error! This ID is not valid." << endl;
       return;
     }
-    
+
     if (what_to_set == "name") {
       string new_name;
       cout << "Please insert the new " << what_to_set << "." << endl;
@@ -230,13 +233,12 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
         cout << "Error! This name does not respect the rules." << endl;
       }
       user_new.setName(new_name);                   //Modifica il dato nel nuovo utente
-      
+
       if (!manager.replaceAccount(ID_to_set, user_new)) { //Il manager non è riuscuto a rimpiazzare l'account
         cout << "Error! " << what_to_set << " could not be modified." << endl;
         return;
       }
-    }
-    else if (what_to_set == "surname") {
+    } else if (what_to_set == "surname") {
       string new_surname;
       cout << "Please insert the new" << what_to_set << "." << endl;
       getline(cin, new_surname);
@@ -248,8 +250,7 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
         cout << "Error! " << what_to_set << " could not be modified." << endl;
         return;
       }
-    }
-    else if (what_to_set == "gender") {
+    } else if (what_to_set == "gender") {
       char new_gender;
       cout << "Please insert the new gender." << endl;
       cin >> new_gender;
@@ -262,8 +263,7 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
         cout << "Error! " << what_to_set << " could not be modified." << endl;
         return;
       }
-    }
-    else if (what_to_set == "birth") {
+    } else if (what_to_set == "birth") {
       string new_birth;
       Date birth;
       cout << "Please insert the new birth date." << endl;
@@ -275,13 +275,11 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
           cout << "Error! " << what_to_set << " could not be modified." << endl;
           return;
         }
-      }
-      else {
+      } else {
         cout << "Error! Date is not valid." << endl;
         return;
       }
-    }
-    else if (what_to_set == "address") {
+    } else if (what_to_set == "address") {
       string new_addr;
       cout << "Please insert the new address." << endl;
       getline(cin, new_addr);                         //Acquisisci l'indirizzo
@@ -293,8 +291,7 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
         cout << "Error! " << what_to_set << " could not be modified." << endl;
         return;
       }
-    }
-    else if (what_to_set == "subscription") {
+    } else if (what_to_set == "subscription") {
       string new_sub;
       Date sub;
       cout << "Please insert the new date of subscription (in format dd/mm/yyyy)." << endl;
@@ -306,30 +303,27 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
           cout << "Error! " << what_to_set << " could not be modified." << endl;
           return;
         }
-      }
-      else {  //Data non valida
+      } else {  //Data non valida
         cout << "Error! This date is not valid." << endl;
         return;
       }
-    }
-    else {
+    } else {
       std::cout << "Cannot set \"" << what_to_set << "\" on a User." << std::endl;
     }
     data_to_delete << user_old;         //Carica la versione vecchia dell'utente nel buffer dei dati da eliminare
     new_data << user_new;               //Carica invece la versione nuova tra i dati da aggiungere
     cout << "Done!" << endl;
-  }
-  else if (type == Account::group_type) {
+  } else if (type == Account::group_type) {
     Group group_old;
     Group group_new;
     group_old = manager.getGroup(ID_to_set);
     group_new = group_old;              //Fai momentaneamente una copia che verrà modificata in seguito
-    
+
     if (group_new == Group()) {         //Il manager non ha trovato il gruppo
       cout << "Error! This ID is not valid." << endl;
       return;
     }
-    
+
     if (what_to_set == "name") {
       string new_name;
       cout << "Please insert the new name." << endl;
@@ -342,8 +336,7 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
         cout << "Error! " << what_to_set << " could not be modified." << endl;
         return;
       }
-    }
-    else if (what_to_set == "subscription") {
+    } else if (what_to_set == "subscription") {
       string new_sub;
       Date sub;
       cout << "Please insert the new date of subscription (in format dd/mm/yyyy)." << endl;
@@ -355,13 +348,11 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
           cout << "Error! Could not modify this parameter." << endl;
           return;
         }
-      }
-      else {
+      } else {
         cout << "Error! This date is not valid." << endl;
         return;
       }
-    }
-    else if (what_to_set == "location") {
+    } else if (what_to_set == "location") {
       string new_loc;
       cout << "Please insert the new legal location." << endl;
       getline(cin, new_loc);
@@ -374,8 +365,7 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
         cout << "Error! " << what_to_set << " could not be modified." << endl;
         return;
       }
-    }
-    else if (what_to_set == "type_activity") {
+    } else if (what_to_set == "type_activity") {
       string new_act;
       cout << "Please insert the new type of activity." << endl;
       getline(cin, new_act);
@@ -387,8 +377,7 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
         cout << "Error! " << what_to_set << " could not be modified." << endl;
         return;
       }
-    }
-    else if (what_to_set == "inception") {
+    } else if (what_to_set == "inception") {
       string new_inc;
       Date inc;
       cout << "Please insert the new date of inception (in format dd/mm/yyyy)." << endl;
@@ -400,31 +389,28 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
           cout << "Error! " << what_to_set << " could not be modified." << endl;
           return;
         }
-      }
-      else {
+      } else {
         cout << "Error! The date is not valid." << endl;
         return;
       }
-    }
-    else {
+    } else {
       cout << "Error! Cannot set \"" << what_to_set << " on a Group." << endl;
       return;
     }
-    
+
     new_data << group_new;
     data_to_delete << group_old;
     cout << "Done!" << endl;
-  }
-  else if (type == Account::company_type) {
+  } else if (type == Account::company_type) {
     Company company_old;
     Company company_new;
     company_old = manager.getCompany(ID_to_set);
     company_new = company_old;
-    
+
     if (company_old == Company()) {
       cout << "Error! This ID is not valid." << endl;
     }
-    
+
     if (what_to_set == "name") {
       string new_name;
       cout << "Please insert the new name." << endl;
@@ -438,8 +424,7 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
         cout << "Error! " << what_to_set << " could not be modified." << endl;
         return;
       }
-    }
-    else if (what_to_set == "subscription") {
+    } else if (what_to_set == "subscription") {
       string new_sub;
       Date sub;
       cout << "Please insert the new date of subscription (in format dd/mm/yyyy)." << endl;
@@ -451,13 +436,11 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
           cout << "Error! This ID already exist." << endl;
           return;
         }
-      }
-      else {
+      } else {
         cout << "Error! This date is not valid." << endl;
         return;
       }
-    }
-    else if (what_to_set == "inception") {
+    } else if (what_to_set == "inception") {
       string new_inc;
       Date inc;
       cout << "Please insert the new date of inception (in format dd/mm/yyyy)." << endl;
@@ -469,14 +452,12 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
           cout << "Error! " << what_to_set << " could not be modified." << endl;
           return;
         }
-      }
-      else {
+      } else {
         cout << "Error! This date is not valid." << endl;
         return;
       }
-      
-    }
-    else if (what_to_set == "financial_location") {
+
+    } else if (what_to_set == "financial_location") {
       string new_loc;
       cout << "Please insert the new financial location." << endl;
       getline(cin, new_loc);
@@ -489,8 +470,7 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
         cout << "Error! " << what_to_set << " could not be modified." << endl;
         return;
       }
-    }
-    else if (what_to_set == "operative_location") {
+    } else if (what_to_set == "operative_location") {
       string new_loc;
       cout << "Please insert the new operative location." << endl;
       getline(cin, new_loc);
@@ -503,8 +483,7 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
         cout << "Error! " << what_to_set << " could not be modified." << endl;
         return;
       }
-    }
-    else if (what_to_set == "products") {
+    } else if (what_to_set == "products") {
       string new_prod;
       cout << "Please insert the new type of products." << endl;
       getline(cin, new_prod);
@@ -518,7 +497,7 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
         return;
       }
     }
-    
+
     new_data << company_new;
     data_to_delete << company_old;
     std::cout << "Done!" << std::endl;
@@ -583,16 +562,15 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
       std::cout << "Gender not valid." << std::endl;
       return;
     }
-    
+
     User new_u(tmp_n, tmp_s, tmp_id, tmp_a, tmp_sub, tmp_b, tmp_g);
-    
+
     if (!manager.addAccount(new_u)) {
       cout << "Error! Account could not be created." << endl;
       return;
     }
     new_data << new_u;                                                  //Aggiungi il nuovo utente al buffer
-  }
-  else if (what_to_add == "group") {
+  } else if (what_to_add == "group") {
     string tmp_n, tmp_id, tmp_loc, tmp_act, d1, d2;
     Date tmp_sub, tmp_inc;
     cout << "Id:\n>";
@@ -610,13 +588,13 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     cout << "Legal location:\n>";
     getline(cin, tmp_loc);
     if (!Account::nameValid(tmp_loc)) {
-      std::cout << "Loaction not valid." << std::endl;
+      std::cout << "Location not valid." << std::endl;
       return;
     }
     cout << "Type of activity:\n>";
     getline(cin, tmp_act);
     if (!Account::nameValid(tmp_act)) {
-      std::cout << "Activitty not valid." << std::endl;
+      std::cout << "Activity not valid." << std::endl;
       return;
     }
     cout << "Subscription:\n>";
@@ -633,15 +611,14 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
       return;
     }
     tmp_inc.scanDateByStr(d2);
-    
+
     Group new_g(tmp_n, tmp_id, tmp_loc, tmp_act, tmp_sub, tmp_inc);
     if (!manager.addAccount(new_g)) {
       cout << "Error! This ID already exists!";
       return;
     }
-    new_data << new_g;
-  }
-  else if (what_to_add == "company") {
+    new_data << new_g;                                                  //aggiungi il nuovo gruppo al buffer
+  } else if (what_to_add == "company") {
     string tmp_n, tmp_id, tmp_finloc, tmp_oploc, tmp_p, d1, d2;
     Date tmp_sub, tmp_inc;
     cout << "Id:\n>";
@@ -688,7 +665,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
       return;
     }
     tmp_inc.scanDateByStr(d2);
-    
+
     Company new_c(tmp_n, tmp_id, tmp_finloc, tmp_oploc, tmp_p, tmp_sub, tmp_inc);
     if (!manager.addAccount(new_c)) {
       cout << "Error! This ID already exists." << endl;
@@ -709,12 +686,10 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     if (error == -1) {
       cout << "Error! The first ID does not exist!" << endl;
       return;
-    }
-    else if (error == -2) {
+    } else if (error == -2) {
       cout << "Error! The second ID does not exist!" << endl;
       return;
-    }
-    else if (error == -3) {
+    } else if (error == -3) {
       cout << "Error! This relationship does not exist!" << endl;
       cout << "Possible relations:\n"
               "\tfriend (U - U)\n"
@@ -727,8 +702,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
               "\tworker (U -> C)\n"
               "\temployer (C -> U)\n" << endl;
       return;
-    }
-    else if (error == -4) {
+    } else if (error == -4) {
       cout << "Error! The relationship and the Users' ages are not compatible!" << endl;
       return;
     }
@@ -740,37 +714,45 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     std::string input;
     std::set<std::string> likes, dislikes;
     Post post_tmp;
-    
+
     cout << "News:\n>";
     getline(cin, news);
     post_tmp.setNews(news);
-    
+
     cout << "Date and time:\n>";
     getline(cin, d_t);
-    post_tmp.setDate_Time(d_t);
-    
+    while (!post_tmp.setDate_Time(d_t)) {            //mi accerto che i dati inseriti siano validi
+      cout << "\nError! Date or Time are not valid!";//continuo a richiederli finchè almeno la data non sia inserita bene
+      cout << "Date and time:\n>";
+      getline(cin, d_t);
+
+    }
+
+
     cout << "Likes (insert '-' at the end of the list):\n";
     while (input != "-") {
       cout << ">";
       getline(cin, input);
+
       if (input != "-")
         likes.insert(input);
     }
     post_tmp.setLikes(likes);
-    
-    input.clear(); //Altrimenti non entra nel ciclo dei dislike
+
+    input.clear();                                //Altrimenti non entra nel ciclo dei dislikes
     cout << "Dislikes (insert '-' at the end of the list):\n";
     while (input != "-") {
       cout << ">";
       getline(cin, input);
       if (input != "-")
         dislikes.insert(input);
+
     }
     post_tmp.setDislikes(dislikes);
-    
+
     cout << "Who wrote the post?:\n>";
     getline(cin, whose_ID);
-    if (!manager.addPost(post_tmp, whose_ID)) {
+    if (!manager.addPost(post_tmp, whose_ID)) { //addPost controlla tutti gli ID inseriti
       cout << "Could not create post." << endl;
       return;
     }
@@ -779,7 +761,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
   else if (what_to_add == "like" || what_to_add == "dislike") {
     string post_owner, reaction_id, post_num_str;
     unsigned int post_num;
-    
+
     cout << "Please insert the post owner's ID:" << endl;
     cout << ">";
     getline(cin, post_owner);
@@ -790,17 +772,17 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     cout << ">";
     getline(cin, post_num_str);
     post_num = unsigned(stoi(post_num_str));
-    
+
     post_num--;
-    
+
     vector<Post> posts = manager.getPosts(post_owner);
     if (posts.size() <= post_num) {   //Controlla se il proprietario dell'account ha il post
       cout << "Error! Could find post " << post_num + 1 << " from " << post_owner << "." << endl;
       return;
     }
-    
+
     Post &old_post = posts[post_num];
-    
+
     bool like = what_to_add == "like";      //Decidi se mettere like o dislike
     if (!manager.setReaction(like, true, post_owner, post_num, reaction_id)) {
       cout << "Error! Could find post " << post_num + 1 << " from " << post_owner << "." << endl;
@@ -808,8 +790,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     }
     data_to_delete << std::make_pair(post_owner, old_post);
     new_data << std::make_pair(post_owner, manager.getPosts(post_owner)[post_num]);
-  }
-  else {
+  } else {
     cout << "Could not add \"" << what_to_add << "\"." << endl;
     return;
   }
@@ -829,22 +810,22 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
       cout << "Error! Missing parameter." << endl;
       return;
     }
-    
+
     std::vector<Post> posts;
     std::vector<IOBuffer::Relation> relations;
     std::vector<pair<pair<string, string>, string>> all_relationships;
     std::vector<pair<string, vector<Post>>> post_without_react, post_with_react;
-    
+
     posts = manager.getPosts(ID_to_delete);
     for (auto it = posts.begin(); it != posts.end(); it++) {
       data_to_delete << make_pair(ID_to_delete, *it); //Elimino i post redatti dall'account da eliminare
     }
-    
+
     all_relationships = manager.getAllRelationships(ID_to_delete);
     for (auto it = all_relationships.begin(); it != all_relationships.end(); it++) {
       data_to_delete << *it; //Elimino le relazioni in cui l'account occorre
     }
-    
+
     post_with_react = manager.getPostsReactedBy(ID_to_delete);             //vettore di post pre-eliminazione
     post_without_react = manager.getPostsWithoutReactionsOf(ID_to_delete); //vettore di post post-eliminazione
     
@@ -870,20 +851,17 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
       if (manager.deleteAccount(ID_to_delete)) {
         data_to_delete << temp;
       }
-    }
-    else if (type == Account::group_type) {
+    } else if (type == Account::group_type) {
       Group temp = manager.getGroup(ID_to_delete);
       if (manager.deleteAccount(ID_to_delete)) {
         data_to_delete << temp;
       }
-    }
-    else if (type == Account::company_type) {
+    } else if (type == Account::company_type) {
       Company temp = manager.getCompany(ID_to_delete);
       if (manager.deleteAccount(ID_to_delete)) {
         data_to_delete << temp;
       }
-    }
-    else {
+    } else {
       std::cout << "Account not valid." << std::endl;
       return;
     }
@@ -907,9 +885,9 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
     cout << ">";
     getline(cin, post_num_str);
     post_num = unsigned(stoi(post_num_str));
-    
+
     post_num--;
-    
+
     std::vector<Post> posts = manager.getPosts(post_owner);
     if (posts.size() <= post_num) {
       std::cout << "Error! " << post_owner << " does not have post " << post_num + 1 << std::endl;
@@ -935,16 +913,16 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
     cout << ">";
     getline(cin, post_num_str);
     post_num = unsigned(stoi(post_num_str));
-    
+
     post_num--;
     posts = manager.getPosts(post_owner);   //Acquisisco il vettore di post per controlli e per estrarre quello interessato
     if (posts.size() <= post_num) {   //Controlla se il proprietario dell'account ha il post
       cout << "Error! Could find post " << post_num + 1 << " from " << post_owner << "." << endl;
       return;
     }
-    
+
     Post &old_post = posts[post_num];
-    
+
     bool like = what_to_delete == "like";      //Decidi se mettere like o dislike
     if (!manager.setReaction(like, false, post_owner, post_num, reaction_id)) {
       cout << "Error! Could find this reaction in post " << post_num + 1 << " from " << post_owner << "." << endl;
@@ -952,12 +930,11 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
     }
     data_to_delete << std::make_pair(post_owner, old_post);
     new_data << std::make_pair(post_owner, manager.getPosts(post_owner)[post_num]);
-  }
-  else {
+  } else {
     cout << "Cannot delete \"" << what_to_delete << "\"." << endl;
     return;
   }
-  
+
   std::cout << "Done!" << std::endl;
 }
 
@@ -982,40 +959,35 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
         cout << "Error! " << id << " is not a User or it does not exist." << endl;
         return;
       }
-    }
-    else if (param2 == "relatives") {
+    } else if (param2 == "relatives") {
       command >> id;
       num = manager.NumRelatives(id);
       if (num == 0) {
         cout << id << " has no relatives." << endl;
         return;
       }
-    }
-    else if (param2 == "workers") {
+    } else if (param2 == "workers") {
       command >> id;
       num = manager.NumEmployees(id);
       if (num == 0) {
         cout << id << " has no workers." << endl;
         return;
       }
-    }
-    else if (param2 == "subsidiaries") {
+    } else if (param2 == "subsidiaries") {
       command >> id;
       num = manager.NumSubsidiaries(id);
       if (num == 0) {
         cout << id << " has no subsidiaries." << endl;
         return;
       }
-    }
-    else if (param2 == "members") {
+    } else if (param2 == "members") {
       command >> id;
       num = manager.NumMembers(id);
       if (num == 0) {
         cout << id << " has no members." << endl;
         return;
       }
-    }
-    else if (param2 == "born_after") {
+    } else if (param2 == "born_after") {
       string date;
       Date born_d;
       cout << "Please insert the starting date (in format dd/mm/yyyy):\n>";
@@ -1028,8 +1000,7 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
       num = manager.NumBornAfter(born_d);
       cout << "The number of people born after this date is: " << num << endl;
       return;
-    }
-    else {
+    } else {
       cout << "Error! Cannot get number of " << param2 << "." << endl;
       return;
     }
@@ -1045,17 +1016,15 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
            << "Product: " << empl_comp.getTypeOfProduct() << "\n"
            << "Inception: " << empl_comp.getInception() << "\n"
            << "Birth Date: " << empl_comp.getSubscription() << std::endl;
-      
-    }
-    else if (param2 == "employing_partnership") {
+
+    } else if (param2 == "employing_partnership") {
       vector<string> part;
       part = manager.MostEmployingPartnership();
       cout << "The members of the Most Employing Partnership are:\n";
       for (auto it = part.begin(); it != part.end(); it++) {
         cout << *it << endl;
       }
-    }
-    else if (param2 == "user_friends") {
+    } else if (param2 == "user_friends") {
       User mostfr_user;
       mostfr_user = manager.UserWithMostFriends();
       cout << "Name:" << mostfr_user.getName() << "\n"
@@ -1064,9 +1033,8 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
            << "Address: " << mostfr_user.getAddress() << "\n"
            << "Birth Date :" << mostfr_user.getBirth() << "\n"
            << "Subscription Date: " << mostfr_user.getSubscription() << std::endl;
-      
-    }
-    else if (param2 == "user_acquaintances") {
+
+    } else if (param2 == "user_acquaintances") {
       User mostacq_user;
       mostacq_user = manager.UserWithMostAcquaintances();
       cout << "Name:" << mostacq_user.getName() << "\n"
@@ -1075,27 +1043,22 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
            << "Address: " << mostacq_user.getAddress() << "\n"
            << "Birth Date :" << mostacq_user.getBirth() << "\n"
            << "Subscription Date: " << mostacq_user.getSubscription() << std::endl;
-    }
-    else if (param2 == "liked_post") {
+    } else if (param2 == "liked_post") {
       pair<string, Post> l_post;
       l_post = manager.MostLikedPost();
       cout << "The most liked post is:\n" << l_post.second << endl
            << "From: " << l_post.first;
-      
-    }
-    else if (param2 == "disliked_post") {
+
+    } else if (param2 == "disliked_post") {
       pair<string, Post> d_post;
       d_post = manager.MostDislikedPost();
       cout << "The most disliked post is:\n" << d_post.second << endl
            << "From: " << d_post.first;
-    }
-    else if (param2 == "liked_account") {
+    } else if (param2 == "liked_account") {
       cout << "The Most Liked Account is:\n" << manager.MostLiked_DislikedAccount(true);
-    }
-    else if (param2 == "disliked_account") {
+    } else if (param2 == "disliked_account") {
       cout << "The Most Disliked Account is:\n" << manager.MostLiked_DislikedAccount(false);
-    }
-    else {
+    } else {
       cout << "Error! Cannot get statistscs of \"" << param2 << "\"." << endl;
       return;
     }
@@ -1109,14 +1072,12 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
     best_post = manager.RatioReactionPost(true);
     cout << "The Post with the best Like/Dislike ratio is:\n" << best_post.second << endl
          << "By: " << best_post.first;
-  }
-  else if (param1 == "worst_ratio_post") {
+  } else if (param1 == "worst_ratio_post") {
     pair<string, Post> worst_post;
     worst_post = manager.RatioReactionPost(false);
     cout << "The Post with the worst Like/Dislike ratio is:\n" << worst_post.second << endl
          << "By: " << worst_post.first;
-  }
-  else {
+  } else {
     std::cout << "Cannot get statistics of " << param1 << std::endl;
   }
 }
@@ -1149,7 +1110,7 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
       std::cout << "Please insert some User's ID" << std::endl;
       return;
     }
-    
+
     std::string tree = manager.PrintTree(id);
     cout << tree;
     std::cout << "Save this tree? (yes/no)" << std::endl << ">";
@@ -1164,17 +1125,15 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
       file << tree;
       file.flush();
       file.close();
-    }
-    else {
+    } else {
       return;
     }
-  }
-  else if (what_to_search == "loner_people") {
+  } else if (what_to_search == "loner_people") {
     unsigned int relations, memberships, reactions;
     string ans; //answer
     bool unemployed;
     vector<string> lon_people;
-    
+
     cout << "Please insert the parameters that define a loner person:\n"
             "Minimum number of relations: ";
     cin >> relations;
@@ -1184,24 +1143,21 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
     cin >> ans;
     if (ans == "yes") {
       unemployed = true;
-    }
-    else if (ans == "no") {
+    } else if (ans == "no") {
       unemployed = false;
-    }
-    else {
+    } else {
       std::cout << "Invalid answer." << std::endl;
       return;
     }
     cout << "Minimum number of added reactions: ";
     cin >> reactions;
     cin.ignore();
-    
+
     lon_people = manager.LonerPeople(relations, memberships, unemployed, reactions);
     for (auto it = lon_people.begin(); it != lon_people.end(); it++) {
       cout << *it << endl;
     }
-  }
-  else if (what_to_search == "friendliest_companies") {
+  } else if (what_to_search == "friendliest_companies") {
     float threshold;
     bool with_partners;
     std::string ans;
@@ -1212,11 +1168,9 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
     std::cin.ignore();
     if (ans == "yes") {
       with_partners = true;
-    }
-    else if (ans == "no") {
+    } else if (ans == "no") {
       with_partners = false;
-    }
-    else {
+    } else {
       std::cout << "Invalid answer." << std::endl;
       return;
     }
@@ -1229,8 +1183,7 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
     for (int i = 0; i < companies.size(); i++) {
       std::cout << companies[i].first << "\t\t" << companies[i].second << std::endl;
     }
-  }
-  else {
+  } else {
     cout << "Error! Cannot search for " << what_to_search << "." << endl;
     return;
   }

@@ -21,7 +21,7 @@ int main (int argc, const char *argv[]) {
   //Controllo dei parametri passati da linea di comando
   if (argc != 4) {
     std::cerr
-            << "Parameters error. Plese insert input file names as follows: <accounts_file> <relations_file> <posts_file>."
+            << "Parameters error. Please insert input file names as follows: <accounts_file> <relations_file> <posts_file>."
             << std::endl;
     return -1;
   }
