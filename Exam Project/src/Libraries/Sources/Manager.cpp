@@ -122,6 +122,7 @@ vector<pair<string, vector<Post>>> Manager::getPostsReactedBy(const string &ID) 
       }
 
     }
+    tmp_post.second.clear();              //Pulisci il vettore prima di controllare i post di un nuovo account
   }
 
   return reacted_posts;
