@@ -185,7 +185,7 @@ float Post::RatioReaction() const {
 bool Post::AddLike(const string &id) {
   if (!DislikeExists(id)) {
     pair<set<string>::iterator, bool> ret;
-    ret = _likes.insert(id);
+    ret = _likes.insert(id); //l'insert ritorna un pair <iteratore, bool>
     if (ret.second) {
       return true;
     }
