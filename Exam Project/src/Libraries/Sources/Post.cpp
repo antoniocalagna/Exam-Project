@@ -145,7 +145,7 @@ ostream &operator<<(ostream &stream, const Post &p) {
 
 //Others
 bool Post::LikeExists(const string &ID) const {
-  if (_likes.find(ID) != _likes.end()) {
+  if (_likes.find(ID) != _likes.end()) { //la find di un set ritorna l'iteratore all'id trovato oppure la fine (se non ha trovato niente)
     return true;
   } else { return false; }
 }
@@ -194,7 +194,7 @@ float Post::RatioReaction() const{
 bool Post::AddLike(const string &id) {
   if (!DislikeExists(id)) {
     pair<set<string>::iterator, bool> ret;
-    ret = _likes.insert(id);
+    ret = _likes.insert(id); //l'insert ritorna un pair <iteratore, bool>
     if (ret.second) {
       return true;
     }
