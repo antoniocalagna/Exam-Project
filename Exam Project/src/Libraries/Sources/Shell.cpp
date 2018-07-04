@@ -1226,21 +1226,29 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
     }
 
     std::string tree = manager.PrintTree(id);
-    cout << tree;
-    std::cout << "Save this tree? (yes/no)" << std::endl << ">"; //Richiesta di salvataggio su file
-    std::string answer;
-    std::getline(std::cin, answer);
-    if (answer == "yes") {
-      std::cout << "Filename: " << std::endl << ">";
-      std::string filename;
-      std::getline(std::cin, filename);
-      std::ofstream file;
-      file.open(filename + ".txt", std::ios::out | std::ios::trunc);
-      file << tree;
-      file.flush();
-      file.close();
-    } else {
+    
+    if (tree.empty())
+    {
+      cout << "This tree is not valid because it is not long enough!" << endl;
       return;
+    }
+    else {
+      cout << tree;
+      std::cout << "Save this tree? (yes/no)" << std::endl << ">"; //Richiesta di salvataggio su file
+      std::string answer;
+      std::getline(std::cin, answer);
+      if (answer == "yes") {
+        std::cout << "Filename: " << std::endl << ">";
+        std::string filename;
+        std::getline(std::cin, filename);
+        std::ofstream file;
+        file.open(filename + ".txt", std::ios::out | std::ios::trunc);
+        file << tree;
+        file.flush();
+        file.close();
+      } else {
+        return;
+      }
     }
   } else if (what_to_search == "loner_people") {
     unsigned int relations, memberships, reactions;

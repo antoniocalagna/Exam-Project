@@ -1082,8 +1082,7 @@ vector<string> Manager::FormatTree(const vector<vector<string>> &tree_to_format)
 }
 
 string Manager::PrintTree(const std::string &whose_ID) const {
-  vector<string> tree_to_print = FormatTree(GenealogicalTree(
-          whose_ID)); //Invoco a cascata le funzioni di creazione dell'albero e la formattazione dello stesso
+  vector<string> tree_to_print = FormatTree(GenealogicalTree(whose_ID)); //Invoco a cascata le funzioni di creazione dell'albero e la formattazione dello stesso
   stringstream ss;
 
   if (tree_to_print.size() < 3) {

@@ -1,40 +1,43 @@
-appl,C,{name:{Apple},financial_loc:{Cupertino USA},operative_loc:{Cupertino USA},prod:{Tech},inception:{20/06/1970},sub:{29/06/2018}}
 stb,C,{name:{Stabilo},financial_loc:{Germany},operative_loc:{Germany},prod:{Cartoleria},inception:{15/01/1940},sub:{05/07/2012}}
+appl,C,{name:{Apple},financial_loc:{Cupertino USA},operative_loc:{Cupertino USA},prod:{Tech},inception:{20/06/1970},sub:{29/06/2018}}
+bocce_squad,G,{name:{Giocatori di Bocce},location:{Turin},activity:{Svago},inception:{17/10/1888},sub:{07/09/2013}}
 sams,C,{name:{Samsung},financial_loc:{Bu Korea},operative_loc:{Sempre Korea},prod:{Tech},inception:{15/01/1933},sub:{18/10/2011}}
 bal_spiagg,G,{name:{Balenottere Spiaggiate},location:{Spiaggia},activity:{Spiaggiarsi in spiaggia},inception:{15/01/1990},sub:{18/07/2011}}
-bocce_squad,G,{name:{Giocatori di Bocce},location:{Turin},activity:{Svago},inception:{17/10/1888},sub:{07/09/2013}}
-gianlusav,U,{name:{Gianluca},surname:{Savina},gender:{M},addr:{Via Einstein 11},sub:{12/03/2017},birth:{21/07/1997}}
-sofa000,U,{name:{Sofia},surname:{Faiella},gender:{F},addr:{Via Amari 63},sub:{21/02/2012},birth:{09/05/1998}}
-mario_db,U,{name:{Mario},surname:{Di Blasi},gender:{N},addr:{Cardillo},sub:{12/03/2005},birth:{11/02/1997}}
-totina,U,{name:{Antonio},surname:{Calagna},gender:{N},addr:{Porta Venezia},sub:{22/10/2016},birth:{27/10/1998}}
-triX,U,{name:{Beatrice},surname:{Moscoloni},gender:{F},addr:{Via Cavour 5},sub:{20/01/2012},birth:{27/07/1998}}
-pelide,U,{name:{Achille},surname:{Figlio di Peleo},gender:{A},addr:{Magna Grecia},sub:{01/01/1900},birth:{01/01/2000}}
-salvich,U,{name:{Salvatore},surname:{Alvich},gender:{F},addr:{Via Principe di Paterno' 32},sub:{04/02/2012},birth:{23/03/2005}}
-milvich,U,{name:{Michele},surname:{Alvich},gender:{M},addr:{Via Principe di Paterno' 32},sub:{20/09/2003},birth:{03/02/1969}}
-pao_bao,U,{name:{Barone},surname:{Paolino},gender:{m},addr:{Via Leopardi 3},sub:{26/06/2018},birth:{20/01/1998}}
-rilvich,U,{name:{Nonna Rita},surname:{Alvich},gender:{f},addr:{Via Principe di Paterno'},sub:{10/02/1997},birth:{05/08/1940}}
-ettorre,U,{name:{Ettore},surname:{Principe di Troia},gender:{M},addr:{Troia},sub:{01/01/1900},birth:{01/01/2000}}
-ros_rus,U,{name:{Rosanna},surname:{Russo},gender:{F},addr:{Via Principe di Paterno' 32},sub:{20/07/2004},birth:{06/06/1971}}
-vlad,U,{name:{Vladimir},surname:{Putin},gender:{m},addr:{Secret},sub:{05/02/2009},birth:{07/10/1952}}
-claslavax,U,{name:{Clara},surname:{Salvalai},gender:{F},addr:{Via Galvani 11},sub:{12/02/2014},birth:{09/09/1997}}
-PoliTO,G,{name:{Politecnico di Torino},location:{Torino},activity:{Mangiare anime},inception:{15/01/1885},sub:{18/07/2000}}
-nonno_italo,U,{name:{Italo},surname:{Di Cicca},gender:{M},addr:{Paradiso},sub:{05/04/2003},birth:{22/12/1921}}
-CsanG,U,{name:{Claudio},surname:{Sangari},gender:{M},addr:{Via Libera Russia 10},sub:{07/01/2013},birth:{16/02/1997}}
-alvicheese,U,{name:{Alessia},surname:{Alvich},gender:{F},addr:{Via Principe di Paterno' 32},sub:{04/02/2012},birth:{23/03/1998}}
-MYSSKETA,U,{name:{Monica},surname:{Ketamina},gender:{F},addr:{Porta Venezia},sub:{30/08/1997},birth:{27/04/1983}}
-lore_barb,U,{name:{Lorenzo},surname:{Barbaro},gender:{M},addr:{Via Liberta'},sub:{12/03/2005},birth:{15/04/1997}}
-nonna_teta,U,{name:{Teresa},surname:{Passannanti},gender:{F},addr:{Via Fermi 10},sub:{07/05/2016},birth:{29/05/1929}}
-nan_cer,U,{name:{Nensi},surname:{Amato},gender:{F},addr:{Via Amari 63},sub:{11/02/2011},birth:{19/02/1970}}
-gelena,U,{name:{Gianna},surname:{Di Cicca},gender:{M},addr:{Via Streva 21},sub:{07/05/2016},birth:{29/05/1969}}
-caesar_salad,U,{name:{Cesare},surname:{Faiella},gender:{M},addr:{Via Amari 63},sub:{10/03/2010},birth:{19/02/1965}}
-frenz,U,{name:{Francesca},surname:{Calagna},gender:{F},addr:{Viale del Fante 11},sub:{22/01/2013},birth:{29/11/1966}}
-elecami,U,{name:{Elena},surname:{Caminita},gender:{F},addr:{Monreale},sub:{05/04/2014},birth:{23/12/1996}}
-prezzi27,U,{name:{Giovanni},surname:{Li Calsi},gender:{M},addr:{Villabate},sub:{11/02/2004},birth:{14/03/1997}}
-nonno_nene,U,{name:{Antonio},surname:{Calagna},gender:{M},addr:{Via Roma 9},sub:{04/03/2002},birth:{21/11/1920}}
-faber_crax,U,{name:{Fabrizio},surname:{Crasci'},gender:{m},addr:{Via dei Nebrodi 23},sub:{29/06/2018},birth:{20/03/1998}}
-crushditotina,U,{name:{Nicola},surname:{Cantisani},gender:{N},addr:{Via delle buttane},sub:{10/06/2014},birth:{10/02/1996}}
+leo,U,{name:{Leo},surname:{Calagna},gender:{M},addr:{Via Streva 21},sub:{27/11/1998},birth:{10/05/1969}}
+giuliagallo24,U,{name:{Giulia},surname:{Gallo},gender:{F},addr:{Largo Cristoforo Colombo},sub:{05/04/2014},birth:{24/12/1996}}
+nico_cantisani,U,{name:{Nicola},surname:{Cantisani},gender:{M},addr:{Torino},sub:{05/07/2018},birth:{10/03/1996}}
 nonna_nina,U,{name:{Antonina},surname:{Addamo},gender:{F},addr:{Via Roma 9},sub:{11/02/2015},birth:{20/06/1939}}
 silvich,U,{name:{Silvia},surname:{Alvich},gender:{F},addr:{Via Principe di Paterno' 32},sub:{04/01/2013},birth:{20/05/2001}}
-giuliagallo24,U,{name:{Giulia},surname:{Gallo},gender:{F},addr:{Largo Cristoforo Colombo},sub:{05/04/2014},birth:{24/12/1996}}
-leo,U,{name:{Leo},surname:{Calagna},gender:{M},addr:{Via Streva 21},sub:{27/11/1998},birth:{10/05/1969}}
+nonno_nene,U,{name:{Antonio},surname:{Calagna},gender:{M},addr:{Via Roma 9},sub:{04/03/2002},birth:{21/11/1920}}
+faber_crax,U,{name:{Fabrizio},surname:{Crasci'},gender:{m},addr:{Via dei Nebrodi 23},sub:{29/06/2018},birth:{20/03/1998}}
+fedWho,U,{name:{Unknown},surname:{Unknown},gender:{M},addr:{Mondello},sub:{04/07/2018},birth:{18/04/1999}}
+prezzi27,U,{name:{Giovanni},surname:{Li Calsi},gender:{M},addr:{Villabate},sub:{11/02/2004},birth:{14/03/1997}}
+elecami,U,{name:{Elena},surname:{Caminita},gender:{F},addr:{Monreale},sub:{05/04/2014},birth:{23/12/1996}}
+frenz,U,{name:{Francesca},surname:{Calagna},gender:{F},addr:{Viale del Fante 11},sub:{22/01/2013},birth:{29/11/1966}}
+caesar_salad,U,{name:{Cesare},surname:{Faiella},gender:{M},addr:{Via Amari 63},sub:{10/03/2010},birth:{19/02/1965}}
+gelena,U,{name:{Gianna},surname:{Di Cicca},gender:{M},addr:{Via Streva 21},sub:{07/05/2016},birth:{29/05/1969}}
+NoH8,G,{name:{No Hate Squad},location:{Palermo},activity:{Rights Activists},inception:{10/09/2011},sub:{05/07/2018}}
+nan_cer,U,{name:{Nensi},surname:{Amato},gender:{F},addr:{Via Amari 63},sub:{11/02/2011},birth:{19/02/1970}}
+nonna_teta,U,{name:{Teresa},surname:{Passannanti},gender:{F},addr:{Via Fermi 10},sub:{07/05/2016},birth:{29/05/1929}}
+lore_barb,U,{name:{Lorenzo},surname:{Barbaro},gender:{M},addr:{Via Liberta'},sub:{12/03/2005},birth:{15/04/1997}}
+PoliTO,G,{name:{Politecnico di Torino},location:{Torino},activity:{Mangiare anime},inception:{15/01/1885},sub:{18/07/2000}}
+MYSSKETA,U,{name:{Monica},surname:{Ketamina},gender:{F},addr:{Porta Venezia},sub:{30/08/1997},birth:{27/04/1983}}
+alvicheese,U,{name:{Alessia},surname:{Alvich},gender:{F},addr:{Via Principe di Paterno' 32},sub:{04/02/2012},birth:{23/03/1998}}
+nonno_italo,U,{name:{Italo},surname:{Di Cicca},gender:{M},addr:{Paradiso},sub:{05/04/2003},birth:{22/12/1921}}
+CsanG,U,{name:{Claudio},surname:{Sangari},gender:{M},addr:{Via Libera Russia 10},sub:{07/01/2013},birth:{16/02/1997}}
 domi_123,U,{name:{Domenico},surname:{Di Grusa},gender:{M},addr:{Viale Regione Siciliana 5300},sub:{20/07/2012},birth:{20/10/1997}}
+clasalvax,U,{name:{Clara},surname:{Salvalai},gender:{F},addr:{Via Galvani 11},sub:{12/02/2014},birth:{09/09/1997}}
+vlad,U,{name:{Vladimir},surname:{Putin},gender:{m},addr:{Secret},sub:{05/02/2009},birth:{07/10/1952}}
+rilvich,U,{name:{Nonna Rita},surname:{Alvich},gender:{f},addr:{Via Principe di Paterno'},sub:{10/02/1997},birth:{05/08/1940}}
+pao_bao,U,{name:{Barone},surname:{Paolino},gender:{m},addr:{Via Leopardi 3},sub:{26/06/2018},birth:{20/01/1998}}
+milvich,U,{name:{Michele},surname:{Alvich},gender:{M},addr:{Via Principe di Paterno' 32},sub:{20/09/2003},birth:{03/02/1969}}
+salvich,U,{name:{Salvatore},surname:{Alvich},gender:{F},addr:{Via Principe di Paterno' 32},sub:{04/02/2012},birth:{23/03/2005}}
+pelide,U,{name:{Achille},surname:{Figlio di Peleo},gender:{A},addr:{Magna Grecia},sub:{01/01/1900},birth:{01/01/2000}}
+triX,U,{name:{Beatrice},surname:{Moscoloni},gender:{F},addr:{Via Cavour 5},sub:{20/01/2012},birth:{27/07/1998}}
+totina,U,{name:{Antonio},surname:{Calagna},gender:{N},addr:{Porta Venezia},sub:{22/10/2016},birth:{27/10/1998}}
+sofa000,U,{name:{Sofia},surname:{Faiella},gender:{F},addr:{Via Amari 63},sub:{21/02/2012},birth:{09/05/1998}}
+gine_bada,U,{name:{Ginevra},surname:{Badami},gender:{F},addr:{Palermo Centro},sub:{05/07/2018},birth:{05/11/1996}}
+gianlusav,U,{name:{Gianluca},surname:{Savina},gender:{M},addr:{Via Einstein 11},sub:{12/03/2017},birth:{21/07/1997}}
+mario_db,U,{name:{Mario},surname:{Di Blasi},gender:{N},addr:{Cardillo},sub:{12/03/2005},birth:{11/02/1997}}
+ros_rus,U,{name:{Rosanna},surname:{Russo},gender:{F},addr:{Via Principe di Paterno' 32},sub:{20/07/2004},birth:{06/06/1971}}
+ettorre,U,{name:{Ettore},surname:{Principe di Troia},gender:{M},addr:{Troia},sub:{01/01/1900},birth:{01/01/2000}}
