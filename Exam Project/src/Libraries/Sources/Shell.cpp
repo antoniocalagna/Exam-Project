@@ -36,9 +36,9 @@ void Shell::help(std::stringstream &command, Manager &manager, IOBuffer &new_dat
   std::cout << "stats <type_of_statistic> [<type_of_data>]"
                "\n\tPrints statistic info.\n"
                "\tPossible type of statistic:\n"
-               "\tnumber(<type_of_data>), most(<type_of_data>), average_age, best_post, worst_post.\n"
+               "\tnumber(<type_of_data>), most(<type_of_data>), average_age, best_ratio_post, worst_ratio_post.\n"
                "\tIn case of \"number\", the possible types of data are:\n"
-               "\taccounts, users, groups, companies, friends, relatives, employees, subsidiaries, members, born_after.\n"
+               "\taccounts, users, groups, companies, friends <id>, relatives <id>, workers <id>, subsidiaries <id>, members <id>, born_after.\n"
                "\tIn case of \"most\", the possible types of data are:\n"
                "\temploying_company, employing_partnership, user_friends, user_acquaintances, liked_post, disliked_post, liked_account, disliked_account."
             << std::endl;
@@ -86,11 +86,11 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
       //Get info - user
     else if (account_type == Account::user_type) {
       User user = manager.getUser(requested_id);                //Prendi una copia dell'utente e stampane le informazioni
-      std::cout << "Name:" << user.getName() << "\n"
+      std::cout << "Name: " << user.getName() << "\n"
                 << "Surname: " << user.getSurname() << "\n"
                 << "Gender: " << user.getGender() << "\n"
                 << "Address: " << user.getAddress() << "\n"
-                << "Birth Date :" << user.getBirth() << "\n"
+                << "Birth Date: " << user.getBirth() << "\n"
                 << "Subscription Date: " << user.getSubscription() << std::endl;
       
     }
@@ -176,9 +176,15 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
     command >> id;
     std::vector<std::string> relations = manager.getRelated(id, what_to_get); //Prendi una lista di tutte le relzioni del tipo richiesto
     if (relations.empty()) {
-      std::cout << id << " has no " << what_to_get << "." << std::endl;
+      if (what_to_get==relation::parent || what_to_get==relation::born)
+        std::cout << id << " is " << what_to_get << " of no one." << std::endl;
+      else
+        std::cout << id << " has no " << what_to_get << "." << std::endl;
       return;
     }
+    
+    if (what_to_get==relation::born)
+      std::cout << id << "'s parents are: " << std::endl;
     for (int i = 0; i < relations.size(); i++) {                              //Stampale
       std::cout << relations[i] << std::endl;
     }
@@ -1097,13 +1103,13 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
     cout << "The Average of Users' ages is:\n"
          << manager.UsersAverageAge() << endl;
   }
-  else if (param1 == "best_post") {
+  else if (param1 == "best_ratio_post") {
     pair<string, Post> best_post;
     best_post = manager.RatioReactionPost(true);
     cout << "The Post with the best Like/Dislike ratio is:\n" << best_post.second << endl
          << "By: " << best_post.first;
   }
-  else if (param1 == "worst_post") {
+  else if (param1 == "worst_ratio_post") {
     pair<string, Post> worst_post;
     worst_post = manager.RatioReactionPost(false);
     cout << "The Post with the worst Like/Dislike ratio is:\n" << worst_post.second << endl
