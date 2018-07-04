@@ -74,7 +74,7 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
   //GET: Interfaccia per ottenere informazioni e dati
   std::string what_to_get;
   command >> what_to_get;
-  //Get info
+                                            //Preleva informazioni su un certo ID
   if (what_to_get == "info") {
     std::string requested_id;
     command >> requested_id;
@@ -83,7 +83,7 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
       std::cout << "Requested ID not found" << std::endl;
       return;
     }
-      //Get info - user
+
     else if (account_type == Account::user_type) {
       User user = manager.getUser(requested_id);                //Prendi una copia dell'utente e stampane le informazioni
       std::cout << "Name: " << user.getName() << "\n"
@@ -94,7 +94,7 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
                 << "Subscription Date: " << user.getSubscription() << std::endl;
       
     }
-      //Get info - group
+
     else if (account_type == Account::group_type) {
       Group group = manager.getGroup(requested_id);             //Prendi una copia del gruppo e stampane le informazioni
       std::cout << "Name: " << group.getName() << "\n"
@@ -103,7 +103,7 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
                 << "Inception: " << group.getInception() << "\n"
                 << "Birth Date: " << group.getSubscription() << std::endl;
     }
-      //Get info - company
+
     else if (account_type == Account::company_type) {
       Company company = manager.getCompany(requested_id);       //Prendi una copia della compagnia e stampane le informazioni
       std::cout << "Name: " << company.getName() << "\n"
@@ -114,7 +114,7 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
                 << "Birth Date: " << company.getSubscription() << std::endl;
     }
   }
-    //Get relation
+                                            //Preleva una relazione tra due ID
   else if (what_to_get == "relation") {
     std::string id1, id2;                                                 //Prendi dalla linea di comando anche i due ID
     command >> id1 >> id2;
@@ -126,7 +126,7 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
     std::cout << "Relation: " << relation << std::endl;                   //Stampala
   }
     
-    //Get posts
+                                            //Preleva tutti i post di un certo ID
   else if (what_to_get == "posts") {
     std::string id;
     command >> id;                                                       //Leggi l'ID dalla linea di comando
@@ -137,11 +137,12 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
     }
     else {
       for (int i = 0; i < posts.size(); i++) {                            //Stampa tutti i post
-        std::cout << "\n" << i + 1 << ":" << std::endl                    //Indice del post
+        std::cout << "\n" << i + 1 << ":" << std::endl                    //i = Indice del post
                   << "\n" << posts[i].getNews() << "\n" << std::endl
                   << "[" << posts[i].getDate()
                   << " " << posts[i].getTime()
                   << "]\n" << std::endl;
+        
         std::vector<std::string> likes, dislikes;                       //Preparati a leggere i like e i dislike
         likes = posts[i].getLikes();
         dislikes = posts[i].getDislikes();
@@ -170,7 +171,7 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
       }
     }
   }
-    //Get <relation_type> <id>
+                    //Preleva gli ID oggetto della relazione. L'ID fornito è il soggetto della suddetta.
   else if (relation::isValid(what_to_get)) {
     std::string id;
     command >> id;
@@ -190,14 +191,14 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
     }
     std::cout << std::endl;
   }
-    //Get <something_not_valid>
+
   else {
     std::cout << "Cannot get \"" << what_to_get << "\"" << std::endl;
     std::cout << "Possible parameters: info <id>, relation <id1> <id2>, posts <id>, <relation> <id>";
     return;
   }
 }
-
+                                            //Imposta dati specifici
 void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete) {
   
   string what_to_set, ID_to_set;
@@ -527,7 +528,7 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
 void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete) {
   string what_to_add;
   command >> what_to_add;
-  
+                                            //Aggiungi un nuovo Account
   if (what_to_add == "user") {
     string tmp_n, tmp_s, tmp_id, tmp_a, d1, d2;
     Date tmp_sub, tmp_b;
@@ -694,7 +695,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
       return;
     }
     new_data << new_c;  //Metti la nuova compagnia nel buffer
-  }
+  }                                           //Add Relationship
   else if (what_to_add == "relation") {
     int error;
     string who1, who2, type_rel;
@@ -733,6 +734,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     }
     new_data << std::make_pair(std::make_pair(who1, who2), type_rel);   //In caso di successo
   }
+                                              //Aggiungi un nuovo Post
   else if (what_to_add == "post") {
     string news, d_t, whose_ID;
     std::string input;
@@ -773,7 +775,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
       return;
     }
     new_data << std::make_pair(whose_ID, post_tmp);
-  }
+  }                                          //Aggiungi una nuova interazione ad un certo post
   else if (what_to_add == "like" || what_to_add == "dislike") {
     string post_owner, reaction_id, post_num_str;
     unsigned int post_num;
@@ -819,7 +821,7 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
   command >> what_to_delete;
   if (what_to_delete.empty()) {
     cout << "Error! Missing parameter." << endl;
-  }
+  }                                          //Elimina un certo Account
   if (what_to_delete == "account") {
     string ID_to_delete;
     command >> ID_to_delete;
@@ -835,33 +837,33 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
     
     posts = manager.getPosts(ID_to_delete);
     for (auto it = posts.begin(); it != posts.end(); it++) {
-      data_to_delete << make_pair(ID_to_delete, *it);//elimino i post
+      data_to_delete << make_pair(ID_to_delete, *it); //Elimino i post redatti dall'account da eliminare
     }
     
     all_relationships = manager.getAllRelationships(ID_to_delete);
     for (auto it = all_relationships.begin(); it != all_relationships.end(); it++) {
-      data_to_delete << *it; //elimino le relazioni
+      data_to_delete << *it; //Elimino le relazioni in cui l'account occorre
     }
     
     post_with_react = manager.getPostsReactedBy(ID_to_delete);             //vettore di post pre-eliminazione
     post_without_react = manager.getPostsWithoutReactionsOf(ID_to_delete); //vettore di post post-eliminazione
     
-    
-    for (auto it_new1 = post_without_react.begin(); it_new1 != post_without_react.end(); it_new1++) { //vettore esterno
+    //Elimino dai post generali le occorrenze nelle interazioni dell'account da eliminare
+    for (auto it_new1 = post_without_react.begin(); it_new1 != post_without_react.end(); it_new1++) {
       for (auto it_new2 = it_new1->second.begin();
-           it_new2 != it_new1->second.end(); it_new2++) { //vettore interno secondo elemento
+           it_new2 != it_new1->second.end(); it_new2++) {
         new_data << make_pair(it_new1->first, *it_new2);
       }
     }
     
-    for (auto it_del1 = post_with_react.begin(); it_del1 != post_with_react.end(); it_del1++) { //vettore esterno
+    for (auto it_del1 = post_with_react.begin(); it_del1 != post_with_react.end(); it_del1++) {
       for (auto it_del2 = it_del1->second.begin();
-           it_del2 != it_del1->second.end(); it_del2++) { //vettore interno secondo elemento
+           it_del2 != it_del1->second.end(); it_del2++) {
         data_to_delete << make_pair(it_del1->first, *it_del2);
       }
     }
     
-    
+    //Ricavo il tipo di account così da poterlo passare al buffer di eliminazione opportunamente
     char type = manager.getAccountType(ID_to_delete);
     if (type == Account::user_type) {
       User temp = manager.getUser(ID_to_delete);
@@ -885,7 +887,7 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
       std::cout << "Account not valid." << std::endl;
       return;
     }
-  }
+  }                                          //Elimina una relazione tra due ID
   else if (what_to_delete == "relation") {
     string id_start, id_target;
     command >> id_start >> id_target;
@@ -895,7 +897,7 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
       return;
     }
     data_to_delete << std::make_pair(std::make_pair(id_start, id_target), relation);
-  }
+  }                                          //Elimina un post in una determinata posizione
   else if (what_to_delete == "post") {
     std::string post_owner;
     string post_num_str;
@@ -918,7 +920,7 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
       return;
     }
     data_to_delete << std::make_pair(post_owner, posts[post_num]);
-  }
+  }                                          //Elimina una interazione in un certo post
   else if (what_to_delete == "like" || what_to_delete == "dislike") {
     string post_owner, reaction_id, post_num_str;
     unsigned int post_num;
@@ -935,7 +937,7 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
     post_num = unsigned(stoi(post_num_str));
     
     post_num--;
-    posts = manager.getPosts(post_owner);   //Acquisisci i post per passarli al manager
+    posts = manager.getPosts(post_owner);   //Acquisisco il vettore di post per controlli e per estrarre quello interessato
     if (posts.size() <= post_num) {   //Controlla se il proprietario dell'account ha il post
       cout << "Error! Could find post " << post_num + 1 << " from " << post_owner << "." << endl;
       return;
@@ -962,7 +964,7 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
 void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete) {
   string param1, param2;
   command >> param1 >> param2;
-  if (param1 == "number") {
+  if (param1 == "number") {             //Statistics -- Number of...
     size_t num;
     string id;
     if (param2 == "accounts")
@@ -1016,7 +1018,6 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
     else if (param2 == "born_after") {
       string date;
       Date born_d;
-      //int not_valid;
       cout << "Please insert the starting date (in format dd/mm/yyyy):\n>";
       cin >> date;
       if (!Date::CheckDate(date)) {
@@ -1034,7 +1035,7 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
     }
     cout << "The number of " << param2 << " is: " << num << endl;
   }
-  else if (param1 == "most") {
+  else if (param1 == "most") {                //Statistics -- Most...
     if (param2 == "employing_company") {
       Company empl_comp;
       empl_comp = manager.MostEmployingCompany();
@@ -1099,11 +1100,11 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
       return;
     }
   }
-  else if (param1 == "average_age") {
+  else if (param1 == "average_age") {           //Statistics -- Average Age
     cout << "The Average of Users' ages is:\n"
          << manager.UsersAverageAge() << endl;
   }
-  else if (param1 == "best_ratio_post") {
+  else if (param1 == "best_ratio_post") {       //Statistics -- Best and Worst Ratio
     pair<string, Post> best_post;
     best_post = manager.RatioReactionPost(true);
     cout << "The Post with the best Like/Dislike ratio is:\n" << best_post.second << endl
@@ -1123,7 +1124,7 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
 void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete) {
   string what_to_search;
   command >> what_to_search;
-  if (what_to_search == "trees") {
+  if (what_to_search == "trees") {                //Search all genealogical trees
     std::cout << "Searching trees..." << std::endl;
     vector<string> trees = manager.PrintAllTrees();               //Genera il vettore degli alberi
     if (trees.empty()) {                                          //Controlla che siano stati trovati degli alberi
@@ -1140,7 +1141,7 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
       f.flush();
       f.close();
     }
-  }
+  }                                             //Search a specific genealogical tree
   else if (what_to_search == "tree") {
     string id;
     command >> id;
