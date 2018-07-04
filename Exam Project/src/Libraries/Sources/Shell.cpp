@@ -616,14 +616,14 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     }
     cout << "Subscription:\n>";
     getline(cin, d1);
-    if(!Date::CheckDate(d1)) {
+    if (!Date::CheckDate(d1)) {
       std::cout << "Date not valid." << std::endl;
       return;
     }
     tmp_sub.scanDateByStr(d1);
     cout << "Inception:\n>";
     getline(cin, d2);
-    if(!Date::CheckDate(d2)) {
+    if (!Date::CheckDate(d2)) {
       std::cout << "Date not valid." << std::endl;
       return;
     }
@@ -641,7 +641,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     Date tmp_sub, tmp_inc;
     cout << "Id:\n>";
     getline(cin, tmp_id);
-    if(!Account::IDValid(tmp_id)) {
+    if (!Account::IDValid(tmp_id)) {
       std::cout << "ID not valid." << std::endl;
       return;
     }
@@ -671,14 +671,14 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     }
     cout << "Subscription:\n>";
     getline(cin, d1);
-    if(!Date::CheckDate(d1)) {
+    if (!Date::CheckDate(d1)) {
       std::cout << "Date not valid." << std::endl;
       return;
     }
     tmp_sub.scanDateByStr(d1);
     cout << "Inception:\n>";
     getline(cin, d2);
-    if(!Date::CheckDate(d2)) {
+    if (!Date::CheckDate(d2)) {
       std::cout << "Date not valid." << std::endl;
       return;
     }
@@ -843,8 +843,8 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
       data_to_delete << *it; //elimino le relazioni
     }
     
-    post_with_react = manager.getPostsReactedBy(ID_to_delete); //vettore di post con reazioni id morto
-    post_without_react = manager.getPostsWithoutReactionsOf(ID_to_delete); //vettore di post senza reazioni dell'id morto
+    post_with_react = manager.getPostsReactedBy(ID_to_delete);             //vettore di post con reazioni id da cancellare
+    post_without_react = manager.getPostsWithoutReactionsOf(ID_to_delete); //vettore di post senza reazioni dell'id da cancellare
     
     
     for (auto it_new1 = post_without_react.begin(); it_new1 != post_without_react.end(); it_new1++) { //vettore esterno
