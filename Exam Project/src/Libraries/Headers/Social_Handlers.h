@@ -22,12 +22,14 @@ private:
 };
 
 class RelationsHandler : public FileHandler {
+private:
   Error _checkLine(const std::string &line) const override;
   std::unordered_set<std::string> _emptyBuffer(IOBuffer &buffer) const override;
   void _fillBuffer(IOBuffer &buffer, const std::string &data) const override;
 };
 
 class PostsHandler : public FileHandler {
+private:
   Error _checkLine(const std::string &line) const override;
   std::unordered_set<std::string> _emptyBuffer(IOBuffer &buffer) const override;
   void _fillBuffer(IOBuffer &buffer, const std::string &data) const override;
