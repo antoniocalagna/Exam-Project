@@ -45,18 +45,18 @@ public:
   bool RemoveLike(const string &id);
   bool RemoveDislike(const string &id);
   bool LikeExists(const string &ID) const;
-  bool DislikeExists(const string &ID) const;
-  bool ReactionExists(const string &ID) const;
+  bool DislikeExists(const string &ID) const;   //c
+  bool ReactionExists(const string &ID) const;  //Controlla se l'ID richiesto ha inserito una reazione
   bool RemoveReaction(const string &ID);
-  int NumLikes() const; //numero likes
+  int NumLikes() const;                         //numero likes
   int NumDislikes() const;
-  float RatioReaction() const; //rapporto LIKE/(DISLIKE+LIKE) così da poter studiare i post più 'popolari'
+  float RatioReaction() const;                  //rapporto LIKE/(DISLIKE+LIKE) così da poter studiare i post più 'popolari'
   
 private:
-  string _news;
-  Date _date;
-  Clock _time;
-  set<string> _likes, _dislikes;
+  string _news;                     //Messaggio del post
+  Date _date;                       //Data di pubblicazione
+  Clock _time;                      //Ora di pubblicazione
+  set<string> _likes, _dislikes;    //Set di like e dislike
 };
 
 
