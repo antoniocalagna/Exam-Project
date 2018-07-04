@@ -363,7 +363,7 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
         return;
       }
       group_new.setLegalLocation(new_loc);
-      if (!manager.replaceAccount(ID_to_set, group_new)) { //da provare
+      if (!manager.replaceAccount(ID_to_set, group_new)) {
         cout << "Error! " << what_to_set << " could not be modified." << endl;
         return;
       }
@@ -376,7 +376,7 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
         std::cout << "Error! Could not add the activity in this format." << std::endl;
       }
       group_new.setTypeOfActivity(new_act);
-      if (!manager.replaceAccount(ID_to_set, group_new)) { //da provare
+      if (!manager.replaceAccount(ID_to_set, group_new)) {
         cout << "Error! " << what_to_set << " could not be modified." << endl;
         return;
       }
@@ -385,12 +385,11 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
       string new_inc;
       Date inc;
       cout << "Please insert the new date of inception (in format dd/mm/yyyy)." << endl;
-      //cin.ignore(); da provare se ci vada o no
       getline(cin, new_inc);
       if (Date::CheckDate(new_inc)) {
         inc.scanDateByStr(new_inc);
         group_new.setInception(inc);
-        if (!manager.replaceAccount(ID_to_set, group_new)) { //da provare
+        if (!manager.replaceAccount(ID_to_set, group_new)) {
           cout << "Error! " << what_to_set << " could not be modified." << endl;
           return;
         }
@@ -428,7 +427,7 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
         return;
       }
       company_new.setName(new_name);
-      if (!manager.replaceAccount(ID_to_set, company_new)) { //da provare
+      if (!manager.replaceAccount(ID_to_set, company_new)) {
         cout << "Error! " << what_to_set << " could not be modified." << endl;
         return;
       }
@@ -767,7 +766,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
       cout << "Could not create post." << endl;
       return;
     }
-    new_data << std::make_pair(whose_ID, post_tmp); //MANCAVA QUESTO, TESTO.
+    new_data << std::make_pair(whose_ID, post_tmp);
   }
   else if (what_to_add == "like" || what_to_add == "dislike") {
     string post_owner, reaction_id, post_num_str;
