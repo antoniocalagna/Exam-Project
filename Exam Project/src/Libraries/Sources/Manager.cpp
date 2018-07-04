@@ -933,7 +933,7 @@ vector<pair<string, float>> Manager::SortedNewsRatioCompanies(const bool &with_p
                         num_posts; //Calcolo il rapporto complessivo dividendo la somma dei rapporti per il numero di post
 
     if (total_ratio_tmp >= min_ratio) //Se supera il rapporto minimo lo inserisco nella lista delle coppie
-      companies_ratio.push_back(make_pair(*it_ids, total_ratio_tmp));
+      companies_ratio.emplace_back(make_pair(*it_ids, total_ratio_tmp));
 
   } //Fine delle compagnie
 
