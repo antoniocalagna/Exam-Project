@@ -13,7 +13,7 @@
 
 //Specializzazioni del FileHandler
 namespace FH {
-
+/** ## Specializzazione dei metodi virtuali di FH ## **/
 class AccountsHandler : public FileHandler {
 private:
   Error _checkLine(const std::string &line) const override;
@@ -35,6 +35,9 @@ private:
   void _fillBuffer(IOBuffer &buffer, const std::string &data) const override;
 };
 
+/*
+ * Funzioni che trasformano il dato in una stringa
+ */
 std::string formatOutput(const User &user);
 std::string formatOutput(const Group &group);
 std::string formatOutput(const Company &company);

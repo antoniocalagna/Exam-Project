@@ -37,12 +37,12 @@ public:
   ~IOBuffer() = default;
   
   /**Getters*/
-  bool usersEmpty() const;
-  bool groupsEmpty() const;
-  bool companiesEmpty() const;
-  bool postsEmpty() const;
-  bool relationsEmpty() const;
-  size_t size() const;
+  bool usersEmpty() const;        //Controlla se la lista di utenti è vuota
+  bool groupsEmpty() const;       //Controlla se la lista di gruppi è vuota
+  bool companiesEmpty() const;    //Controlla se la lista di compagnie è vuota
+  bool postsEmpty() const;        //Controlla se la lista dei post è vuota
+  bool relationsEmpty() const;    //Controlla se la lista delle relazioni è vuota
+  size_t size() const;            //Restituisci la dimensione del buffer
   
   /**General*/
   void clear();                                     //Cancella il contenuto del buffer
