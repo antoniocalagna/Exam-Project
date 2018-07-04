@@ -13,7 +13,7 @@ void Shell::help(std::stringstream &command, Manager &manager, IOBuffer &new_dat
                "\tinfo, relation (between two IDs), posts, <type_of_relation>.\n"
                "\tIn case of \"get relation\", the two IDs need to be inserted.\n"
                "\tget relation id1 1d2 returns the relation between two IDs,\n"
-               "\tget <type_of_relation> id returns a list of all accounts related to that ID through the required relation."
+               "\tget <type_of_relation> <id> returns a list of all accounts related to that ID through the required relation."
             << std::endl;
   std::cout << "set <field_to_set> <id>\n\tSets the field as required. Possible fields: \n"
                "\tname, surname, gender, address, birth, subscription (USERS)\n"
@@ -121,6 +121,12 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
   else if (what_to_get == "relation") {
     std::string id1, id2;                                                 //Prendi dalla linea di comando anche i due ID
     command >> id1 >> id2;
+    
+    if (!manager.accountExists(id1)||(!manager.accountExists(id2))) {
+      cout << "Error! One the two IDs does not exist." << endl;
+      return;
+    }
+    
     std::string relation = manager.getRelationship(id1, id2);             //Richiedi la relazione
     if (relation.empty()) {                                               //Non è presente alcuna relazione
       std::cout << "No relation found between " << id1 << " and " << id2;
@@ -133,6 +139,12 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
   else if (what_to_get == "posts") {
     std::string id;
     command >> id;                                                       //Leggi l'ID dalla linea di comando
+    
+    if (!manager.accountExists(id)) {
+      cout << "Error! The ID: " << id << " does not exist." << endl;
+      return;
+    }
+    
     std::vector<Post> posts = manager.getPosts(id);                      //Richiedi tutti i post dell'account
     if (posts.empty()) {
       std::cout << "No posts from " << id << " found" << std::endl;
@@ -177,8 +189,13 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
   else if (relation::isValid(what_to_get)) {
     std::string id;
     command >> id;
-    std::vector<std::string> relations = manager.getRelated(id,
-                                                            what_to_get); //Prendi una lista di tutte le relzioni del tipo richiesto
+    
+    if (!manager.accountExists(id)) {
+      cout << "Error! The ID: " << id << " does not exist." << endl;
+      return;
+    }
+    
+    std::vector<std::string> relations = manager.getRelated(id,what_to_get); //Prendi una lista di tutte le relzioni del tipo richiesto
     if (relations.empty()) {
       if (what_to_get == relation::parent || what_to_get == relation::born)
         std::cout << id << " is " << what_to_get << " of no one." << std::endl;
@@ -209,6 +226,11 @@ void Shell::set(std::stringstream &command, Manager &manager, IOBuffer &new_data
 
   if (what_to_set.empty() || ID_to_set.empty()) {   //Controlla che i parametri siano stati effettivamente inseriti
     cout << "Error! Please specify what field to set." << endl;
+    return;
+  }
+  
+  if (!manager.accountExists(ID_to_set)) {
+    cout << "Error! The ID: " << ID_to_set << " does not exist." << endl;
     return;
   }
 
@@ -512,7 +534,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     string tmp_n, tmp_s, tmp_id, tmp_a, d1, d2;
     Date tmp_sub, tmp_b;
     char tmp_g;
-    cout << "Id:\n>";
+    cout << "ID:\n>";
     getline(cin, tmp_id);
     if (!Account::IDValid(tmp_id)) {
       std::cout << "ID not valid." << std::endl;
@@ -570,10 +592,11 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
       return;
     }
     new_data << new_u;                                                  //Aggiungi il nuovo utente al buffer
+    cout << "Done!" << endl;
   } else if (what_to_add == "group") {
     string tmp_n, tmp_id, tmp_loc, tmp_act, d1, d2;
     Date tmp_sub, tmp_inc;
-    cout << "Id:\n>";
+    cout << "ID:\n>";
     getline(cin, tmp_id);
     if (!Account::IDValid(tmp_id)) {
       std::cout << "ID not valid." << std::endl;
@@ -614,14 +637,15 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
 
     Group new_g(tmp_n, tmp_id, tmp_loc, tmp_act, tmp_sub, tmp_inc);
     if (!manager.addAccount(new_g)) {
-      cout << "Error! This ID already exists!";
+      cout << "Error! Account could not be created." << endl;
       return;
     }
     new_data << new_g;                                                  //aggiungi il nuovo gruppo al buffer
+    cout << "Done!" << endl;
   } else if (what_to_add == "company") {
     string tmp_n, tmp_id, tmp_finloc, tmp_oploc, tmp_p, d1, d2;
     Date tmp_sub, tmp_inc;
-    cout << "Id:\n>";
+    cout << "ID:\n>";
     getline(cin, tmp_id);
     if (!Account::IDValid(tmp_id)) {
       std::cout << "ID not valid." << std::endl;
@@ -668,10 +692,11 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
 
     Company new_c(tmp_n, tmp_id, tmp_finloc, tmp_oploc, tmp_p, tmp_sub, tmp_inc);
     if (!manager.addAccount(new_c)) {
-      cout << "Error! This ID already exists." << endl;
+      cout << "Error! Account could not be created." << endl;
       return;
     }
     new_data << new_c;  //Metti la nuova compagnia nel buffer
+    cout << "Done!" << endl;
   }                                           //Add Relationship
   else if (what_to_add == "relation") {
     int error;
@@ -700,7 +725,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
               "\tson (U - U)\n"
               "\tpartner (U - U)\n"
               "\tmember (U - G)\n"
-              "\tpartner\n"
+              "\tworking_with (C - C)\n"
               "\tworker (U -> C)\n"
               "\temployer (C -> U)\n" << endl;
       return;
@@ -713,7 +738,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
       cout << "Error! The relationship is incoherent with the Accounts' types!" << endl;
     }
     else {
-    new_data << std::make_pair(std::make_pair(who1, who2), type_rel);   //In caso di successo
+    new_data << std::make_pair(std::make_pair(who1, who2), type_rel);   //In caso di successo passo al buffer la coppia ID1+ID2 - relazione
     cout << "Done!" << endl;
     }
   }
@@ -730,7 +755,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
 
     cout << "Date and time:\n>";
     getline(cin, d_t);
-    if (!post_tmp.setDate_Time(d_t)) {            //mi accerto che i dati inseriti siano validi
+    if (!post_tmp.setDate_Time(d_t)) {          //Controllo che data e ora siano valide
       cout << "\nError! Date or time not valid." << endl;
       return;
     }
@@ -758,7 +783,13 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
 
     cout << "Who wrote the post?:\n>";
     getline(cin, whose_ID);
-    if (!manager.addPost(post_tmp, whose_ID)) { //addPost controlla tutti gli ID inseriti
+    
+    if (!manager.accountExists(whose_ID)) {
+      cout << "Error! Your ID does not exist." << endl;
+      return;
+    }
+    
+    if (!manager.addPost(post_tmp, whose_ID)) { //addPost controlla che l'aggiunzione sia possibile
       cout << "Could not create post." << endl;
       return;
     }
@@ -772,9 +803,21 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
     cout << "Please insert the post owner's ID:" << endl;
     cout << ">";
     getline(cin, post_owner);
+    
+    if (!manager.accountExists(post_owner)) {
+      cout << "Error! The ID: " << post_owner << " does not exist." << endl;
+      return;
+    }
+    
     cout << "Insert the account reacting to the post's ID:" << endl;
     cout << ">";
     getline(cin, reaction_id);
+    
+    if (!manager.accountExists(reaction_id)) {
+      cout << "Error! The ID: " << reaction_id << " does not exist." << endl;
+      return;
+    }
+    
     cout << "Please insert post number:" << endl;
     cout << ">";
     getline(cin, post_num_str);
@@ -815,6 +858,10 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
     command >> ID_to_delete;
     if (ID_to_delete.empty()) {
       cout << "Error! Missing parameter." << endl;
+      return;
+    }
+    if (!manager.accountExists(ID_to_delete)) {
+      cout << "Error! The ID: " << ID_to_delete << " does not exist." << endl;
       return;
     }
 
@@ -888,6 +935,12 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
     string post_num_str;
     unsigned int post_num;
     command >> post_owner;
+    
+    if (!manager.accountExists(post_owner)) {
+      cout << "Error! The ID: " << post_owner << " does not exist." << endl;
+      return;
+    }
+    
     cout << "Please insert post number:" << endl;
     cout << ">";
     getline(cin, post_num_str);
@@ -897,7 +950,7 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
 
     std::vector<Post> posts = manager.getPosts(post_owner);
     if (posts.size() <= post_num) {
-      std::cout << "Error! " << post_owner << " does not have post " << post_num + 1 << std::endl;
+      std::cout << "Error! " << post_owner << " does not have any post at pos " << post_num + 1 << std::endl;
       return;
     }
     if (!manager.deletePost(post_owner, post_num)) {
@@ -913,14 +966,26 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
     cout << "Please insert the post owner's ID:" << endl;
     cout << ">";
     getline(cin, post_owner);
+    
+    if (!manager.accountExists(post_owner)) {
+      cout << "Error! The ID: " << post_owner << " does not exist." << endl;
+      return;
+    }
+    
     cout << "Insert the account reacting to the post's ID:" << endl;
     cout << ">";
     getline(cin, reaction_id);
+    
+    if (!manager.accountExists(reaction_id)) {
+      cout << "Error! The ID: " << reaction_id << " does not exist." << endl;
+      return;
+    }
+    
     cout << "Please insert post number:" << endl;
     cout << ">";
     getline(cin, post_num_str);
     post_num = unsigned(stoi(post_num_str));
-
+    
     post_num--;
     posts = manager.getPosts(post_owner);   //Acquisisco il vettore di post per controlli e per estrarre quello interessato
     if (posts.size() <= post_num) {   //Controlla se il proprietario dell'account ha il post
@@ -928,7 +993,7 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
       return;
     }
 
-    Post &old_post = posts[post_num];
+    Post &old_post = posts[post_num];   //Salvo il post pre-eliminazione per passarlo al buffer delle eliminazioni
 
     bool like = what_to_delete == "like";      //Decidi se mettere like o dislike
     if (!manager.setReaction(like, false, post_owner, post_num, reaction_id)) {
@@ -962,13 +1027,25 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
     else if (param2 == "friends") {
       command >> id;
       num = manager.NumFriends(id);
+      
+      if (!manager.accountExists(id)) {
+        cout << "Error! The ID: " << id << " does not exist." << endl;
+        return;
+      }
+      
       if (num == 0) {
-        cout << "Error! " << id << " is not a User or it does not exist." << endl;
+        cout << id << " has no friend." << endl;
         return;
       }
     } else if (param2 == "relatives") {
       command >> id;
       num = manager.NumRelatives(id);
+      
+      if (!manager.accountExists(id)) {
+        cout << "Error! The ID: " << id << " does not exist." << endl;
+        return;
+      }
+      
       if (num == 0) {
         cout << id << " has no relatives." << endl;
         return;
@@ -976,6 +1053,12 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
     } else if (param2 == "workers") {
       command >> id;
       num = manager.NumEmployees(id);
+      
+      if (!manager.accountExists(id)) {
+        cout << "Error! The ID: " << id << " does not exist." << endl;
+        return;
+      }
+      
       if (num == 0) {
         cout << id << " has no workers." << endl;
         return;
@@ -983,6 +1066,12 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
     } else if (param2 == "subsidiaries") {
       command >> id;
       num = manager.NumSubsidiaries(id);
+      
+      if (!manager.accountExists(id)) {
+        cout << "Error! The ID: " << id << " does not exist." << endl;
+        return;
+      }
+      
       if (num == 0) {
         cout << id << " has no subsidiaries." << endl;
         return;
@@ -990,6 +1079,12 @@ void Shell::stats(std::stringstream &command, Manager &manager, IOBuffer &new_da
     } else if (param2 == "members") {
       command >> id;
       num = manager.NumMembers(id);
+      
+      if (!manager.accountExists(id)) {
+        cout << "Error! The ID: " << id << " does not exist." << endl;
+        return;
+      }
+      
       if (num == 0) {
         cout << id << " has no members." << endl;
         return;
@@ -1113,6 +1208,12 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
   else if (what_to_search == "tree") {
     string id;
     command >> id;
+    
+    if (!manager.accountExists(id)) {
+      cout << "Error! The ID: " << id << " does not exist." << endl;
+      return;
+    }
+    
     if (id.empty() || manager.getAccountType(id) != Account::user_type) {
       std::cout << "Please insert some User's ID" << std::endl;
       return;
@@ -1120,7 +1221,7 @@ void Shell::search(std::stringstream &command, Manager &manager, IOBuffer &new_d
 
     std::string tree = manager.PrintTree(id);
     cout << tree;
-    std::cout << "Save this tree? (yes/no)" << std::endl << ">";
+    std::cout << "Save this tree? (yes/no)" << std::endl << ">"; //Richiesta di salvataggio su file
     std::string answer;
     std::getline(std::cin, answer);
     if (answer == "yes") {
