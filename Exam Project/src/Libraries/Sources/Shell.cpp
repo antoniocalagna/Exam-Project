@@ -822,10 +822,6 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
       return;
     }
     
-    if (!manager.accountExists(ID_to_delete)) {
-      std::cout << "Account not valid" << std::endl;
-    }
-    
     std::vector<Post> posts;
     std::vector<IOBuffer::Relation> relations;
     std::vector<pair<pair<string, string>, string>> all_relationships;
@@ -841,8 +837,8 @@ void Shell::del(std::stringstream &command, Manager &manager, IOBuffer &new_data
       data_to_delete << *it; //elimino le relazioni
     }
     
-    post_with_react = manager.getPostsReactedBy(ID_to_delete);             //vettore di post con reazioni id da cancellare
-    post_without_react = manager.getPostsWithoutReactionsOf(ID_to_delete); //vettore di post senza reazioni dell'id da cancellare
+    post_with_react = manager.getPostsReactedBy(ID_to_delete);             //vettore di post pre-eliminazione
+    post_without_react = manager.getPostsWithoutReactionsOf(ID_to_delete); //vettore di post post-eliminazione
     
     
     for (auto it_new1 = post_without_react.begin(); it_new1 != post_without_react.end(); it_new1++) { //vettore esterno
