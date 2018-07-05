@@ -776,8 +776,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
       cout << "Error! The relationship is incoherent with the Accounts' types!" << endl;
       return;
     }
-    new_data << std::make_pair(std::make_pair(who1, who2),
-                               type_rel);                 //In caso di successo, salva la relazione
+    new_data << std::make_pair(std::make_pair(who1, who2),type_rel);                 //In caso di successo, salva la relazione
     if (!existing_relation.empty()) {
       data_to_delete << std::make_pair(std::make_pair(who1, who2), existing_relation);  //E sovrascrivi quella vecchia
     }
