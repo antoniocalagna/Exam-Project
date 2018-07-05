@@ -9,6 +9,7 @@
 #ifndef User_h
 #define User_h
 
+#include <array>
 #include "Account.h"
 
 class User :
@@ -49,7 +50,7 @@ private:
 
 namespace gender {
 const int  n_genders = 6;
-const char genders[n_genders] = {'M', 'F', 'N', 'A', 'B', 'O'};
+const std::array<char, n_genders> genders = {'M', 'F', 'N', 'A', 'B', 'O'};
 bool isValid(char g);
 bool isValid(const std::string &str);
 }
