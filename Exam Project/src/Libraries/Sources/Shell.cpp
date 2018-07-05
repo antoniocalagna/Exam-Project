@@ -787,24 +787,38 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
       return;
     }
     
-    cout << "Likes (insert '-' at the end of the list):\n";
+    cout << "Likes (insert one user per line. Use '-' to end the list):\n";
     while (input != "-") {
       cout << ">";
       getline(cin, input);
       
-      if (input != "-")
-        likes.insert(input);
+      if (input != "-" && !input.empty()) {
+        std::string id;
+        std::stringstream(input) >> id;       //Se vengono inseriti spazi o altre robe, ignorale
+        if(manager.getAccountType(id) != Account::user_type) {
+          std::cout << "Error! Account " << id << " is not a User or doesn't exist." << std::endl;
+          return;
+        }
+        likes.insert(id);
+      }
     }
     post_tmp.setLikes(likes);
     
     input.clear();                                //Altrimenti non entra nel ciclo dei dislikes
-    cout << "Dislikes (insert '-' at the end of the list):\n";
+    
+    cout << "Dislikes (insert one user per line. Use '-' to end the list):\n";
     while (input != "-") {
       cout << ">";
       getline(cin, input);
-      if (input != "-")
-        dislikes.insert(input);
-      
+      if (input != "-" && !input.empty()) {
+        std::string id;
+        std::stringstream(input) >> id;
+        if(manager.getAccountType(id) != Account::user_type) {
+          std::cout << "Error! Account " << id << " is not a User or doesn't exist." << std::endl;
+          return;
+        }
+        dislikes.insert(id);
+      }
     }
     post_tmp.setDislikes(dislikes);
     
