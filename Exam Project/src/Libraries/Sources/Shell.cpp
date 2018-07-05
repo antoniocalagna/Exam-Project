@@ -89,16 +89,14 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
   if (what_to_get == "info") {
     std::string requested_id;
     command >> requested_id;
-    char account_type = manager.getAccountType(
-            requested_id);   //Controlla il tipo di account di cui sono richieste le informazioni
+    char account_type = manager.getAccountType(requested_id);   //Controlla il tipo di account di cui sono richieste le informazioni
     if (account_type == 0) {                                    //Account non trovato
       std::cout << "Requested ID not found" << std::endl;
       return;
     }
     
     else if (account_type == Account::user_type) {
-      User user = manager.getUser(
-              requested_id);                //Prendi una copia dell'utente e stampane le informazioni
+      User user = manager.getUser(requested_id);                //Prendi una copia dell'utente e stampane le informazioni
       std::cout << "Name: " << user.getName() << "\n"
                 << "Surname: " << user.getSurname() << "\n"
                 << "Gender: " << user.getGender() << "\n"
@@ -118,8 +116,7 @@ void Shell::get(std::stringstream &command, Manager &manager, IOBuffer &new_data
     }
     
     else if (account_type == Account::company_type) {
-      Company company = manager.getCompany(
-              requested_id);       //Prendi una copia della compagnia e stampane le informazioni
+      Company company = manager.getCompany(requested_id);       //Prendi una copia della compagnia e stampane le informazioni
       std::cout << "Name: " << company.getName() << "\n"
                 << "Financial location: " << company.getFinancialLocation() << "\n"
                 << "Operative location: " << company.getOperativeLocation() << "\n"
