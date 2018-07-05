@@ -5,8 +5,8 @@
 #include "Shell.h"
 
 void Shell::help(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete) {
-  std::cout << "help" << "\n\tPrints this page of help." << std::endl;
-  std::cout << "list" << "\n\tPrints a list of all registered accounts" << std::endl;
+  std::cout << "help" << "\n\tPrints this page of help.\n" << std::endl;
+  std::cout << "list" << "\n\tPrints a list of all registered accounts\n" << std::endl;
   std::cout << "get <data_to_get> <id1> [<id2>]"
             << "\n\tPrints the required data.\n"
                "\tPossible data to get:\n"
@@ -18,20 +18,30 @@ void Shell::help(std::stringstream &command, Manager &manager, IOBuffer &new_dat
   std::cout << "set <field_to_set> <id>\n\tSets the field as required. Possible fields: \n"
                "\tname, surname, gender, address, birth, subscription (USERS)\n"
                "\tname, type_activity, inception, subscription (GROUPS)\n"
-               "\tname, products, operative_location, financial_location (COMPANIES)"
+               "\tname, products, operative_location, financial_location (COMPANIES)\n"
             << std::endl;
   std::cout << "add <data_to_add>"
                "\n\tCreates new data for the program.\n"
                "\tPossible data to add:\n"
                "\tuser, group, company,\n"
                "\trelation (in format \"add relation <id1> <relation> <id2>\"),\n"
-               "\tpost, like, dislike."
+               "\tPossible relations:\n"
+               "\t\tfriend (U - U)\n"
+               "\t\tacquaintance (U - U)\n"
+               "\t\tparent (U - U)\n"
+               "\t\tson (U - U)\n"
+               "\t\tpartner (U - U)\n"
+               "\t\tmember (U - G)\n"
+               "\t\tworking_with (C - C)\n"
+               "\t\tworker (U -> C)\n"
+               "\t\temployer (C -> U)\n"
+               "\t\tpost, like, dislike.\n"
             << std::endl;
   std::cout << "delete <data_to_delete>\n\tDeletes the data as required.\n\tPossible data to delete:\n"
                "\taccount <ID_to_delete>,\n"
                "\trelation <id1> <id2>,\n"
                "\tpost <owner_ID>,\n"
-               "\tlike, dislike."
+               "\tlike, dislike.\n"
             << std::endl;
   std::cout << "stats <type_of_statistic> [<type_of_data>]"
                "\n\tPrints statistic info.\n"
@@ -40,15 +50,16 @@ void Shell::help(std::stringstream &command, Manager &manager, IOBuffer &new_dat
                "\tIn case of \"number\", the possible types of data are:\n"
                "\taccounts, users, groups, companies, friends <id>, relatives <id>, workers <id>, subsidiaries <id>, members <id>, born_after.\n"
                "\tIn case of \"most\", the possible types of data are:\n"
-               "\temploying_company, employing_partnership, user_friends, user_acquaintances, liked_post, disliked_post, liked_account, disliked_account."
+               "\temploying_company, employing_partnership, user_friends, user_acquaintances, "
+               "liked_post, disliked_post, liked_account, disliked_account.\n"
             << std::endl;
   std::cout << "search <data_to_search>"
                "\n\tPossible data to search:\n"
                "\ttrees (all trees), tree <id>, loner_people, friendliest_companies.\n"
             << std::endl;
-  std::cout << "save\n\tSaves current status on file." << std::endl;
-  std::cout << "autosave on/off\n\tTurns autosave on/off." << std::endl;
-  std::cout << "exit\n\tSaves and quits the program." << std::endl;
+  std::cout << "save\n\tSaves current status on file.\n" << std::endl;
+  std::cout << "autosave on/off\n\tTurns autosave on/off.\n" << std::endl;
+  std::cout << "exit\n\tSaves and quits the program.\n" << std::endl;
 }
 
 void Shell::list(std::stringstream &command, Manager &manager, IOBuffer &new_data, IOBuffer &data_to_delete) {
@@ -797,7 +808,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
         std::stringstream(input) >> id;       //Se vengono inseriti spazi o altre robe, ignorale
         if (manager.getAccountType(id) != Account::user_type) {
           std::cout << "\nError! Account " << id << " is not a User or doesn't exist.\n"
-                                                  "Please continue inserting likes:" << std::endl;
+                                                    "Please continue inserting likes:" << std::endl;
         }
         else {
           likes.insert(id);
@@ -817,7 +828,7 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
         std::stringstream(input) >> id;
         if (manager.getAccountType(id) != Account::user_type) {
           std::cout << "\nError! Account " << id << " is not a User or doesn't exist.\n"
-                                                  "Please continue inserting dislikes:" << std::endl;
+                                                    "Please continue inserting dislikes:" << std::endl;
         }
         else {
           dislikes.insert(id);
