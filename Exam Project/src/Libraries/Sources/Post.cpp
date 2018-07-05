@@ -46,8 +46,7 @@ bool Post::setDate_Time(const string &date_time) {
     else
       return false;
   }
-  if (Date::CheckDate(date))
-  {
+  if (Date::CheckDate(date)) {
     _date.scanDateByStr(date);
     return true;
   }
@@ -126,7 +125,9 @@ ostream &operator<<(ostream &stream, const Post &p) {
     }
     stream << *it << "}, ";
   }
-  else { stream << "}, "; }
+  else {
+    stream << "}, ";
+  }
   
   stream << "dislikes: {";
   
