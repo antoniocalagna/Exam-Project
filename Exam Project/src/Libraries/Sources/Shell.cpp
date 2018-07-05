@@ -795,11 +795,13 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
       if (input != "-" && !input.empty()) {
         std::string id;
         std::stringstream(input) >> id;       //Se vengono inseriti spazi o altre robe, ignorale
-        if(manager.getAccountType(id) != Account::user_type) {
-          std::cout << "Error! Account " << id << " is not a User or doesn't exist." << std::endl;
-          return;
+        if (manager.getAccountType(id) != Account::user_type) {
+          std::cout << "\nError! Account " << id << " is not a User or doesn't exist.\n"
+                                                  "Please continue inserting likes:" << std::endl;
         }
-        likes.insert(id);
+        else {
+          likes.insert(id);
+        }
       }
     }
     post_tmp.setLikes(likes);
@@ -813,11 +815,13 @@ void Shell::add(std::stringstream &command, Manager &manager, IOBuffer &new_data
       if (input != "-" && !input.empty()) {
         std::string id;
         std::stringstream(input) >> id;
-        if(manager.getAccountType(id) != Account::user_type) {
-          std::cout << "Error! Account " << id << " is not a User or doesn't exist." << std::endl;
-          return;
+        if (manager.getAccountType(id) != Account::user_type) {
+          std::cout << "\nError! Account " << id << " is not a User or doesn't exist.\n"
+                                                  "Please continue inserting dislikes:" << std::endl;
         }
-        dislikes.insert(id);
+        else {
+          dislikes.insert(id);
+        }
       }
     }
     post_tmp.setDislikes(dislikes);
