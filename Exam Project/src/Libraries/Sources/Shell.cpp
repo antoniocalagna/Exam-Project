@@ -70,7 +70,7 @@ void Shell::list(std::stringstream &command, Manager &manager, IOBuffer &new_dat
     return;
   }
   
-  //Ordina il vettore per stampare gli account in base al loro tipo
+  //Ordina il vettore per stampare gli account in base al loro tipo per raggrupparli
   std::sort(accounts.begin(),
             accounts.end(),
             [](const Account &account1, const Account &account2) {
