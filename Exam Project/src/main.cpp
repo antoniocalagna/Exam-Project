@@ -274,7 +274,6 @@ int main (int argc, const char *argv[]) {
       cycles_without_saving++;
     }
     command.str(std::string());   //Svuota il buffer del comando
-    std::cin.clear();
   } while (!exit);
   
   accounts_fh.close();
